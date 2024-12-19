@@ -1,11 +1,11 @@
 Flask==2.0.1
 Werkzeug==2.0.3
 python-dotenv==1.0.1
-supabase-py==0.0.2
+supabase==1.0.3
 python-jose==3.3.0
 gunicorn==20.1.0
-requests==2.28.2
-urllib3==1.26.15
-gotrue==0.2.0
-postgrest==0.10.6
-realtime==0.0.4 
+requests>=2.31.0
+urllib3>=1.26.15,<2.0.0
+certifi>=2023.7.22
+charset-normalizer>=2.0.0
+idna>=2.5 
