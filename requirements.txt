@@ -1,4 +1,5 @@
-Flask==2.0.1
+Flask==2.3.3
+Werkzeug==3.0.1
 python-dotenv==1.0.1
 supabase==2.3.4
 python-jose==3.3.0
