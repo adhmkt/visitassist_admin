@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Admin - Edit Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/functionality_modal.css') }}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-robot logo-icon"></i>
+                <h2>Chatbot Admin</h2>
+            </div>
+            <ul class="nav-links">
+                <li>
+                    <a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                </li>
+                <li class="active">
+                    <a href="/edit-agent"><i class="fas fa-robot"></i> Assistants</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-users"></i> Users</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                </li>
+                <li class="logout">
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="user-profile">
+                    <span class="user-name">Welcome, {{ user.first_name }} {{ user.last_name }}</span>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <div class="main-section">
+                <div class="agent-controls">
+                    <h2>Manage Assistants</h2>
+                    <button class="action-button" id="newAgentBtn">
+                        <i class="fas fa-plus"></i> New Assistant
+                    </button>
+                </div>
+
+                <!-- Assistant Selection and Search -->
+                <div class="selection-container">
+                    <div class="form-group agent-select-group">
+                        <label for="agent-select">Select Assistant to Edit</label>
+                        <div class="select-search-container">
+                            <div class="search-bar">
+                                <i class="fas fa-search"></i>
+                                <input type="text" placeholder="Search assistants by name..."
+                                    aria-label="Search assistants by name" id="agentSearch">
+                            </div>
+                            <select id="agent-select" class="form-control">
+                                <option value="">Choose an assistant...</option>
+                                {% for agent in agents %}
+                                <option value="{{ agent.id }}">{{ agent.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Assistant Form -->
+                <form id="agentForm" class="form-content">
+                    <div class="form-group">
+                        <label for="assistant_id">Assistant ID</label>
+                        <input type="text" id="assistant_id" name="assistant_id" class="form-control" readonly>
+                        <span class="help-text">Unique identifier for the assistant (not editable)</span>
+                        <div class="assistant-link" style="margin-top: 10px;">
+                            <a href="#" id="assistantWebsiteLink" target="_blank" class="action-button">
+                                <i class="fas fa-external-link-alt"></i> Open Assistant Website
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="name">Assistant Name</label>
+                        <input type="text" id="name" name="name" class="form-control" required>
+                        <span class="help-text">Display name of the assistant</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+                        <span class="help-text">Brief description of the assistant's purpose</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prompt">Instructions</label>
+                        <textarea id="prompt" name="prompt" class="form-control" rows="5" required></textarea>
+                        <span class="help-text">System instructions for the assistant</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type">Assistant Type</label>
+                        <input type="text" id="type" name="type" class="form-control" value="classic">
+                        <span class="help-text">Type of assistant (defaults to 'classic')</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="image">Assistant Image</label>
+                        <input type="text" id="image" name="image" class="form-control">
+                        <span class="help-text">URL or path to assistant's image</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sponsor_id">Sponsor ID</label>
+                        <input type="number" id="sponsor_id" name="sponsor_id" class="form-control">
+                        <span class="help-text">ID of the sponsoring organization</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="questions">Questions</label>
+                        <textarea id="questions" name="questions" class="form-control" rows="5"></textarea>
+                        <span class="help-text">JSON format of predefined questions</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="config">Configuration</label>
+                        <div class="config-section">
+                            <div class="language-selector">
+                                <label for="language-select">Language</label>
+                                <select id="language-select" class="form-control">
+                                    <!-- Languages will be populated dynamically -->
+                                </select>
+                            </div>
+
+                            <div class="config-subsection">
+                                <h4>Basic Information</h4>
+                                <div class="form-group">
+                                    <label for="assistant_name">Assistant Name</label>
+                                    <input type="text" id="assistant_name" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="assistant_desc">Description</label>
+                                    <textarea id="assistant_desc" class="form-control" rows="3"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="config-subsection">
+                                <h4>Design Features</h4>
+                                <div class="form-group">
+                                    <label for="assistant_img_url">Assistant Image URL</label>
+                                    <input type="text" id="assistant_img_url" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="assistant_sidebar_img">Sidebar Image URL</label>
+                                    <input type="text" id="assistant_sidebar_img" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="assistant_splash_img">Splash Image URL</label>
+                                    <input type="text" id="assistant_splash_img" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bg_image">Background Image</label>
+                                    <input type="text" id="bg_image" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bubble_bg_color">Bubble Background Color</label>
+                                    <input type="color" id="bubble_bg_color" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="bubble_font_color">Bubble Font Color</label>
+                                    <input type="color" id="bubble_font_color" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="config-subsection">
+                                <h4>Welcome Messages</h4>
+                                <div class="form-group">
+                                    <label for="assistant_splash_txt">Desktop Welcome Message</label>
+                                    <textarea id="assistant_splash_txt" class="form-control" rows="4"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="assistant_splash_mobile_txt">Mobile Welcome Message</label>
+                                    <textarea id="assistant_splash_mobile_txt" class="form-control" rows="4"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="config-subsection">
+                                <h4>Conversation Starters</h4>
+                                <div class="functionalities-summary">
+                                    <p>Current Count: <span id="functionalityCount">0</span></p>
+                                    <p>Last Updated: <span id="lastUpdated">Never</span></p>
+                                    <button type="button" class="action-button" id="manageFunctionalities">
+                                        <i class="fas fa-tasks"></i> Manage Conversation Starters
+                                    </button>
+                                </div>
+                            </div>
+
+                            <textarea id="config" name="config" class="form-control" rows="5"
+                                style="display: none;"></textarea>
+                        </div>
+                        <span class="help-text">Assistant configuration for all languages and features</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="functions">Functions</label>
+                        <input type="text" id="functions" name="functions" class="form-control" value="not_defined">
+                        <span class="help-text">Available functions (defaults to 'not_defined')</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="languages">Languages</label>
+                        <textarea id="languages" name="languages" class="form-control" rows="5"></textarea>
+                        <span class="help-text">JSON format of supported languages</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subtype">Subtype</label>
+                        <input type="text" id="subtype" name="subtype" class="form-control" value="subtype">
+                        <span class="help-text">Assistant subtype (defaults to 'subtype')</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sponsor_logo">Sponsor Logo</label>
+                        <input type="text" id="sponsor_logo" name="sponsor_logo" class="form-control"
+                            value="sponsor_default.png">
+                        <span class="help-text">URL or path to sponsor's logo</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sponsor_url">Sponsor URL</label>
+                        <input type="url" id="sponsor_url" name="sponsor_url" class="form-control"
+                            value="https://apis-ia.com">
+                        <span class="help-text">Website URL of the sponsor</span>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="action-button">Save Assistant</button>
+                        <button type="button" class="action-button" id="deleteAgentBtn" style="display: none;">Delete
+                            Assistant</button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/functionality_modal.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/edit_agent.js') }}"></script>
+</body>
+
+</html>

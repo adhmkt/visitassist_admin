@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Admin - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <div class="layout-container">
+        <nav class="side-nav">
+            <div class="nav-header">
+                <h2>Chatbot Admin</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+                <li><a href="/edit-agent" class="nav-link">Edit Assistant</a></li>
+                <li><a href="/chat-history" class="nav-link">Chat History</a></li>
+                <li><a href="/settings" class="nav-link">Settings</a></li>
+                <li><a href="/logout" class="nav-link">Logout</a></li>
+            </ul>
+        </nav>
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>

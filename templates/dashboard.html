@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Admin - Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-robot logo-icon"></i>
+                <h2>Chatbot Admin</h2>
+            </div>
+            <ul class="nav-links">
+                <li class="active">
+                    <a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                </li>
+                <li>
+                    <a href="/edit-agent"><i class="fas fa-robot"></i> Assistants</a>
+                </li>
+                <li>
+                    <a href="/assistant-directory"><i class="fas fa-th-large"></i> Assistant Directory</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-users"></i> Users</a>
+                </li>
+                <li>
+                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                </li>
+                <li class="logout">
+                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="user-profile">
+                    <span class="user-name">Welcome, {{ user.first_name }} {{ user.last_name }}</span>
+                    <i class="fas fa-user-circle"></i>
+                </div>
+            </header>
+
+            <!-- Dashboard Content -->
+            <div class="dashboard-content">
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon active-users">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Active Users</h3>
+                            <p class="stat-number">{{ active_users }}</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon active-agents">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>Active Assistants</h3>
+                            <p class="stat-number">{{ active_agents }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Cards -->
+                <div class="action-cards">
+                    <div class="action-card">
+                        <i class="fas fa-plus-circle"></i>
+                        <h3>Create Assistant</h3>
+                        <p>Create a new chatbot assistant</p>
+                        <button class="action-button">Create New</button>
+                    </div>
+                    <div class="action-card">
+                        <i class="fas fa-edit"></i>
+                        <h3>Edit Assistant</h3>
+                        <p>Modify existing assistants</p>
+                        <button class="action-button" id="editAgentBtn">Edit</button>
+                    </div>
+                    <div class="action-card">
+                        <i class="fas fa-user"></i>
+                        <h3>User Profile</h3>
+                        <p>Email: {{ user.email }}</p>
+                        <p>Role: {{ user.role }}</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+
+</html>
