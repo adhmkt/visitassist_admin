@@ -2,8 +2,9 @@ class FunctionalityModal {
     constructor() {
         this.modal = null;
         this.currentLanguage = '';
-        this.allLanguages = [];
+        this.languageData = [];
         this.functionalitiesByLanguage = {};
+        this.functionalities = [];
         this.dbFunctionalities = [];
         this.assistantId = null;
         this.selectedItems = new Set();
@@ -52,36 +53,38 @@ class FunctionalityModal {
 
                     <!-- Main Content -->
                     <div class="modal-body">
-                        <div class="table-container">
-                            <table id="functionalitiesTable">
-                                <thead>
-                                    <tr>
-                                        <th><input type="checkbox" id="selectAll"></th>
-                                        <th>ID</th>
-                                        <th>Text</th>
-                                        <th>Value</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                        <div class="edit-form">
-                            <h3>Edit Conversation Starter</h3>
-                            <form id="editFunctionalityForm">
-                                <div class="form-group">
-                                    <label for="editId">ID</label>
-                                    <input type="number" id="editId" readonly>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editText">Text</label>
-                                    <input type="text" id="editText" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="editValue">Value</label>
-                                    <textarea id="editValue" required></textarea>
-                                </div>
-                            </form>
+                        <div class="content-layout">
+                            <div class="table-container">
+                                <table id="functionalitiesTable">
+                                    <thead>
+                                        <tr>
+                                            <th><input type="checkbox" id="selectAll"></th>
+                                            <th>ID</th>
+                                            <th>Text</th>
+                                            <th>Value</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div class="edit-form">
+                                <h3>Edit Conversation Starter</h3>
+                                <form id="editFunctionalityForm">
+                                    <div class="form-group">
+                                        <label for="editId">ID</label>
+                                        <input type="number" id="editId" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editText">Text</label>
+                                        <input type="text" id="editText" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="editValue">Value</label>
+                                        <textarea id="editValue" required></textarea>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
 
@@ -157,7 +160,12 @@ class FunctionalityModal {
     async open(languages, functionalitiesByLang, assistantId) {
         console.log('Opening modal with config:', { languages, functionalitiesByLang, assistantId });
 
-        // Store assistant ID
+        // Store assistant ID - ensure it's a string and not empty
+        if (!assistantId) {
+            console.error('No assistant ID provided');
+            this.showError('Assistant ID is required');
+            return;
+        }
         this.assistantId = assistantId;
 
         // Store the full language objects
@@ -173,7 +181,20 @@ class FunctionalityModal {
         }
 
         // Store functionalities by language
-        this.functionalitiesByLanguage = functionalitiesByLang || {};
+        this.functionalitiesByLanguage = {};
+
+        // Format functionalities for each language
+        Object.entries(functionalitiesByLang || {}).forEach(([langCode, functionalities]) => {
+            if (Array.isArray(functionalities)) {
+                this.functionalitiesByLanguage[langCode] = functionalities.map(func => ({
+                    id: func.functionality_id,
+                    text: func.functionality_text,
+                    value: func.functionality_value
+                }));
+            } else {
+                this.functionalitiesByLanguage[langCode] = [];
+            }
+        });
 
         // Ensure each language has a functionalities array
         this.languageData.forEach(lang => {
@@ -218,10 +239,15 @@ class FunctionalityModal {
         const statsDiv = headerTop.querySelector('.language-stats') || document.createElement('div');
         statsDiv.className = 'language-stats';
 
+        // Ensure languageData exists and is an array
+        if (!Array.isArray(this.languageData)) {
+            this.languageData = [];
+        }
+
         // Calculate statistics
         const totalLanguages = this.languageData.length;
-        const completedLanguages = Object.values(this.functionalitiesByLanguage)
-            .filter(funcs => funcs.length > 0).length;
+        const completedLanguages = Object.values(this.functionalitiesByLanguage || {})
+            .filter(funcs => Array.isArray(funcs) && funcs.length > 0).length;
 
         statsDiv.innerHTML = `
             <div class="stat">
@@ -313,9 +339,102 @@ class FunctionalityModal {
     }
 
     async editFunctionality(id) {
+        if (!Array.isArray(this.functionalities)) {
+            this.functionalities = [];
+        }
+
+        // Ensure we have a valid assistant ID
+        if (!this.assistantId || this.assistantId === 'null' || this.assistantId === '') {
+            console.error('Invalid or missing assistant ID:', this.assistantId);
+            this.showError('Invalid Assistant ID. Please reload the page and try again.');
+            return;
+        }
+
         const func = this.functionalities.find(f => f.id.toString() === id.toString());
         if (!func) {
-            this.showError('Functionality not found');
+            console.warn('Functionality not found in current array, fetching from server...');
+            try {
+                // Construct API URL with proper path segments
+                const apiUrl = `/api/assistant-functionalities/${this.assistantId}/${id}/${this.currentLanguage}`;
+                console.log('Fetching functionality from:', apiUrl);
+
+                // Fetch functionality data from database
+                const response = await fetch(apiUrl);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Fetched functionality data:', data);
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Failed to load functionality data');
+                }
+
+                // Get the database functionality data
+                const dbFunc = data.functionality;
+
+                if (!dbFunc) {
+                    throw new Error('Functionality not found in database');
+                }
+
+                // Create a new functionality object
+                const newFunc = {
+                    id: dbFunc.functionality_id,
+                    text: dbFunc.functionality_text,
+                    value: dbFunc.functionality_value
+                };
+
+                // Add to functionalities array if not exists
+                if (!this.functionalities.some(f => f.id === newFunc.id)) {
+                    this.functionalities.push(newFunc);
+                }
+
+                // Store in the language-specific data
+                if (!this.functionalitiesByLanguage[this.currentLanguage]) {
+                    this.functionalitiesByLanguage[this.currentLanguage] = [];
+                }
+                if (!this.functionalitiesByLanguage[this.currentLanguage].some(f => f.id === newFunc.id)) {
+                    this.functionalitiesByLanguage[this.currentLanguage].push(newFunc);
+                }
+
+                // Store the fetched functionality in dbFunctionalities array
+                const existingIndex = this.dbFunctionalities.findIndex(f =>
+                    f.functionality_id === dbFunc.functionality_id &&
+                    f.language === dbFunc.language
+                );
+                if (existingIndex !== -1) {
+                    this.dbFunctionalities[existingIndex] = dbFunc;
+                } else {
+                    this.dbFunctionalities.push(dbFunc);
+                }
+
+                // Update form fields
+                const form = this.modal.querySelector('#editFunctionalityForm');
+                form.querySelector('#editId').value = newFunc.id;
+                form.querySelector('#editText').value = newFunc.text;
+                form.querySelector('#editValue').value = newFunc.value;
+
+                // Update the table to show the new functionality
+                this.updateTable();
+
+                // Highlight the selected row
+                const rows = this.modal.querySelectorAll('tbody tr');
+                rows.forEach(row => row.classList.remove('editing'));
+                const selectedRow = this.modal.querySelector(`tr input[data-id="${id}"]`)?.closest('tr');
+                if (selectedRow) selectedRow.classList.add('editing');
+
+                // Show edit feedback
+                this.showSuccess('Editing conversation starter');
+
+                // Add event listeners for form changes
+                this.attachFormListeners(form);
+
+            } catch (error) {
+                console.error('Error fetching functionality:', error);
+                this.showError(error.message || 'Error loading functionality data');
+            }
             return;
         }
 
@@ -422,6 +541,52 @@ class FunctionalityModal {
         }
     }
 
+    attachFormListeners(form) {
+        const editText = form.querySelector('#editText');
+        const editValue = form.querySelector('#editValue');
+
+        const updateHandler = () => {
+            const updatedFunc = {
+                id: parseInt(form.querySelector('#editId').value),
+                text: editText.value,
+                value: editValue.value
+            };
+
+            // Update the functionality in the current language array
+            const index = this.functionalities.findIndex(f => f.id.toString() === updatedFunc.id.toString());
+            if (index !== -1) {
+                this.functionalities[index] = updatedFunc;
+
+                // Update the table
+                this.updateTable();
+
+                // Store in the language-specific data
+                this.functionalitiesByLanguage[this.currentLanguage] = this.functionalities;
+
+                // Update in dbFunctionalities
+                const dbIndex = this.dbFunctionalities.findIndex(f =>
+                    f.functionality_id === updatedFunc.id &&
+                    f.language === this.currentLanguage
+                );
+                if (dbIndex !== -1) {
+                    this.dbFunctionalities[dbIndex] = {
+                        ...this.dbFunctionalities[dbIndex],
+                        functionality_text: updatedFunc.text,
+                        functionality_value: updatedFunc.value
+                    };
+                }
+            }
+        };
+
+        // Remove existing event listeners to prevent duplicates
+        editText.removeEventListener('input', updateHandler);
+        editValue.removeEventListener('input', updateHandler);
+
+        // Add new event listeners
+        editText.addEventListener('input', updateHandler);
+        editValue.addEventListener('input', updateHandler);
+    }
+
     updatePreview(func) {
         const previewContent = this.modal.querySelector('.preview-content');
         previewContent.innerHTML = `
@@ -516,11 +681,11 @@ class FunctionalityModal {
             const configUpdates = {
                 languages: {
                     [this.currentLanguage]: {
-                        functionalities: [{
-                            functionality_id: updatedFunc.id,
-                            functionality_text: updatedFunc.text,
-                            functionality_value: updatedFunc.value
-                        }]
+                        functionalities: this.functionalities.map(func => ({
+                            functionality_id: func.id,
+                            functionality_text: func.text,
+                            functionality_value: func.value
+                        }))
                     }
                 }
             };
@@ -602,11 +767,22 @@ class FunctionalityModal {
 
     switchLanguage(newLanguage) {
         // Save current functionalities before switching
-        this.functionalitiesByLanguage[this.currentLanguage] = [...this.functionalities];
+        if (Array.isArray(this.functionalities)) {
+            this.functionalitiesByLanguage[this.currentLanguage] = [...this.functionalities];
+        } else {
+            this.functionalitiesByLanguage[this.currentLanguage] = [];
+        }
 
         // Switch to new language
         this.currentLanguage = newLanguage;
-        this.functionalities = [...(this.functionalitiesByLanguage[newLanguage] || [])];
+
+        // Ensure we have an array for the new language
+        if (!this.functionalitiesByLanguage[newLanguage]) {
+            this.functionalitiesByLanguage[newLanguage] = [];
+        }
+
+        // Set functionalities for new language
+        this.functionalities = [...this.functionalitiesByLanguage[newLanguage]];
 
         // Clear selection
         this.selectedItems.clear();
@@ -624,7 +800,7 @@ class FunctionalityModal {
             'de': 'Deutsch',
             'it': 'Italiano',
             'pt': 'Português',
-            'ar': 'العربية',
+            'ar': 'ال��ربية',
             'zh': '中文',
             'ja': '日本',
             'ko': '한국어',

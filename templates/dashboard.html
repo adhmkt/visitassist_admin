@@ -29,6 +29,9 @@
                     <a href="/assistant-directory"><i class="fas fa-th-large"></i> Assistant Directory</a>
                 </li>
                 <li>
+                    <a href="/events"><i class="fas fa-calendar"></i> Events</a>
+                </li>
+                <li>
                     <a href="#"><i class="fas fa-users"></i> Users</a>
                 </li>
                 <li>
@@ -41,7 +44,7 @@
         </nav>
 
         <!-- Main Content Area -->
-        <main class="main-content">
+        <div class="main-content">
             <header class="top-bar">
                 <div class="search-bar">
                     <i class="fas fa-search"></i>
@@ -83,13 +86,19 @@
                         <i class="fas fa-plus-circle"></i>
                         <h3>Create Assistant</h3>
                         <p>Create a new chatbot assistant</p>
-                        <button class="action-button">Create New</button>
+                        <a href="/edit-agent" class="action-button">Create New</a>
                     </div>
                     <div class="action-card">
                         <i class="fas fa-edit"></i>
                         <h3>Edit Assistant</h3>
                         <p>Modify existing assistants</p>
-                        <button class="action-button" id="editAgentBtn">Edit</button>
+                        <a href="/edit-agent" class="action-button">Edit</a>
+                    </div>
+                    <div class="action-card">
+                        <i class="fas fa-calendar-plus"></i>
+                        <h3>Manage Events</h3>
+                        <p>Create and edit events</p>
+                        <a href="/events" class="action-button">Manage</a>
                     </div>
                     <div class="action-card">
                         <i class="fas fa-user"></i>
@@ -99,7 +108,7 @@
                     </div>
                 </div>
             </div>
-        </main>
+        </div>
     </div>
 
     <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>

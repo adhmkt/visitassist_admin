@@ -1,0 +1,40 @@
+<!-- Sidebar -->
+<div class="sidebar">
+    <div class="sidebar-header">
+        <i class="fas fa-robot logo-icon"></i>
+        <h3>Admin Panel</h3>
+    </div>
+
+    <ul class="nav-links">
+        <li class="{{ 'active' if request.endpoint == 'dashboard' }}">
+            <a href="{{ url_for('dashboard') }}">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="{{ 'active' if request.endpoint == 'edit_agent' }}">
+            <a href="{{ url_for('edit_agent') }}">
+                <i class="fas fa-robot"></i>
+                <span>Edit Assistant</span>
+            </a>
+        </li>
+        <li class="{{ 'active' if request.endpoint == 'assistant_directory' }}">
+            <a href="{{ url_for('assistant_directory') }}">
+                <i class="fas fa-th-large"></i>
+                <span>Assistant Directory</span>
+            </a>
+        </li>
+        <li class="{{ 'active' if request.endpoint == 'events_page' }}">
+            <a href="{{ url_for('events_page') }}">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Events</span>
+            </a>
+        </li>
+        <li class="logout">
+            <a href="{{ url_for('logout') }}">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </li>
+    </ul>
+</div>

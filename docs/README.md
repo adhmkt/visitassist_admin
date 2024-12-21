@@ -21,6 +21,15 @@ This documentation provides comprehensive guidelines for the Chatbot Admin inter
 - Accessibility features
 - Responsive behavior
 
+### 3. Functionality Modal (`functionality_modal.md`)
+- Component overview
+- Integration guide
+- Language management
+- Functionality editing
+- API endpoints
+- Troubleshooting guide
+- Best practices
+
 ## Using This Documentation
 
 ### For Developers
@@ -28,6 +37,7 @@ This documentation provides comprehensive guidelines for the Chatbot Admin inter
 2. Use the component documentation as a reference for structure and behavior
 3. Implement accessibility features as specified
 4. Follow responsive design guidelines for different screen sizes
+5. Reference the Functionality Modal documentation for assistant management
 
 ### For Designers
 1. Reference the color palette and typography for new designs

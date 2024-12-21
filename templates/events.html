@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+
+{% block title %}Events Management{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/events.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <h1>Events Management</h1>
+        <div class="header-actions">
+            <button id="createEventBtn" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                <span>Create Event</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-body">
+        <!-- Search and Filter Section -->
+        <div class="search-section">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchEvents" placeholder="Search events..." aria-label="Search events">
+            </div>
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="dateRange">Date Range</label>
+                    <div class="date-range">
+                        <input type="date" id="startDate" class="form-control" aria-label="Start date">
+                        <span class="date-separator">to</span>
+                        <input type="date" id="endDate" class="form-control" aria-label="End date">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label for="venueFilter">Venue</label>
+                    <select id="venueFilter" class="form-control">
+                        <option value="">All Venues</option>
+                        {% for venue in venues %}
+                        <option value="{{ venue.venue_id }}">{{ venue.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="organizerFilter">Organizer</label>
+                    <select id="organizerFilter" class="form-control">
+                        <option value="">All Organizers</option>
+                        {% for organizer in organizers %}
+                        <option value="{{ organizer.organizer_id }}">{{ organizer.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events Table -->
+        <div class="card table-container">
+            <div class="card-body">
+                <table id="eventsTable" class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Venue</th>
+                            <th>Organizer</th>
+                            <th>Price</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Events will be dynamically inserted here -->
+                    </tbody>
+                </table>
+                <div id="loadingMessage" class="loading-message">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>Loading events...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event Modal -->
+<div id="eventModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modalTitle">Create Event</h2>
+            <button class="close-btn" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="datetime-local" id="startDate" name="start_date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="datetime-local" id="endDate" name="end_date" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="venue">Venue</label>
+                        <select id="venue" name="venue_id" class="form-control" required>
+                            <option value="">Select Venue</option>
+                            {% for venue in venues %}
+                            <option value="{{ venue.venue_id }}">{{ venue.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="organizer">Organizer</label>
+                        <select id="organizer" name="organizer_id" class="form-control" required>
+                            <option value="">Select Organizer</option>
+                            {% for organizer in organizers %}
+                            <option value="{{ organizer.organizer_id }}">{{ organizer.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ticketPrice">Ticket Price</label>
+                        <input type="number" id="ticketPrice" name="ticket_price" class="form-control" step="0.01"
+                            min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="imageUrl">Image URL</label>
+                        <input type="url" id="imageUrl" name="image_url" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tags">Tags</label>
+                    <select id="tags" name="tags" class="form-control" multiple>
+                        {% for tag in tags %}
+                        <option value="{{ tag.tag_id }}">{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="help-text">Hold Ctrl/Cmd to select multiple tags</span>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+            <button type="button" class="btn btn-primary" id="saveBtn">Save</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/events.js') }}"></script>
+{% endblock %}

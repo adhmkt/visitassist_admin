@@ -290,7 +290,15 @@ def update_functionalities():
             if 'languages' in config_updates:
                 if 'languages' not in merged_config:
                     merged_config['languages'] = {}
-                merged_config['languages'].update(config_updates['languages'])
+                
+                # Merge language-specific data
+                for lang_code, lang_data in config_updates['languages'].items():
+                    if lang_code not in merged_config['languages']:
+                        merged_config['languages'][lang_code] = {}
+                    
+                    # Merge functionalities
+                    if 'functionalities' in lang_data:
+                        merged_config['languages'][lang_code]['functionalities'] = lang_data['functionalities']
 
             # Update assistant configuration
             result = db.supabase.table('assistants')\
@@ -361,6 +369,105 @@ def update_functionalities():
         error_msg = str(e)
         print(f"Error in update_functionalities: {error_msg}")
         return jsonify({'success': False, 'error': error_msg}), 500
+
+@app.route('/events')
+def events_page():
+    venues = db.get_all_venues()
+    organizers = db.get_all_organizers()
+    tags = db.get_all_tags()
+    return render_template('events.html', venues=venues, organizers=organizers, tags=tags)
+
+@app.route('/api/events', methods=['GET'])
+def get_events():
+    """Get all events"""
+    try:
+        db = DatabaseOperations()
+        events = db.get_events()
+        return jsonify(events)
+    except Exception as e:
+        print(f"Error getting events: {str(e)}")
+        return jsonify({"error": "Failed to get events"}), 500
+
+@app.route('/api/events/search')
+def search_events():
+    try:
+        # Get search parameters from query string
+        filters = {
+            'search': request.args.get('search'),
+            'start_date': request.args.get('start_date'),
+            'end_date': request.args.get('end_date'),
+            'venue_id': request.args.get('venue_id'),
+            'organizer_id': request.args.get('organizer_id')
+        }
+        
+        # Remove None values
+        filters = {k: v for k, v in filters.items() if v is not None}
+        
+        # Convert IDs to integers if present
+        if 'venue_id' in filters:
+            filters['venue_id'] = int(filters['venue_id'])
+        if 'organizer_id' in filters:
+            filters['organizer_id'] = int(filters['organizer_id'])
+        
+        events = db.get_events(filters)
+        return jsonify(events)
+    except Exception as e:
+        print(f"Error searching events: {str(e)}")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/events/<int:event_id>')
+def get_event(event_id):
+    """Get a specific event by ID"""
+    try:
+        db = DatabaseOperations()
+        event = db.get_event(event_id)
+        if event:
+            return jsonify(event)
+        return jsonify({"error": "Event not found"}), 404
+    except Exception as e:
+        print(f"Error getting event: {str(e)}")
+        return jsonify({"error": "Failed to get event"}), 500
+
+@app.route('/api/events', methods=['POST'])
+def create_event():
+    try:
+        event_data = request.get_json()
+        event_id = db.create_event(event_data)
+        return jsonify({'message': 'Event created successfully', 'event_id': event_id}), 201
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+@app.route('/api/events/<int:event_id>', methods=['PUT'])
+def update_event(event_id):
+    try:
+        event_data = request.get_json()
+        db.update_event(event_id, event_data)
+        return jsonify({'message': 'Event updated successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+@app.route('/api/events/<int:event_id>', methods=['DELETE'])
+def delete_event(event_id):
+    try:
+        db.delete_event(event_id)
+        return jsonify({'message': 'Event deleted successfully'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 400
+
+@app.route('/api/venues', methods=['GET'])
+def get_venues():
+    venues = db.get_all_venues()
+    return jsonify(venues)
+
+@app.route('/api/organizers', methods=['GET'])
+def get_organizers():
+    organizers = db.get_all_organizers()
+    return jsonify(organizers)
+
+@app.route('/api/tags', methods=['GET'])
+def get_tags():
+    tags = db.get_all_tags()
+    return jsonify(tags)
 
 if __name__ == '__main__':
     app.run(debug=True)

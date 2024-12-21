@@ -271,6 +271,480 @@ class DatabaseOperations:
             print(f"Error creating user: {e}")
             raise
 
+    # Event Operations
+    def create_event(self, event_data: Dict) -> Dict:
+        """
+        Create a new event
+        
+        Args:
+            event_data (dict): Event data containing required fields
+            
+        Returns:
+            dict: Created event data
+        """
+        try:
+            result = self.supabase.table('ev_events').insert(event_data).execute()
+            return result.data[0] if result.data else None
+        except Exception as e:
+            print(f"Error creating event: {e}")
+            raise
+
+    def get_event(self, event_id: int) -> Optional[Dict]:
+        """
+        Get event by ID with venue and organizer details
+        
+        Args:
+            event_id (int): Event ID
+            
+        Returns:
+            dict: Event data if found, None otherwise
+        """
+        try:
+            result = self.supabase.table('ev_events')\
+                .select(
+                    "*, ev_venues(*), ev_organizers(*), eventtags(tag_id)"
+                )\
+                .eq('event_id', event_id)\
+                .execute()
+            
+            if result.data:
+                event = result.data[0]
+                # Get tags for the event
+                tag_ids = [t['tag_id'] for t in event.get('eventtags', [])]
+                if tag_ids:
+                    tags = self.supabase.table('ev_tags')\
+                        .select('*')\
+                        .in_('tag_id', tag_ids)\
+                        .execute()
+                    event['tags'] = tags.data
+                return event
+            return None
+        except Exception as e:
+            print(f"Error getting event: {e}")
+            raise
+
+    def update_event(self, event_id: int, event_data: Dict) -> Optional[Dict]:
+        """
+        Update event data
+        
+        Args:
+            event_id (int): Event ID
+            event_data (dict): Updated event data
+            
+        Returns:
+            dict: Updated event data
+        """
+        try:
+            result = self.supabase.table('ev_events')\
+                .update(event_data)\
+                .eq('event_id', event_id)\
+                .execute()
+            return result.data[0] if result.data else None
+        except Exception as e:
+            print(f"Error updating event: {e}")
+            raise
+
+    def delete_event(self, event_id: int) -> bool:
+        """
+        Delete event by ID
+        
+        Args:
+            event_id (int): Event ID
+            
+        Returns:
+            bool: True if deleted successfully
+        """
+        try:
+            result = self.supabase.table('ev_events')\
+                .delete()\
+                .eq('event_id', event_id)\
+                .execute()
+            return bool(result.data)
+        except Exception as e:
+            print(f"Error deleting event: {e}")
+            raise
+
+    def get_events(self, filters: Dict = None) -> List[Dict]:
+        """
+        Get events with optional filters
+        
+        Args:
+            filters (dict): Optional filters for events
+            
+        Returns:
+            list: List of events
+        """
+        try:
+            query = self.supabase.table('ev_events')\
+                .select("*, ev_venues(name), ev_organizers(name)")
+            
+            if filters:
+                if filters.get('search'):
+                    query = query.ilike('title', f"%{filters['search']}%")
+                if filters.get('start_date'):
+                    query = query.gte('start_date', filters['start_date'])
+                if filters.get('end_date'):
+                    query = query.lte('end_date', filters['end_date'])
+                if filters.get('venue_id'):
+                    query = query.eq('venue_id', filters['venue_id'])
+                if filters.get('organizer_id'):
+                    query = query.eq('organizer_id', filters['organizer_id'])
+            
+            result = query.execute()
+            return result.data if result.data else []
+        except Exception as e:
+            print(f"Error getting events: {e}")
+            raise
+
+    # Venue Operations
+    def create_venue(self, venue_data: Dict) -> Dict:
+        """Create a new venue"""
+        try:
+            result = self.supabase.table('ev_venues').insert(venue_data).execute()
+            return result.data[0] if result.data else None
+        except Exception as e:
+            print(f"Error creating venue: {e}")
+            raise
+
+    def get_venue(self, venue_id: int) -> Optional[Dict]:
+        """Get venue by ID"""
+        try:
+            result = self.supabase.table('ev_venues')\
+                .select("*")\
+                .eq('venue_id', venue_id)\
+                .execute()
+            return result.data[0] if result.data else None
+        except Exception as e:
+            print(f"Error getting venue: {e}")
+            raise
+
+    def get_venues(self) -> List[Dict]:
+        """Get all venues"""
+        try:
+            result = self.supabase.table('ev_venues').select("*").execute()
+            return result.data if result.data else []
+        except Exception as e:
+            print(f"Error getting venues: {e}")
+            raise
+
+    # Organizer Operations
+    def create_organizer(self, organizer_data: Dict) -> Dict:
+        """Create a new organizer"""
+        try:
+            result = self.supabase.table('ev_organizers').insert(organizer_data).execute()
+            return result.data[0] if result.data else None
+        except Exception as e:
+            print(f"Error creating organizer: {e}")
+            raise
+
+    def get_organizer(self, organizer_id: int) -> Optional[Dict]:
+        """Get organizer by ID"""
+        try:
+            result = self.supabase.table('ev_organizers')\
+                .select("*")\
+                .eq('organizer_id', organizer_id)\
+                .execute()
+            return result.data[0] if result.data else None
+        except Exception as e:
+            print(f"Error getting organizer: {e}")
+            raise
+
+    def get_organizers(self) -> List[Dict]:
+        """Get all organizers"""
+        try:
+            result = self.supabase.table('ev_organizers').select("*").execute()
+            return result.data if result.data else []
+        except Exception as e:
+            print(f"Error getting organizers: {e}")
+            raise
+
+    # Tag Operations
+    def create_tag(self, tag_data: Dict) -> Dict:
+        """Create a new tag"""
+        try:
+            result = self.supabase.table('ev_tags').insert(tag_data).execute()
+            return result.data[0] if result.data else None
+        except Exception as e:
+            print(f"Error creating tag: {e}")
+            raise
+
+    def get_tags(self) -> List[Dict]:
+        """Get all tags"""
+        try:
+            result = self.supabase.table('ev_tags').select("*").execute()
+            return result.data if result.data else []
+        except Exception as e:
+            print(f"Error getting tags: {e}")
+            raise
+
+    def add_tags_to_event(self, event_id: int, tag_ids: List[int]) -> bool:
+        """Add tags to an event"""
+        try:
+            tag_data = [{'event_id': event_id, 'tag_id': tag_id} for tag_id in tag_ids]
+            result = self.supabase.table('eventtags').insert(tag_data).execute()
+            return bool(result.data)
+        except Exception as e:
+            print(f"Error adding tags to event: {e}")
+            raise
+
+    def remove_tags_from_event(self, event_id: int, tag_ids: List[int]) -> bool:
+        """Remove tags from an event"""
+        try:
+            result = self.supabase.table('eventtags')\
+                .delete()\
+                .eq('event_id', event_id)\
+                .in_('tag_id', tag_ids)\
+                .execute()
+            return bool(result.data)
+        except Exception as e:
+            print(f"Error removing tags from event: {e}")
+            raise
+
+    def get_event_tags(self, event_id: int) -> List[Dict]:
+        """Get all tags for an event"""
+        try:
+            result = self.supabase.table('eventtags')\
+                .select("ev_tags(*)")\
+                .eq('event_id', event_id)\
+                .execute()
+            return [item['ev_tags'] for item in result.data] if result.data else []
+        except Exception as e:
+            print(f"Error getting event tags: {e}")
+            raise
+
+    # Venue Methods
+    def get_all_venues(self):
+        """Get all venues."""
+        try:
+            response = self.supabase.table('ev_venues') \
+                .select('*') \
+                .execute()
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error getting venues: {str(e)}")
+            return []
+
+    def get_venue(self, venue_id):
+        """Get a specific venue by ID."""
+        try:
+            response = self.supabase.table('ev_venues') \
+                .select('*') \
+                .eq('venue_id', venue_id) \
+                .single() \
+                .execute()
+            return response.data
+        except Exception as e:
+            print(f"Error getting venue {venue_id}: {str(e)}")
+            return None
+
+    # Organizer Methods
+    def get_all_organizers(self):
+        """Get all organizers."""
+        try:
+            response = self.supabase.table('ev_organizers') \
+                .select('*') \
+                .execute()
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error getting organizers: {str(e)}")
+            return []
+
+    def get_organizer(self, organizer_id):
+        """Get a specific organizer by ID."""
+        try:
+            response = self.supabase.table('ev_organizers') \
+                .select('*') \
+                .eq('organizer_id', organizer_id) \
+                .single() \
+                .execute()
+            return response.data
+        except Exception as e:
+            print(f"Error getting organizer {organizer_id}: {str(e)}")
+            return None
+
+    # Tag Methods
+    def get_all_tags(self):
+        """Get all tags."""
+        try:
+            response = self.supabase.table('ev_tags') \
+                .select('*') \
+                .execute()
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error getting tags: {str(e)}")
+            return []
+
+    def get_tag(self, tag_id):
+        """Get a specific tag by ID."""
+        try:
+            response = self.supabase.table('tags') \
+                .select('*') \
+                .eq('tag_id', tag_id) \
+                .single() \
+                .execute()
+            return response.data
+        except Exception as e:
+            print(f"Error getting tag {tag_id}: {str(e)}")
+            return None
+
+    # Event Methods
+    def get_all_events(self):
+        """Get all events with their venue and organizer information."""
+        try:
+            response = self.supabase.table('events') \
+                .select('*, venues(name), organizers(name), event_tags(tag_id)') \
+                .execute()
+            events = response.data
+            
+            # Format the response
+            for event in events:
+                event['venue_name'] = event['venues']['name']
+                event['organizer_name'] = event['organizers']['name']
+                event['tags'] = [tag['tag_id'] for tag in event['event_tags']]
+                del event['venues']
+                del event['organizers']
+                del event['event_tags']
+            
+            return events
+        except Exception as e:
+            print(f"Error getting events: {str(e)}")
+            return []
+
+    def search_events(self, search_term='', start_date=None, end_date=None, venue_id=None, organizer_id=None):
+        """Search events based on various criteria."""
+        try:
+            query = self.supabase.table('events') \
+                .select('*, venues(name), organizers(name), event_tags(tag_id)')
+            
+            if search_term:
+                query = query.ilike('title', f'%{search_term}%')
+            
+            if start_date:
+                query = query.gte('start_date', start_date)
+            
+            if end_date:
+                query = query.lte('end_date', end_date)
+            
+            if venue_id:
+                query = query.eq('venue_id', venue_id)
+            
+            if organizer_id:
+                query = query.eq('organizer_id', organizer_id)
+            
+            response = query.execute()
+            events = response.data
+            
+            # Format the response
+            for event in events:
+                event['venue_name'] = event['venues']['name']
+                event['organizer_name'] = event['organizers']['name']
+                event['tags'] = [tag['tag_id'] for tag in event['event_tags']]
+                del event['venues']
+                del event['organizers']
+                del event['event_tags']
+            
+            return events
+        except Exception as e:
+            print(f"Error searching events: {str(e)}")
+            return []
+
+    def get_event_by_id(self, event_id):
+        """Get a single event by its ID."""
+        try:
+            response = self.supabase.table('events') \
+                .select('*, venues(name), organizers(name), event_tags(tag_id)') \
+                .eq('event_id', event_id) \
+                .single() \
+                .execute()
+            
+            event = response.data
+            if event:
+                event['venue_name'] = event['venues']['name']
+                event['organizer_name'] = event['organizers']['name']
+                event['tags'] = [tag['tag_id'] for tag in event['event_tags']]
+                del event['venues']
+                del event['organizers']
+                del event['event_tags']
+            
+            return event
+        except Exception as e:
+            print(f"Error getting event {event_id}: {str(e)}")
+            return None
+
+    def create_event(self, event_data):
+        """Create a new event."""
+        try:
+            # Extract tags before creating event
+            tags = event_data.pop('tags', [])
+            
+            # Create event
+            response = self.supabase.table('events') \
+                .insert(event_data) \
+                .execute()
+            
+            event = response.data[0]
+            event_id = event['event_id']
+            
+            # Add tags
+            if tags:
+                tag_data = [{'event_id': event_id, 'tag_id': tag_id} for tag_id in tags]
+                self.supabase.table('event_tags').insert(tag_data).execute()
+            
+            return event_id
+        except Exception as e:
+            print(f"Error creating event: {str(e)}")
+            raise
+
+    def update_event(self, event_id, event_data):
+        """Update an existing event."""
+        try:
+            # Extract tags before updating event
+            tags = event_data.pop('tags', [])
+            
+            # Update event
+            response = self.supabase.table('events') \
+                .update(event_data) \
+                .eq('event_id', event_id) \
+                .execute()
+            
+            # Update tags
+            if tags is not None:
+                # Delete existing tags
+                self.supabase.table('event_tags') \
+                    .delete() \
+                    .eq('event_id', event_id) \
+                    .execute()
+                
+                # Add new tags
+                if tags:
+                    tag_data = [{'event_id': event_id, 'tag_id': tag_id} for tag_id in tags]
+                    self.supabase.table('event_tags').insert(tag_data).execute()
+            
+            return True
+        except Exception as e:
+            print(f"Error updating event {event_id}: {str(e)}")
+            raise
+
+    def delete_event(self, event_id):
+        """Delete an event and its associated tags."""
+        try:
+            # Delete associated tags first
+            self.supabase.table('event_tags') \
+                .delete() \
+                .eq('event_id', event_id) \
+                .execute()
+            
+            # Delete the event
+            self.supabase.table('events') \
+                .delete() \
+                .eq('event_id', event_id) \
+                .execute()
+            
+            return True
+        except Exception as e:
+            print(f"Error deleting event {event_id}: {str(e)}")
+            raise
+
 # Example usage:
 # db = DatabaseOperations()
 # 

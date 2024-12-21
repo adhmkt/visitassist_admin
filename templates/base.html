@@ -4,29 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Admin - {% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <title>{% block title %}{% endblock %} - Admin Panel</title>
+    <!-- Base CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <!-- Extra CSS -->
     {% block extra_css %}{% endblock %}
 </head>
 
 <body>
-    <div class="layout-container">
-        <nav class="side-nav">
-            <div class="nav-header">
-                <h2>Chatbot Admin</h2>
-            </div>
-            <ul class="nav-links">
-                <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
-                <li><a href="/edit-agent" class="nav-link">Edit Assistant</a></li>
-                <li><a href="/chat-history" class="nav-link">Chat History</a></li>
-                <li><a href="/settings" class="nav-link">Settings</a></li>
-                <li><a href="/logout" class="nav-link">Logout</a></li>
-            </ul>
-        </nav>
-        <main class="main-content">
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        {% include 'sidebar.html' %}
+
+        <!-- Main Content -->
+        <div class="content-wrapper">
             {% block content %}{% endblock %}
-        </main>
+        </div>
     </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     {% block scripts %}{% endblock %}
 </body>
 
