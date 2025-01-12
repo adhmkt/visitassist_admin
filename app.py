@@ -4,6 +4,7 @@ import requests
 from dotenv import load_dotenv
 from supabase import create_client, Client
 from math import cos, pi, radians
+import base64
 
 # Load environment variables
 load_dotenv()
@@ -1080,6 +1081,46 @@ def check_place_exists(place_id):
         return jsonify({
             'success': False,
             'message': f'Error checking place: {str(e)}'
+        }), 500
+
+@app.route('/api/storage/upload', methods=['POST'])
+def upload_to_storage():
+    try:
+        data = request.json
+        filename = data.get('filename')
+        content_type = data.get('contentType')
+        base64_data = data.get('base64Data')
+
+        if not all([filename, content_type, base64_data]):
+            return jsonify({'success': False, 'message': 'Missing required fields'}), 400
+
+        # Decode base64 data
+        binary_data = base64.b64decode(base64_data)
+
+        # Upload to Supabase Storage
+        bucket_name = 'place-photos'  # Your Supabase storage bucket name
+        storage_client = supabase.storage.from_(bucket_name)
+        
+        # Upload the file
+        result = storage_client.upload(
+            path=filename,
+            file=binary_data,
+            file_options={"content-type": content_type}
+        )
+
+        # Get the public URL
+        public_url = storage_client.get_public_url(filename)
+
+        return jsonify({
+            'success': True,
+            'url': public_url
+        })
+
+    except Exception as e:
+        print('Error uploading to storage:', str(e))
+        return jsonify({
+            'success': False,
+            'message': str(e)
         }), 500
 
 if __name__ == '__main__':

@@ -446,7 +446,54 @@
         }
     });
 
-    // Add this after the showPlaceDetails function
+    // Add this function to handle photo upload
+    async function uploadPhotoToStorage(photoReference) {
+        try {
+            // First fetch the photo data from our API endpoint
+            const photoResponse = await fetch(`/api/places/photo/${photoReference}`);
+            const photoBlob = await photoResponse.blob();
+
+            // Create a unique filename using timestamp and random string
+            const timestamp = new Date().getTime();
+            const randomString = Math.random().toString(36).substring(7);
+            const filename = `place_photos/${timestamp}_${randomString}.jpg`;
+
+            // Upload to Supabase storage
+            const uploadResponse = await fetch('/api/storage/upload', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    filename: filename,
+                    contentType: 'image/jpeg',
+                    base64Data: await blobToBase64(photoBlob)
+                })
+            });
+
+            const uploadResult = await uploadResponse.json();
+            if (!uploadResult.success) {
+                throw new Error(uploadResult.message);
+            }
+
+            return uploadResult.url;
+        } catch (error) {
+            console.error('Error uploading photo:', error);
+            throw error;
+        }
+    }
+
+    // Helper function to convert Blob to base64
+    function blobToBase64(blob) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result.split(',')[1]);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    }
+
+    // Update the savePlaceToDatabase function
     async function savePlaceToDatabase() {
         try {
             console.log('Preparing to save place:', currentPlaceDetails);
@@ -465,7 +512,8 @@
                 types: currentPlaceDetails.types,
                 latitude: currentPlaceDetails.geometry.location.lat,
                 longitude: currentPlaceDetails.geometry.location.lng,
-                wheelchair_accessible: currentPlaceDetails.wheelchair_accessible
+                wheelchair_accessible: currentPlaceDetails.wheelchair_accessible,
+                url: currentPlaceDetails.url
             };
 
             console.log('Place data prepared:', placeData);
@@ -492,14 +540,26 @@
                 relative_time_description: review.relative_time_description
             })) || [];
 
-            // Prepare photos data
-            const photosData = currentPlaceDetails.photos?.map(photo => ({
-                place_id: currentPlaceDetails.place_id,
-                photo_reference: photo.photo_reference,
-                height: photo.height,
-                width: photo.width,
-                html_attributions: photo.html_attributions
-            })) || [];
+            // Modified photos handling
+            const photosData = [];
+            if (currentPlaceDetails.photos && currentPlaceDetails.photos.length > 0) {
+                for (const photo of currentPlaceDetails.photos) {
+                    try {
+                        const storageUrl = await uploadPhotoToStorage(photo.photo_reference);
+                        photosData.push({
+                            place_id: currentPlaceDetails.place_id,
+                            photo_reference: photo.photo_reference,
+                            height: photo.height,
+                            width: photo.width,
+                            html_attributions: photo.html_attributions,
+                            storage_url: storageUrl
+                        });
+                    } catch (error) {
+                        console.error('Error processing photo:', error);
+                        // Continue with other photos if one fails
+                    }
+                }
+            }
 
             // Send data to server
             const response = await fetch('/api/places/save', {
