@@ -6,42 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot Admin - Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar Navigation -->
-        <nav class="sidebar">
-            <div class="sidebar-header">
-                <i class="fas fa-robot logo-icon"></i>
-                <h2>Chatbot Admin</h2>
-            </div>
-            <ul class="nav-links">
-                <li class="active">
-                    <a href="/dashboard"><i class="fas fa-home"></i> Dashboard</a>
-                </li>
-                <li>
-                    <a href="/edit-agent"><i class="fas fa-robot"></i> Assistants</a>
-                </li>
-                <li>
-                    <a href="/assistant-directory"><i class="fas fa-th-large"></i> Assistant Directory</a>
-                </li>
-                <li>
-                    <a href="/events"><i class="fas fa-calendar"></i> Events</a>
-                </li>
-                <li>
-                    <a href="#"><i class="fas fa-users"></i> Users</a>
-                </li>
-                <li>
-                    <a href="#"><i class="fas fa-cog"></i> Settings</a>
-                </li>
-                <li class="logout">
-                    <a href="/logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
-                </li>
-            </ul>
-        </nav>
+        <!-- Include the sidebar -->
+        {% include 'sidebar.html' %}
 
         <!-- Main Content Area -->
         <div class="main-content">
@@ -93,6 +64,12 @@
                         <h3>Edit Assistant</h3>
                         <p>Modify existing assistants</p>
                         <a href="/edit-agent" class="action-button">Edit</a>
+                    </div>
+                    <div class="action-card">
+                        <i class="fas fa-lightbulb"></i>
+                        <h3>Recommendations</h3>
+                        <p>View and manage recommendations</p>
+                        <a href="/recommendations" class="action-button">View</a>
                     </div>
                     <div class="action-card">
                         <i class="fas fa-calendar-plus"></i>

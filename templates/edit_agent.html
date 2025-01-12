@@ -8,15 +8,24 @@
 {% endblock %}
 
 {% block content %}
+<!-- Debug Info -->
+{% if selected_agent %}
+<div style="display: none;">
+    <pre id="debug-info">
+        Selected Agent: {{ selected_agent | tojson }}
+    </pre>
+</div>
+{% endif %}
+
 <div class="content-wrapper">
     <!-- Content Header -->
     <div class="content-header">
         <h1>Manage Assistants</h1>
         <div class="header-actions">
-            <button class="btn btn-primary" id="newAgentBtn">
+            <a href="{{ url_for('add_assistant') }}" class="btn btn-primary">
                 <i class="fas fa-plus"></i>
                 <span>New Assistant</span>
-            </button>
+            </a>
         </div>
     </div>
 
@@ -34,7 +43,7 @@
                 <select id="agent-select" class="form-control">
                     <option value="">Choose an assistant...</option>
                     {% for agent in agents %}
-                    <option value="{{ agent.id }}">{{ agent.name }}</option>
+                    <option value="{{ agent.assistant_id }}">{{ agent.assistant_name }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -49,10 +58,13 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="assistant_id">Assistant ID</label>
-                        <input type="text" id="assistant_id" name="assistant_id" class="form-control" readonly>
+                        <input type="text" id="assistant_id" name="assistant_id" class="form-control" readonly
+                            value="{{ selected_agent.assistant_id if selected_agent else '' }}">
                         <span class="help-text">Unique identifier for the assistant (not editable)</span>
                         <div class="assistant-link">
-                            <a href="#" id="assistantWebsiteLink" target="_blank" class="btn btn-secondary">
+                            <a href="#" id="assistantWebsiteLink" target="_blank"
+                                class="btn btn-secondary {{ 'd-inline-flex' if selected_agent else 'd-none' }}">
+
                                 <i class="fas fa-external-link-alt"></i>
                                 <span>Open Assistant Website</span>
                             </a>
@@ -62,25 +74,29 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="name">Assistant Name</label>
-                            <input type="text" id="name" name="name" class="form-control" required>
+                            <input type="text" id="name" name="name" class="form-control" required
+                                value="{{ selected_agent.assistant_name if selected_agent else '' }}">
                             <span class="help-text">Display name of the assistant</span>
                         </div>
                         <div class="form-group">
                             <label for="type">Assistant Type</label>
-                            <input type="text" id="type" name="type" class="form-control" value="classic">
+                            <input type="text" id="type" name="type" class="form-control"
+                                value="{{ selected_agent.assistant_type if selected_agent else 'classic' }}">
                             <span class="help-text">Type of assistant (defaults to 'classic')</span>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+                        <textarea id="description" name="description" class="form-control" rows="3"
+                            required>{{ selected_agent.assistant_desc if selected_agent else '' }}</textarea>
                         <span class="help-text">Brief description of the assistant's purpose</span>
                     </div>
 
                     <div class="form-group">
                         <label for="prompt">Instructions</label>
-                        <textarea id="prompt" name="prompt" class="form-control" rows="5" required></textarea>
+                        <textarea id="prompt" name="prompt" class="form-control" rows="5"
+                            required>{{ selected_agent.assistant_instructions if selected_agent else '' }}</textarea>
                         <span class="help-text">System instructions for the assistant</span>
                     </div>
                 </div>
@@ -227,9 +243,11 @@
                     <i class="fas fa-save"></i>
                     <span>Save Assistant</span>
                 </button>
-                <button type="button" class="btn btn-danger" id="deleteAgentBtn" style="display: none;">
-                    <i class="fas fa-trash"></i>
-                    <span>Delete Assistant</span>
+                <button type="button" class="btn btn-danger {{ 'd-inline-block' if selected_agent else 'd-none' }}"
+                    id="deleteAgentBtn">
+                </button>
+                <i class="fas fa-trash"></i>
+                <span>Delete Assistant</span>
                 </button>
             </div>
         </form>
@@ -245,6 +263,11 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+    // Pass selected agent data to JavaScript
+
+    console.log('Selected agent from server:', window.selectedAgent);
+</script>
 <script src="{{ url_for('static', filename='js/functionality_modal.js') }}"></script>
 <script src="{{ url_for('static', filename='js/edit_agent.js') }}"></script>
 {% endblock %}

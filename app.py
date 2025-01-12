@@ -1,473 +1,1086 @@
-from flask import Flask, render_template, redirect, url_for, session, request, jsonify
-from database.db_operations import DatabaseOperations
-import json
+from flask import Flask, render_template, redirect, url_for, session, request, jsonify, Response
+import os
+import requests
+from dotenv import load_dotenv
+from supabase import create_client, Client
+from math import cos, pi, radians
 
+# Load environment variables
+load_dotenv()
+
+# Configuration - with debug logging and fallback values
+GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
+print("\n=== API Configuration Debug ===")
+print(f"GOOGLE_MAPS_API_KEY present: {'Yes' if GOOGLE_MAPS_API_KEY else 'No'}")
+if not GOOGLE_MAPS_API_KEY:
+    raise ValueError("GOOGLE_MAPS_API_KEY not found in environment variables")
+
+# Initialize Flask app
 app = Flask(__name__)
-app.secret_key = 'your-secret-key'  # Change this to a secure secret key in production
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'your-secret-key')
+
+# Make GOOGLE_MAPS_API_KEY available to templates
+@app.context_processor
+def inject_google_maps_key():
+    return dict(GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY)
+
+# Configuration
+SUPABASE_URL = os.getenv('SUPABASE_URL')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY')
+
+# Initialize Supabase client
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# Database operations class
+class DatabaseOperations:
+    def __init__(self):
+        self.supabase = supabase
+
+    def get_all_agents(self):
+        try:
+            response = self.supabase.table('assistants').select('*').execute()
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error fetching agents: {str(e)}")
+            return []
+
+    def get_agent(self, agent_id):
+        try:
+            response = self.supabase.table('assistants').select('*').eq('assistant_id', agent_id).execute()
+            return response.data[0] if response.data else None
+        except Exception as e:
+            print(f"Error fetching agent: {str(e)}")
+            return None
+
+    def create_agent(self, agent_data):
+        try:
+            response = self.supabase.table('assistants').insert(agent_data).execute()
+            return response.data[0] if response.data else None
+        except Exception as e:
+            print(f"Error creating agent: {str(e)}")
+            return None
+
+    def update_agent(self, agent_id, agent_data):
+        try:
+            response = self.supabase.table('assistants').update(agent_data).eq('assistant_id', agent_id).execute()
+            return response.data[0] if response.data else None
+        except Exception as e:
+            print(f"Error updating agent: {str(e)}")
+            return None
+
+    def delete_agent(self, agent_id):
+        try:
+            response = self.supabase.table('assistants').delete().eq('assistant_id', agent_id).execute()
+            return True if response.data else False
+        except Exception as e:
+            print(f"Error deleting agent: {str(e)}")
+            return False
+
+    def get_agent_chat_history(self, agent_id):
+        try:
+            response = self.supabase.table('chat_history').select('*').eq('agent_id', agent_id).execute()
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error fetching chat history: {str(e)}")
+            return []
+
+    def save_chat_history(self, chat_data):
+        try:
+            response = self.supabase.table('chat_history').insert(chat_data).execute()
+            return response.data[0] if response.data else None
+        except Exception as e:
+            print(f"Error saving chat history: {str(e)}")
+            return None
+
+    def get_all_venues(self):
+        try:
+            response = self.supabase.table('venues').select('*').execute()
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error fetching venues: {str(e)}")
+            return []
+
+    def get_all_organizers(self):
+        try:
+            response = self.supabase.table('organizers').select('*').execute()
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error fetching organizers: {str(e)}")
+            return []
+
+    def get_all_tags(self):
+        try:
+            response = self.supabase.table('tags').select('*').execute()
+            return response.data if response.data else []
+        except Exception as e:
+            print(f"Error fetching tags: {str(e)}")
+            return []
 
 # Initialize database operations
 db = DatabaseOperations()
 
+def process_photos(photos):
+    """Helper function to process photo data from Google Places API"""
+    if not photos:
+        return []
+    
+    processed_photos = []
+    for photo in photos:
+        processed_photos.append({
+            'photo_reference': photo.get('photo_reference'),
+            'height': photo.get('height'),
+            'width': photo.get('width'),
+            'html_attributions': photo.get('html_attributions', [])
+        })
+    return processed_photos
+
 @app.route('/')
 def index():
-    return redirect(url_for('login'))
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    return redirect(url_for('dashboard'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        data = request.get_json()
-        email = data.get('email')
-        password = data.get('password')
-        
-        print(f"Login attempt for email: {email}")  # Debug log
-        
         try:
-            # Query the tour_user table
-            result = db.supabase.table('tour_user')\
-                .select('*')\
-                .eq('email', email)\
-                .execute()
-            
-            print(f"Query result: {result.data}")  # Debug log
-            
-            # First find user by email
-            user = result.data[0] if result.data else None
-            
-            if user and user['password'] == password and user['status'] == 'active':
-                # Store user info in session
+            email = request.form.get('email')
+            password = request.form.get('password')
+
+            # Hardcoded credentials
+            if email == "fernando@apis-ia.com" and password == "Naopassara0":
                 session['user'] = {
-                    'id': user['id'],
-                    'email': user['email'],
-                    'first_name': user['first_name'],
-                    'last_name': user['last_name'],
-                    'role': user['role']
+                    'id': '1',
+                    'email': 'fernando@apis-ia.com',
+                    'first_name': 'Fernando',
+                    'last_name': 'Admin',
+                    'role': 'admin'
                 }
-                print(f"Login successful for user: {user['email']}")  # Debug log
-                return jsonify({'success': True, 'redirect': url_for('dashboard')})
-            
-            print("Login failed: Invalid credentials")  # Debug log
-            return jsonify({'success': False, 'message': 'Invalid credentials'})
+                return redirect(url_for('dashboard'))
+            else:
+                return render_template('login.html', error="Invalid email or password")
+                
         except Exception as e:
-            print(f"Login error: {str(e)}")  # Debug log
-            return jsonify({'success': False, 'message': str(e)})
+            print(f"Login error: {str(e)}")
+            return render_template('login.html', error="An error occurred during login")
     
     return render_template('login.html')
 
 @app.route('/dashboard')
 def dashboard():
-    # Check if user is logged in
     if 'user' not in session:
         return redirect(url_for('login'))
-        
+    return render_template('dashboard.html', user=session['user'])
+
+@app.route('/recommendations')
+def recommendations():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    return render_template('recommendations.html', user=session['user'])
+
+@app.route('/new-recommendation', methods=['GET', 'POST'])
+def new_recommendation():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    
     try:
-        # Get user info from session
-        user = session['user']
-        
-        return render_template('dashboard.html',
-                             user=user,
-                             active_agents=0,  # Placeholder until agents table is created
-                             active_users=1)   # Placeholder until we implement user counting
+        if request.method == 'POST':
+            data = request.get_json()
+            print("Received POST data:", data)
+            return jsonify({
+                'success': True,
+                'message': 'Form submitted successfully'
+            })
+        else:
+            # GET request - render the template
+            return render_template(
+                'new_recommendation.html',
+                user=session['user'],
+                google_maps_key=GOOGLE_MAPS_API_KEY
+            )
+            
     except Exception as e:
-        print(f"Dashboard error: {str(e)}")
-        return redirect(url_for('login'))
+        print(f"Error in new_recommendation: {str(e)}")
+        if request.method == 'POST':
+            return jsonify({
+                'success': False,
+                'message': f'Error: {str(e)}'
+            }), 500
+        else:
+            # For GET requests, redirect to recommendations page on error
+            return redirect(url_for('recommendations'))
 
-@app.route('/edit-agent', methods=['GET', 'POST'])
+@app.route('/edit-agent')
 def edit_agent():
-    # Check if user is logged in
     if 'user' not in session:
         return redirect(url_for('login'))
+    
+    try:
+        # Fetch all agents from Supabase
+        response = supabase.table("assistants").select("*").execute()
+        agents = response.data if response.data else []
 
-    if request.method == 'POST':
+        # Get selected agent if provided in query params
+        selected_agent_id = request.args.get('id')
+        selected_agent = None
+        
+        if selected_agent_id:
+            agent_response = supabase.table("assistants").select("*").eq("assistant_id", selected_agent_id).execute()
+            if agent_response.data and len(agent_response.data) > 0:
+                selected_agent = agent_response.data[0]
+
+        return render_template('edit_agent.html', 
+                            user=session['user'],
+                            agents=agents,
+                            selected_agent=selected_agent)
+                            
+    except Exception as e:
+        print(f"Error in edit_agent route: {str(e)}")
+        # Return empty lists if there's an error
+        return render_template('edit_agent.html',
+                            user=session['user'],
+                            agents=[],
+                            selected_agent=None,
+                            error="Error loading agents")
+
+@app.route('/api/save-agent', methods=['POST'])
+def save_agent():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
+    try:
         data = request.get_json()
-        agent_id = data.get('assistant_id')
-        print(f"Received update request for assistant_id: {agent_id}")  # Debug log
         
         agent_data = {
+            'assistant_id': data.get('assistant_id'),
             'assistant_name': data.get('name'),
+            'assistant_type': data.get('type', 'classic'),
             'assistant_desc': data.get('description'),
             'assistant_instructions': data.get('prompt'),
-            'assistant_type': data.get('type', 'classic'),
-            'assistant_img': data.get('image'),
-            'sponsor_id': data.get('sponsor_id'),
-            'assistant_questions': data.get('questions', {}),
-            'assistant_json': data.get('config', {}),
             'assistant_functions': data.get('functions', 'not_defined'),
-            'assistant_languages': data.get('languages', {
-                "languages": [
-                    {
-                        "language_code": "en",
-                        "language_name": "English",
-                        "version": "1.0"
-                    }
-                ]
-            }),
             'subtype': data.get('subtype', 'subtype'),
+            'assistant_languages': data.get('languages'),
+            'sponsor_id': data.get('sponsor_id'),
             'sponsor_logo': data.get('sponsor_logo', 'sponsor_default.png'),
-            'sponsor_url': data.get('sponsor_url', 'https://apis-ia.com')
+            'sponsor_url': data.get('sponsor_url', 'https://apis-ia.com'),
+            'assistant_json': data.get('config')
         }
         
-        print(f"Prepared update data: {agent_data}")  # Debug log
+        if agent_data['assistant_id']:
+            # Update existing agent
+            response = supabase.table("assistants").update(agent_data).eq("assistant_id", agent_data['assistant_id']).execute()
+        else:
+            # Create new agent
+            response = supabase.table("assistants").insert(agent_data).execute()
+            
+        return jsonify({'success': True, 'message': 'Agent saved successfully', 'data': response.data})
         
-        try:
-            if agent_id:
-                print(f"Attempting to update assistant with ID: {agent_id}")  # Debug log
-                # Update existing agent
-                updated_agent = db.update_agent(agent_id, agent_data)
-                if updated_agent:
-                    print(f"Successfully updated assistant: {updated_agent}")  # Debug log
-                    return jsonify({'success': True, 'agent': updated_agent})
-                print("Update operation returned None")  # Debug log
-                return jsonify({'success': False, 'message': 'Failed to update assistant'})
-            else:
-                print("Creating new assistant")  # Debug log
-                # Create new agent
-                new_agent = db.create_agent(agent_data)
-                if new_agent:
-                    print(f"Successfully created assistant: {new_agent}")  # Debug log
-                    return jsonify({'success': True, 'agent': new_agent})
-                print("Create operation returned None")  # Debug log
-                return jsonify({'success': False, 'message': 'Failed to create assistant'})
-        except Exception as e:
-            print(f"Error saving assistant: {str(e)}")  # Debug log
-            return jsonify({'success': False, 'message': str(e)})
+    except Exception as e:
+        print(f"Error saving agent: {str(e)}")
+        return jsonify({'success': False, 'message': str(e)}), 500
+
+@app.route('/api/delete-agent', methods=['POST'])
+def delete_agent():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
     
     try:
-        # Get all agents for the dropdown
-        agents = db.get_all_agents()
+        data = request.get_json()
+        assistant_id = data.get('assistant_id')
+        
+        if not assistant_id:
+            return jsonify({'success': False, 'message': 'No assistant ID provided'}), 400
+            
+        response = supabase.table("assistants").delete().eq("assistant_id", assistant_id).execute()
+        return jsonify({'success': True, 'message': 'Agent deleted successfully'})
+        
     except Exception as e:
-        print(f"Warning: Could not fetch assistants: {e}")
-        agents = []  # Use empty list if no agents exist yet
-    
-    # Always render the template, even if there are no agents
-    return render_template('edit_agent.html', 
-                         agents=agents,
-                         user=session['user'])
+        print(f"Error deleting agent: {str(e)}")
+        return jsonify({'success': False, 'message': str(e)}), 500
 
-@app.route('/agent/<agent_id>', methods=['GET'])
-def get_agent(agent_id):
-    try:
-        agent = db.get_agent(agent_id)
-        if agent:
-            return jsonify({'success': True, 'agent': agent})
-        return jsonify({'success': False, 'message': 'Agent not found'})
-    except Exception as e:
-        return jsonify({'success': False, 'message': str(e)})
+@app.route('/add-assistant')
+def add_assistant():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    return render_template('add_assistant.html', user=session['user'])
 
-@app.route('/agent/<agent_id>/delete', methods=['POST'])
-def delete_agent(agent_id):
-    try:
-        success = db.delete_agent(agent_id)
-        if success:
-            return jsonify({'success': True})
-        return jsonify({'success': False, 'message': 'Failed to delete agent'})
-    except Exception as e:
-        return jsonify({'success': False, 'message': str(e)})
+@app.route('/assistant-directory')
+def assistant_directory():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    return render_template('assistant_directory.html', user=session['user'])
 
-@app.route('/agent/<agent_id>/chat-history')
-def chat_history(agent_id):
-    try:
-        history = db.get_agent_chat_history(agent_id)
-        return jsonify({'success': True, 'history': history})
-    except Exception as e:
-        return jsonify({'success': False, 'message': str(e)})
-
-@app.route('/chat/<agent_id>', methods=['POST'])
-def chat(agent_id):
-    data = request.get_json()
-    chat_data = {
-        'agent_id': agent_id,
-        'user_input': data.get('user_input'),
-        'agent_response': data.get('agent_response')
-    }
-    
-    try:
-        saved_chat = db.save_chat_history(chat_data)
-        return jsonify({'success': True, 'chat': saved_chat})
-    except Exception as e:
-        return jsonify({'success': False, 'message': str(e)})
+@app.route('/events')
+def events_page():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    return render_template('events.html', user=session['user'])
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('login'))
 
-@app.route('/agents')
-def get_agents():
-    """Get all agents for search functionality"""
-    # Only require authentication if not accessed from assistant directory
-    is_directory_request = request.headers.get('Referer', '').endswith('/assistant-directory')
-    if not is_directory_request and 'user' not in session:
-        return jsonify({'success': False, 'message': 'Not authenticated'})
+@app.route('/api/functionalities/<assistant_id>/<language>')
+def get_functionalities(assistant_id, language):
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
     
     try:
-        agents = db.get_all_agents()
-        return jsonify({
-            'success': True,
-            'agents': agents
-        })
-    except Exception as e:
-        print(f"Error getting agents: {str(e)}")
-        return jsonify({
-            'success': False,
-            'message': str(e)
-        })
-
-@app.route('/assistant-directory')
-def assistant_directory():
-    return render_template('assistant_cards.html')
-
-@app.route('/api/assistants')
-def get_assistants():
-    try:
-        db = DatabaseOperations()
-        assistants = db.get_all_assistants()
-        return jsonify({
-            'success': True,
-            'assistants': assistants
-        })
-    except Exception as e:
-        return jsonify({
-            'success': False,
-            'message': str(e)
-        }), 500
-
-@app.route('/api/assistant-functionalities/<assistant_id>/<functionality_id>/<language>', methods=['GET'])
-def get_assistant_functionalities(assistant_id, functionality_id, language):
-    try:
-        print(f"Fetching functionality for assistant: {assistant_id}, id: {functionality_id}, language: {language}")
-        
-        # Query assistants_func_text table using Supabase client (note the plural form)
-        result = db.supabase.table('assistants_func_text')\
-            .select('*')\
-            .eq('assistant_id', assistant_id)\
-            .eq('functionality_id', functionality_id)\
-            .eq('language', language)\
+        response = supabase.table("assistants_func_text").select("*")\
+            .eq("assistant_id", assistant_id)\
+            .eq("language", language)\
             .execute()
-            
-        # Get the first result if exists
-        functionality = result.data[0] if result.data else None
-        
-        print("Found functionality:", functionality if functionality else "No result")
+        functionalities = response.data if response.data else []
         
         return jsonify({
             'success': True,
-            'functionality': functionality
+            'functionalities': functionalities
         })
     except Exception as e:
-        print(f"Error fetching functionality: {str(e)}")
         return jsonify({
             'success': False,
-            'error': str(e)
+            'message': str(e)
         }), 500
 
-@app.route('/api/update-functionalities', methods=['POST'])
-def update_functionalities():
+@app.route('/api/save-functionalities', methods=['POST'])
+def save_functionalities():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
     try:
-        data = request.json
-        assistant_id = data['assistantId']
-        config_updates = data['configUpdates']
-        db_updates = data['dbUpdates']
-
-        print(f"Received update request for assistant {assistant_id}")
-        print(f"Config updates: {json.dumps(config_updates, indent=2)}")
-        print(f"DB updates count: {len(db_updates)}")
-
-        # 1. Get current assistant data
-        try:
-            current_assistant = db.supabase.table('assistants')\
-                .select('assistant_json')\
-                .eq('assistant_id', assistant_id)\
+        data = request.get_json()
+        assistant_id = data.get('assistant_id')
+        functionalities = data.get('functionalities', [])
+        
+        # Delete existing functionalities for this assistant and language
+        supabase.table("assistants_func_text")\
+            .delete()\
+            .eq("assistant_id", assistant_id)\
+            .eq("language", functionalities[0]['language'])\
+            .execute()
+        
+        # Insert new functionalities
+        for func in functionalities:
+            supabase.table("assistants_func_text")\
+                .insert({
+                    'assistant_id': assistant_id,
+                    'functionality_text': func['text'],
+                    'language': func['language']
+                })\
                 .execute()
-            
-            if not current_assistant.data:
-                raise Exception(f'Assistant {assistant_id} not found')
-
-            # Get current configuration
-            current_config = current_assistant.data[0].get('assistant_json', {})
-            
-            # Merge the new configuration with existing one
-            merged_config = current_config.copy()
-            if 'languages' in config_updates:
-                if 'languages' not in merged_config:
-                    merged_config['languages'] = {}
-                
-                # Merge language-specific data
-                for lang_code, lang_data in config_updates['languages'].items():
-                    if lang_code not in merged_config['languages']:
-                        merged_config['languages'][lang_code] = {}
-                    
-                    # Merge functionalities
-                    if 'functionalities' in lang_data:
-                        merged_config['languages'][lang_code]['functionalities'] = lang_data['functionalities']
-
-            # Update assistant configuration
-            result = db.supabase.table('assistants')\
-                .update({'assistant_json': merged_config})\
-                .eq('assistant_id', assistant_id)\
-                .execute()
-            
-            if not result.data:
-                raise Exception('Failed to update assistant configuration')
-            
-            print("Successfully updated assistant configuration")
-
-        except Exception as e:
-            print(f"Error updating assistant configuration: {str(e)}")
-            raise
-
-        # 2. Update or Insert functionality texts
-        for update in db_updates:
-            try:
-                print(f"Processing update for functionality {update['functionality_id']} in language {update['language']}")
-                
-                # Check if record exists
-                existing = db.supabase.table('assistants_func_text')\
-                    .select('*')\
-                    .eq('assistant_id', update['assistant_id'])\
-                    .eq('language', update['language'])\
-                    .eq('functionality_id', update['functionality_id'])\
-                    .execute()
-
-                if existing.data:
-                    print(f"Updating existing record for functionality {update['functionality_id']}")
-                    # Update existing record
-                    result = db.supabase.table('assistants_func_text')\
-                        .update({
-                            'functionality_text': update['functionality_text'],
-                            'functionality_value': update['functionality_value'],
-                            'functionality_type': update['functionality_type']
-                        })\
-                        .eq('assistant_id', update['assistant_id'])\
-                        .eq('language', update['language'])\
-                        .eq('functionality_id', update['functionality_id'])\
-                        .execute()
-                else:
-                    print(f"Inserting new record for functionality {update['functionality_id']}")
-                    # Insert new record
-                    result = db.supabase.table('assistants_func_text')\
-                        .insert({
-                            'assistant_id': update['assistant_id'],
-                            'language': update['language'],
-                            'functionality_id': update['functionality_id'],
-                            'functionality_text': update['functionality_text'],
-                            'functionality_value': update['functionality_value'],
-                            'functionality_type': update['functionality_type']
-                        })\
-                        .execute()
-
-                if not result.data:
-                    raise Exception(f'Failed to update/insert functionality {update["functionality_id"]}')
-                
-                print(f"Successfully processed functionality {update['functionality_id']}")
-
-            except Exception as e:
-                print(f"Error updating functionality {update.get('functionality_id')}: {str(e)}")
-                raise
-
-        return jsonify({'success': True})
+        
+        return jsonify({'success': True, 'message': 'Functionalities saved successfully'})
     except Exception as e:
-        error_msg = str(e)
-        print(f"Error in update_functionalities: {error_msg}")
-        return jsonify({'success': False, 'error': error_msg}), 500
+        return jsonify({'success': False, 'message': str(e)}), 500
 
-@app.route('/events')
-def events_page():
-    venues = db.get_all_venues()
-    organizers = db.get_all_organizers()
-    tags = db.get_all_tags()
-    return render_template('events.html', venues=venues, organizers=organizers, tags=tags)
-
-@app.route('/api/events', methods=['GET'])
-def get_events():
-    """Get all events"""
+@app.route('/api/recommendations/create', methods=['POST'])
+def create_recommendation():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
     try:
-        db = DatabaseOperations()
-        events = db.get_events()
-        return jsonify(events)
-    except Exception as e:
-        print(f"Error getting events: {str(e)}")
-        return jsonify({"error": "Failed to get events"}), 500
-
-@app.route('/api/events/search')
-def search_events():
-    try:
-        # Get search parameters from query string
-        filters = {
-            'search': request.args.get('search'),
-            'start_date': request.args.get('start_date'),
-            'end_date': request.args.get('end_date'),
-            'venue_id': request.args.get('venue_id'),
-            'organizer_id': request.args.get('organizer_id')
+        data = request.get_json()
+        print("\n=== Create Recommendation Debug ===")
+        print("Received data:", data)
+        
+        # Validate required fields
+        required_fields = {
+            'title': str,
+            'description': str,
+            'place': dict
         }
         
-        # Remove None values
-        filters = {k: v for k, v in filters.items() if v is not None}
+        # Validate required fields
+        missing_fields = []
+        invalid_types = []
         
-        # Convert IDs to integers if present
-        if 'venue_id' in filters:
-            filters['venue_id'] = int(filters['venue_id'])
-        if 'organizer_id' in filters:
-            filters['organizer_id'] = int(filters['organizer_id'])
+        for field, expected_type in required_fields.items():
+            if field not in data:
+                missing_fields.append(field)
+            elif not isinstance(data[field], expected_type):
+                invalid_types.append(f"{field} (expected {expected_type.__name__})")
         
-        events = db.get_events(filters)
-        return jsonify(events)
+        if missing_fields:
+            return jsonify({
+                'success': False,
+                'message': f'Missing required fields: {", ".join(missing_fields)}'
+            }), 400
+        
+        # Create recommendation record
+        recommendation = {
+            'title': data['title'],
+            'description': data['description'],
+            'place_id': data['place'].get('place_id'),
+            'place_name': data['place'].get('name'),
+            'latitude': data['place'].get('latitude'),
+            'longitude': data['place'].get('longitude'),
+            'address': data['place'].get('address'),
+            'created_by': session['user']['id'],
+            'status': 'active',
+            'tags': data.get('tags', []),
+            'images': data.get('images', []),
+            'category': data.get('category', 'general')
+        }
+        
+        print("Saving recommendation:", recommendation)
+        
+        result = db.supabase.table('recommendations').insert(recommendation).execute()
+        
+        if result.data:
+            print("Successfully created recommendation:", result.data[0])
+            return jsonify({
+                'success': True,
+                'message': 'Recommendation created successfully',
+                'recommendation': result.data[0]
+            })
+        else:
+            print("Failed to create recommendation - no data returned")
+            return jsonify({
+                'success': False,
+                'message': 'Failed to create recommendation'
+            }), 500
+            
     except Exception as e:
-        print(f"Error searching events: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        print(f"Error creating recommendation: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error creating recommendation: {str(e)}'
+        }), 500
 
-@app.route('/api/events/<int:event_id>')
-def get_event(event_id):
-    """Get a specific event by ID"""
+@app.route('/api/recommendations/search', methods=['GET', 'POST'])
+def search_recommendations():
+    """
+    Search endpoint that makes a single call to Google Places API
+    """
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
     try:
-        db = DatabaseOperations()
-        event = db.get_event(event_id)
-        if event:
-            return jsonify(event)
-        return jsonify({"error": "Event not found"}), 404
+        # Handle both GET and POST requests
+        if request.method == 'POST':
+            data = request.get_json()
+            query = data.get('query', '').strip()
+        else:  # GET request
+            query = request.args.get('query', '').strip()
+            
+        print(f"\n=== Search Request Debug ===")
+        print(f"Method: {request.method}")
+        print(f"Query: '{query}'")
+        
+        if not query:
+            return jsonify({
+                'success': False,
+                'message': 'Search query is required'
+            }), 400
+            
+        # Search using Google Places API
+        places_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
+        params = {
+            'query': query,
+            'key': GOOGLE_MAPS_API_KEY
+        }
+        
+        print("\nMaking request to Google Places API:")
+        print(f"URL: {places_url}")
+        print(f"Params: query={query}, key=...{GOOGLE_MAPS_API_KEY[-6:]}")  # Only show last 6 chars of key
+        
+        response = requests.get(places_url, params=params)
+        
+        print(f"\nResponse Status Code: {response.status_code}")
+        
+        try:
+            response_data = response.json()
+            print(f"\nAPI Status: {response_data.get('status')}")
+            
+            if response.status_code == 200:
+                results = response_data.get('results', [])
+                print(f"Number of results: {len(results)}")
+                
+                # Format places
+                formatted_places = []
+                for place in results:
+                    photos = place.get('photos', [])
+                    photo_references = [photo.get('photo_reference') for photo in photos]
+                    
+                    print(f"Photos for {place.get('name')}: {len(photo_references)}") # Debug log
+                    
+                    formatted_place = {
+                        'place_id': place.get('place_id'),
+                        'name': place.get('name'),
+                        'address': place.get('formatted_address'),
+                        'latitude': place.get('geometry', {}).get('location', {}).get('lat'),
+                        'longitude': place.get('geometry', {}).get('location', {}).get('lng'),
+                        'rating': place.get('rating'),
+                        'user_ratings_total': place.get('user_ratings_total'),
+                        'price_level': place.get('price_level'),
+                        'types': place.get('types', []),
+                        'business_status': place.get('business_status'),
+                        'photos': photo_references,  # Store all photo references
+                        'icon': place.get('icon'),
+                        'icon_background_color': place.get('icon_background_color'),
+                        'icon_mask_base_uri': place.get('icon_mask_base_uri'),
+                        'opening_hours': place.get('opening_hours', {}).get('open_now'),
+                        'plus_code': place.get('plus_code', {})
+                    }
+                    formatted_places.append(formatted_place)
+                    print(f"Found place: {formatted_place['name']}")
+                
+                return jsonify({
+                    'success': True,
+                    'results': formatted_places
+                })
+            else:
+                error_message = response_data.get('error_message', 'Unknown error')
+                print(f"\nAPI Error: {error_message}")
+                return jsonify({
+                    'success': False,
+                    'message': f'Google Places API Error: {error_message}'
+                }), response.status_code
+                
+        except ValueError as e:
+            print(f"\nError parsing JSON response: {str(e)}")
+            print(f"Raw response: {response.text[:200]}...")  # Show first 200 chars
+            return jsonify({
+                'success': False,
+                'message': 'Invalid response from Google Places API'
+            }), 500
+            
     except Exception as e:
-        print(f"Error getting event: {str(e)}")
-        return jsonify({"error": "Failed to get event"}), 500
+        print(f"\nUnexpected error: {str(e)}")
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
+        return jsonify({
+            'success': False,
+            'message': f'Server error: {str(e)}'
+        }), 500
 
-@app.route('/api/events', methods=['POST'])
-def create_event():
+@app.route('/api/recommendations', methods=['GET'])
+def get_recommendations():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
     try:
-        event_data = request.get_json()
-        event_id = db.create_event(event_data)
-        return jsonify({'message': 'Event created successfully', 'event_id': event_id}), 201
+        result = db.supabase.table('recommendations')\
+            .select('*')\
+            .eq('status', 'active')\
+            .order('created_at', desc=True)\
+            .execute()
+            
+        return jsonify({
+            'success': True,
+            'recommendations': result.data if result.data else []
+        })
+        
     except Exception as e:
-        return jsonify({'error': str(e)}), 400
+        print(f"Error fetching recommendations: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error fetching recommendations: {str(e)}'
+        }), 500
 
-@app.route('/api/events/<int:event_id>', methods=['PUT'])
-def update_event(event_id):
+@app.route('/api/recommendations/<int:recommendation_id>', methods=['DELETE'])
+def delete_recommendation(recommendation_id):
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
     try:
-        event_data = request.get_json()
-        db.update_event(event_id, event_data)
-        return jsonify({'message': 'Event updated successfully'})
+        # Soft delete by updating status
+        result = supabase.table('recommendations')\
+            .update({'status': 'deleted'})\
+            .eq('id', recommendation_id)\
+            .execute()
+            
+        if result.data:
+            return jsonify({
+                'success': True,
+                'message': 'Recommendation deleted successfully'
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Recommendation not found'
+            }), 404
+            
     except Exception as e:
-        return jsonify({'error': str(e)}), 400
+        print(f"Error deleting recommendation: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error deleting recommendation: {str(e)}'
+        }), 500
 
-@app.route('/api/events/<int:event_id>', methods=['DELETE'])
-def delete_event(event_id):
+@app.route('/api/places', methods=['POST'])
+def save_places():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
     try:
-        db.delete_event(event_id)
-        return jsonify({'message': 'Event deleted successfully'})
+        data = request.get_json()
+        
+        # Required fields
+        required_fields = ['place_id', 'name', 'latitude', 'longitude', 'address']
+        for field in required_fields:
+            if field not in data:
+                return jsonify({'success': False, 'message': f'Missing required field: {field}'}), 400
+        
+        # Check if place already exists
+        existing = db.supabase.table('places')\
+            .select('*')\
+            .eq('place_id', data['place_id'])\
+            .execute()
+            
+        if existing.data:
+            # Update existing place
+            result = db.supabase.table('places')\
+                .update({
+                    'name': data['name'],
+                    'latitude': data['latitude'],
+                    'longitude': data['longitude'],
+                    'address': data['address'],
+                    'types': data.get('types', []),
+                    'phone': data.get('phone', ''),
+                    'website': data.get('website', ''),
+                    'photos': data.get('photos', []),
+                    'rating': data.get('rating', 0),
+                    'updated_at': 'NOW()'
+                })\
+                .eq('place_id', data['place_id'])\
+                .execute()
+        else:
+            # Create new place
+            result = db.supabase.table('places')\
+                .insert({
+                    'place_id': data['place_id'],
+                    'name': data['name'],
+                    'latitude': data['latitude'],
+                    'longitude': data['longitude'],
+                    'address': data['address'],
+                    'types': data.get('types', []),
+                    'phone': data.get('phone', ''),
+                    'website': data.get('website', ''),
+                    'photos': data.get('photos', []),
+                    'rating': data.get('rating', 0),
+                    'created_by': session['user']['id']
+                })\
+                .execute()
+        
+        if result.data:
+            return jsonify({
+                'success': True,
+                'message': 'Place saved successfully',
+                'place': result.data[0]
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Failed to save place'
+            }), 500
+            
     except Exception as e:
-        return jsonify({'error': str(e)}), 400
+        print(f"Error saving place: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error saving place: {str(e)}'
+        }), 500
 
-@app.route('/api/venues', methods=['GET'])
-def get_venues():
-    venues = db.get_all_venues()
-    return jsonify(venues)
+@app.route('/api/places', methods=['GET'])
+def get_places():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
+    try:
+        # Get query parameters
+        search = request.args.get('search', '')
+        lat = request.args.get('lat')
+        lng = request.args.get('lng')
+        radius = request.args.get('radius', 5000)  # Default 5km radius
+        
+        query = db.supabase.table('places').select('*')
+        
+        # Add search filter if provided
+        if search:
+            query = query.ilike('name', f'%{search}%')
+        
+        # Add location filter if provided
+        if lat and lng:
+            # Note: This is a simplified distance calculation
+            # For more accurate results, consider using PostGIS
+            lat, lng = float(lat), float(lng)
+            radius = float(radius)
+            
+            query = query.filter(
+                f"(latitude BETWEEN {lat - radius/111000} AND {lat + radius/111000}) AND " +
+                f"(longitude BETWEEN {lng - radius/(111000*cos(lat*pi/180))} AND {lng + radius/(111000*cos(lat*pi/180))})"
+            )
+        
+        result = query.execute()
+        
+        return jsonify({
+            'success': True,
+            'places': result.data if result.data else []
+        })
+        
+    except Exception as e:
+        print(f"Error fetching places: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error fetching places: {str(e)}'
+        }), 500
 
-@app.route('/api/organizers', methods=['GET'])
-def get_organizers():
-    organizers = db.get_all_organizers()
-    return jsonify(organizers)
+@app.route('/api/places/<place_id>', methods=['GET'])
+def get_place(place_id):
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
+    try:
+        result = db.supabase.table('places')\
+            .select('*')\
+            .eq('place_id', place_id)\
+            .execute()
+            
+        if result.data:
+            return jsonify({
+                'success': True,
+                'place': result.data[0]
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Place not found'
+            }), 404
+            
+    except Exception as e:
+        print(f"Error fetching place: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error fetching place: {str(e)}'
+        }), 500
 
-@app.route('/api/tags', methods=['GET'])
-def get_tags():
-    tags = db.get_all_tags()
-    return jsonify(tags)
+@app.route('/api/places/search', methods=['GET'])
+def search_places():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
+    try:
+        # Get search parameters
+        query = request.args.get('query', '')
+        lat = request.args.get('lat')
+        lng = request.args.get('lng')
+        
+        if not query:
+            return jsonify({
+                'success': False,
+                'message': 'Search query is required'
+            }), 400
+            
+        # Construct Google Places API request
+        base_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
+        params = {
+            'query': query,
+            'key': GOOGLE_MAPS_API_KEY
+        }
+        
+        # Add location if provided
+        if lat and lng:
+            params['location'] = f"{lat},{lng}"
+            params['radius'] = 50000  # 50km radius
+        
+        # Make request to Google Places API
+        response = requests.get(base_url, params=params)
+        
+        if response.status_code == 200:
+            results = response.json().get('results', [])
+            
+            # Format results
+            places = []
+            for place in results:
+                places.append({
+                    'place_id': place.get('place_id'),
+                    'name': place.get('name'),
+                    'address': place.get('formatted_address'),
+                    'latitude': place.get('geometry', {}).get('location', {}).get('lat'),
+                    'longitude': place.get('geometry', {}).get('location', {}).get('lng'),
+                    'types': place.get('types', []),
+                    'rating': place.get('rating'),
+                    'photos': [photo.get('photo_reference') for photo in place.get('photos', [])]
+                })
+            
+            return jsonify({
+                'success': True,
+                'places': places
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Failed to fetch places from Google API'
+            }), response.status_code
+            
+    except Exception as e:
+        print(f"Error searching places: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error searching places: {str(e)}'
+        }), 500
+
+@app.route('/api/places/details/<place_id>', methods=['GET'])
+def get_place_details(place_id):
+    try:
+        # Get place details from Google Places API directly
+        url = "https://maps.googleapis.com/maps/api/place/details/json"
+        params = {
+            'place_id': place_id,
+            'key': GOOGLE_MAPS_API_KEY,
+            'fields': ','.join([
+                'place_id', 'name', 'formatted_address', 'formatted_phone_number',
+                'geometry', 'icon', 'photos', 'rating', 'reviews', 'types',
+                'user_ratings_total', 'website', 'price_level', 'business_status',
+                'opening_hours', 'wheelchair_accessible_entrance'
+            ])
+        }
+        
+        response = requests.get(url, params=params)
+        place = response.json()
+        
+        if place['status'] == 'OK':
+            place_details = place['result']
+            
+            # Extract latitude and longitude
+            latitude = place_details.get('geometry', {}).get('location', {}).get('lat')
+            longitude = place_details.get('geometry', {}).get('location', {}).get('lng')
+            
+            response_data = {
+                'place_id': place_details.get('place_id'),
+                'name': place_details.get('name'),
+                'formatted_address': place_details.get('formatted_address'),
+                'formatted_phone_number': place_details.get('formatted_phone_number'),
+                'website': place_details.get('website'),
+                'rating': place_details.get('rating'),
+                'user_ratings_total': place_details.get('user_ratings_total'),
+                'price_level': place_details.get('price_level'),
+                'business_status': place_details.get('business_status'),
+                'types': place_details.get('types', []),
+                'latitude': latitude,
+                'longitude': longitude,
+                'photos': process_photos(place_details.get('photos', [])),
+                'opening_hours': place_details.get('opening_hours', {}),
+                'wheelchair_accessible': place_details.get('wheelchair_accessible_entrance', False),
+                'reviews': place_details.get('reviews', [])
+            }
+            
+            return jsonify({
+                'success': True,
+                'place': response_data
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Place not found'
+            }), 404
+            
+    except Exception as e:
+        print(f"Error getting place details: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error getting place details: {str(e)}'
+        }), 500
+
+@app.route('/api/places/photo/<photo_reference>', methods=['GET'])
+def get_place_photo(photo_reference):
+    """
+    Proxy endpoint to fetch photos from Google Places Photos API
+    """
+    try:
+        # Google Places Photo API URL
+        photo_url = "https://maps.googleapis.com/maps/api/place/photo"
+        
+        # Parameters for max width/height (adjust as needed)
+        params = {
+            'maxwidth': '400',  # or maxheight
+            'photo_reference': photo_reference,
+            'key': GOOGLE_MAPS_API_KEY
+        }
+        
+        # Make request to Google Places Photo API
+        response = requests.get(photo_url, params=params)
+        
+        if response.status_code == 200:
+            # Return the image with proper content type
+            return Response(
+                response.content,
+                mimetype=response.headers['Content-Type']
+            )
+        else:
+            return jsonify({
+                'success': False,
+                'message': 'Failed to fetch photo'
+            }), response.status_code
+            
+    except Exception as e:
+        print(f"Error fetching photo: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error fetching photo: {str(e)}'
+        }), 500
+
+@app.route('/api/places/save', methods=['POST'])
+def save_place():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
+    try:
+        data = request.get_json()
+        
+        # 1. Save main place data
+        place_data = data['place']
+        place_result = supabase.table('places').upsert(place_data).execute()
+        
+        if not place_result.data:
+            raise Exception('Failed to save place data')
+        
+        place_id = place_data['place_id']
+        
+        # 2. Save geometry data
+        if 'geometry' in data:
+            geometry_data = data['geometry']
+            geometry_data['place_id'] = place_id
+            supabase.table('place_geometry').upsert(geometry_data).execute()
+        
+        # 3. Save services data
+        if 'services' in data:
+            services_data = data['services']
+            services_data['place_id'] = place_id
+            supabase.table('place_services').upsert(services_data).execute()
+        
+        # 4. Save opening hours
+        if 'opening_hours' in data and data['opening_hours']:
+            # First delete existing hours
+            supabase.table('place_opening_hours').delete().eq('place_id', place_id).execute()
+            # Then insert new hours
+            for hours in data['opening_hours']:
+                hours['place_id'] = place_id
+                supabase.table('place_opening_hours').insert(hours).execute()
+        
+        # 5. Save reviews
+        if 'reviews' in data and data['reviews']:
+            # First delete existing reviews
+            supabase.table('place_reviews').delete().eq('place_id', place_id).execute()
+            # Then insert new reviews
+            for review in data['reviews']:
+                review['place_id'] = place_id
+                supabase.table('place_reviews').insert(review).execute()
+        
+        # 6. Save photos
+        if 'photos' in data and data['photos']:
+            print("\n=== Photo Saving Debug ===")
+            print(f"Number of photos to save: {len(data['photos'])}")
+            
+            # First delete existing photos
+            delete_result = supabase.table('place_photos').delete().eq('place_id', place_id).execute()
+            print(f"Deleted existing photos: {delete_result.data}")
+            
+            # Download and store each photo
+            for index, photo in enumerate(data['photos']):
+                print(f"\nProcessing photo {index + 1}/{len(data['photos'])}")
+                print(f"Photo data: {photo}")
+                
+                photo['place_id'] = place_id
+                
+                # Fetch photo from Google
+                photo_url = "https://maps.googleapis.com/maps/api/place/photo"
+                params = {
+                    'maxwidth': '800',  # Get larger size for storage
+                    'photo_reference': photo['photo_reference'],
+                    'key': GOOGLE_MAPS_API_KEY
+                }
+                
+                print(f"Fetching photo from Google: {photo_url}")
+                response = requests.get(photo_url, params=params)
+                print(f"Google API Response Status: {response.status_code}")
+                
+                if response.status_code == 200:
+                    # Generate unique filename
+                    filename = f"{place_id}/{photo['photo_reference']}.jpg"
+                    print(f"Generated filename: {filename}")
+                    
+                    try:
+                        # Create folder if it doesn't exist
+                        folder = f"{place_id}"
+                        print(f"Creating folder in bucket: {folder}")
+                        try:
+                            folder_result = supabase.storage.from_('place-photos').create_folder(folder)
+                            print(f"Folder creation result: {folder_result}")
+                        except Exception as folder_error:
+                            print(f"Folder creation error (might already exist): {str(folder_error)}")
+                        
+                        # Upload to Supabase Storage
+                        print("Uploading to Supabase Storage...")
+                        storage_response = supabase.storage.from_('place-photos').upload(
+                            filename,
+                            response.content,
+                            {'content-type': response.headers['Content-Type'], 'upsert': True}
+                        )
+                        print(f"Storage upload response: {storage_response}")
+                        
+                        # Get public URL
+                        public_url = supabase.storage.from_('place-photos').get_public_url(filename)
+                        print(f"Generated public URL: {public_url}")
+                        
+                        # Save photo data with storage URL and created_by
+                        photo_data = {
+                            'place_id': place_id,
+                            'photo_reference': photo['photo_reference'],
+                            'height': photo.get('height'),
+                            'width': photo.get('width'),
+                            'html_attributions': photo.get('html_attributions', []),
+                            'created_by': session['user']['id'],
+                            'storage_url': public_url
+                        }
+                        print(f"Saving photo data to database: {photo_data}")
+                        
+                        insert_result = supabase.table('place_photos').insert(photo_data).execute()
+                        print(f"Database insert result: {insert_result.data}")
+                        
+                    except Exception as storage_error:
+                        print(f"Error saving photo {filename}: {str(storage_error)}")
+                        print(f"Full error details: {storage_error.__class__.__name__}")
+                        import traceback
+                        print(f"Traceback: {traceback.format_exc()}")
+                        continue
+                else:
+                    print(f"Failed to fetch photo from Google. Status code: {response.status_code}")
+                    print(f"Response content: {response.text[:200]}...")  # First 200 chars
+        
+        return jsonify({
+            'success': True,
+            'message': 'Place saved successfully',
+            'place_id': place_id
+        })
+            
+    except Exception as e:
+        print(f"Error saving place: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error saving place: {str(e)}'
+        }), 500
+
+@app.route('/api/places/<place_id>', methods=['GET'])
+def check_place_exists(place_id):
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
+    try:
+        result = supabase.table('places').select('place_id').eq('place_id', place_id).execute()
+        return jsonify({
+            'success': True,
+            'exists': len(result.data) > 0
+        })
+        
+    except Exception as e:
+        print(f"Error checking place: {str(e)}")
+        return jsonify({
+            'success': False,
+            'message': f'Error checking place: {str(e)}'
+        }), 500
 
 if __name__ == '__main__':
     app.run(debug=True)

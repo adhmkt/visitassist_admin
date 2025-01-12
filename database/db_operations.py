@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from supabase import create_client, Client
 from typing import Dict, List, Optional
+import traceback
 
 # Load environment variables
 load_dotenv()
@@ -26,36 +27,20 @@ class DatabaseOperations:
             dict: Created assistant data
         """
         try:
-            # Prepare the data according to the table schema
-            assistant_data = {
-                'assistant_id': agent_data.get('assistant_id'),
-                'assistant_name': agent_data.get('name'),  # Map name to assistant_name
-                'assistant_desc': agent_data.get('description'),  # Map description to assistant_desc
-                'assistant_instructions': agent_data.get('prompt'),  # Map prompt to assistant_instructions
-                'assistant_type': agent_data.get('type', 'classic'),  # Default to 'classic'
-                'assistant_img': agent_data.get('image'),
-                'sponsor_id': agent_data.get('sponsor_id'),
-                'assistant_questions': agent_data.get('questions', {}),  # Default to empty JSON
-                'assistant_json': agent_data.get('config', {}),  # Default to empty JSONB
-                'assistant_functions': agent_data.get('functions', 'not_defined'),
-                'assistant_languages': agent_data.get('languages', {
-                    "languages": [
-                        {
-                            "language_code": "en",
-                            "language_name": "English",
-                            "version": "1.0"
-                        }
-                    ]
-                }),
-                'subtype': agent_data.get('subtype', 'subtype'),
-                'sponsor_logo': agent_data.get('sponsor_logo', 'sponsor_default.png'),
-                'sponsor_url': agent_data.get('sponsor_url', 'https://apis-ia.com')
-            }
+            print(f"Attempting to create assistant with data: {agent_data}")  # Debug log
             
-            result = self.supabase.table('assistants').insert(assistant_data).execute()
-            return result.data[0] if result.data else None
+            # Insert the data directly
+            result = self.supabase.table('assistants').insert(agent_data).execute()
+            
+            if not result.data:
+                print("No data returned from insert operation")
+                return None
+                
+            print(f"Successfully created assistant: {result.data[0]}")
+            return result.data[0]
+            
         except Exception as e:
-            print(f"Error creating assistant: {e}")
+            print(f"Error creating assistant: {str(e)}")  # Debug log
             raise
 
     def get_agent(self, agent_id: str) -> Optional[Dict]:
@@ -69,29 +54,34 @@ class DatabaseOperations:
             dict: Assistant data if found, None otherwise
         """
         try:
+            print(f"Fetching assistant with ID: {agent_id}")  # Debug log
             result = self.supabase.table('assistants').select("*").eq('assistant_id', agent_id).execute()
+            print(f"Query result: {result.data}")  # Debug log
+            
             if result.data:
-                # Map the data back to the format expected by the frontend
+                # Map the data directly using the database column names
                 assistant = result.data[0]
                 return {
-                    'id': assistant.get('assistant_id'),
-                    'name': assistant.get('assistant_name'),
-                    'description': assistant.get('assistant_desc'),
-                    'prompt': assistant.get('assistant_instructions'),
-                    'type': assistant.get('assistant_type'),
-                    'image': assistant.get('assistant_img'),
+                    'assistant_id': assistant.get('assistant_id'),
+                    'assistant_name': assistant.get('assistant_name'),
+                    'assistant_desc': assistant.get('assistant_desc'),
+                    'assistant_instructions': assistant.get('assistant_instructions'),
+                    'assistant_type': assistant.get('assistant_type'),
+                    'assistant_img': assistant.get('assistant_img'),
                     'sponsor_id': assistant.get('sponsor_id'),
-                    'questions': assistant.get('assistant_questions'),
-                    'config': assistant.get('assistant_json'),
-                    'functions': assistant.get('assistant_functions'),
-                    'languages': assistant.get('assistant_languages'),
+                    'assistant_questions': assistant.get('assistant_questions'),
+                    'assistant_json': assistant.get('assistant_json'),
+                    'assistant_functions': assistant.get('assistant_functions'),
+                    'assistant_languages': assistant.get('assistant_languages'),
                     'subtype': assistant.get('subtype'),
                     'sponsor_logo': assistant.get('sponsor_logo'),
                     'sponsor_url': assistant.get('sponsor_url')
                 }
+            print(f"No assistant found with ID: {agent_id}")  # Debug log
             return None
         except Exception as e:
             print(f"Error getting assistant: {e}")
+            print(f"Traceback: {traceback.format_exc()}")  # Debug log
             raise
 
     def get_all_agents(self) -> List[Dict]:
@@ -102,26 +92,44 @@ class DatabaseOperations:
             list: List of all assistants
         """
         try:
-            result = self.supabase.table('assistants').select("*").execute()
-            # Map each assistant to the format expected by the frontend
-            return [{
-                'id': assistant.get('assistant_id'),
-                'name': assistant.get('assistant_name'),
-                'description': assistant.get('assistant_desc'),
-                'prompt': assistant.get('assistant_instructions'),
-                'type': assistant.get('assistant_type'),
-                'image': assistant.get('assistant_img'),
-                'sponsor_id': assistant.get('sponsor_id'),
-                'questions': assistant.get('assistant_questions'),
-                'config': assistant.get('assistant_json'),
-                'functions': assistant.get('assistant_functions'),
-                'languages': assistant.get('assistant_languages'),
-                'subtype': assistant.get('subtype'),
-                'sponsor_logo': assistant.get('sponsor_logo'),
-                'sponsor_url': assistant.get('sponsor_url')
-            } for assistant in (result.data or [])]
+            print("Executing get_all_agents query...")  # Debug log
+            result = self.supabase.table('assistants').select("*").order('assistant_name').execute()
+            print(f"Query returned {len(result.data) if result.data else 0} rows")  # Debug log
+            
+            if not result.data:
+                print("No data returned from query")
+                return []
+            
+            agents = []
+            for assistant in result.data:
+                try:
+                    agent = {
+                        'assistant_id': assistant.get('assistant_id'),
+                        'assistant_name': assistant.get('assistant_name'),
+                        'assistant_desc': assistant.get('assistant_desc'),
+                        'assistant_instructions': assistant.get('assistant_instructions'),
+                        'assistant_type': assistant.get('assistant_type'),
+                        'assistant_img': assistant.get('assistant_img'),
+                        'sponsor_id': assistant.get('sponsor_id'),
+                        'assistant_questions': assistant.get('assistant_questions'),
+                        'assistant_functions': assistant.get('assistant_functions'),
+                        'assistant_languages': assistant.get('assistant_languages'),
+                        'subtype': assistant.get('subtype'),
+                        'sponsor_logo': assistant.get('sponsor_logo'),
+                        'sponsor_url': assistant.get('sponsor_url')
+                    }
+                    agents.append(agent)
+                    print(f"Processed agent: {agent['assistant_id']} - {agent['assistant_name']}")  # Debug log
+                except Exception as e:
+                    print(f"Error processing agent: {e}")  # Debug log
+                    continue
+            
+            print(f"Successfully mapped {len(agents)} agents")  # Debug log
+            return agents
+            
         except Exception as e:
-            print(f"Error getting assistants: {e}")
+            print(f"Database error in get_all_agents: {str(e)}")  # Debug log
+            print(f"Traceback: {traceback.format_exc()}")  # Debug log
             raise
 
     def update_agent(self, agent_id: str, agent_data: Dict) -> Optional[Dict]:
@@ -138,6 +146,41 @@ class DatabaseOperations:
         try:
             print(f"Updating assistant {agent_id} with data: {agent_data}")  # Debug log
             
+            # First, get the existing assistant data
+            existing_assistant = self.supabase.table('assistants').select("*").eq('assistant_id', agent_id).execute()
+            if not existing_assistant.data:
+                print(f"No assistant found with ID: {agent_id}")  # Debug log
+                return None
+            
+            existing_data = existing_assistant.data[0]
+            
+            # Handle assistant_json separately to preserve schema
+            if 'assistant_json' in agent_data:
+                new_config = agent_data['assistant_json']
+                existing_config = existing_data.get('assistant_json', {})
+                
+                # Merge configurations
+                if 'languages' in new_config:
+                    if 'languages' not in existing_config:
+                        existing_config['languages'] = {}
+                    
+                    # Update language-specific data while preserving other fields
+                    for lang_code, lang_data in new_config['languages'].items():
+                        if lang_code not in existing_config['languages']:
+                            existing_config['languages'][lang_code] = {}
+                        
+                        # Update language data while preserving functionalities
+                        existing_lang_data = existing_config['languages'][lang_code]
+                        functionalities = existing_lang_data.get('functionalities', [])
+                        existing_config['languages'][lang_code].update(lang_data)
+                        
+                        # Restore functionalities if they weren't in the update
+                        if 'functionalities' not in lang_data:
+                            existing_config['languages'][lang_code]['functionalities'] = functionalities
+                
+                # Update the merged configuration
+                agent_data['assistant_json'] = existing_config
+            
             # Remove None values to avoid overwriting with nulls
             update_data = {k: v for k, v in agent_data.items() if v is not None}
             
@@ -146,12 +189,6 @@ class DatabaseOperations:
             
             print(f"Cleaned update data: {update_data}")  # Debug log
             
-            # Verify the assistant exists before updating
-            check_result = self.supabase.table('assistants').select("*").eq('assistant_id', agent_id).execute()
-            if not check_result.data:
-                print(f"No assistant found with ID: {agent_id}")  # Debug log
-                return None
-                
             result = self.supabase.table('assistants').update(update_data).eq('assistant_id', agent_id).execute()
             print(f"Update result: {result.data}")  # Debug log
             

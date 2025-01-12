@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Add New Assistant{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_agent.css') }}">
+{% endblock %}
+
+{% block content %}
+<!-- Content Header -->
+<div class="content-header">
+    <h1>Add New Assistant</h1>
+</div>
+
+<!-- Main Content -->
+<div class="content-body">
+    <form id="addAssistantForm" class="form-container">
+        <div class="card">
+            <div class="card-header">
+                <h2>Basic Information</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="name">Assistant Name</label>
+                    <input type="text" id="name" name="name" class="form-control" required>
+                    <span class="help-text">Display name of the assistant</span>
+                </div>
+                <div class="form-group">
+                    <label for="assistant_id">Assistant ID</label>
+                    <input type="text" id="assistant_id" name="assistant_id" class="form-control" required
+                        pattern="[a-zA-Z0-9_-]+" maxlength="50">
+                    <span class="help-text">Unique identifier for the assistant (letters, numbers, hyphens, and
+                        underscores only)</span>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" class="form-control" required></textarea>
+                    <span class="help-text">Brief description of the assistant's purpose</span>
+                </div>
+                <div class="form-group">
+                    <label for="assistant_img">Assistant Image URL</label>
+                    <input type="text" id="assistant_img" name="assistant_img" class="form-control" required>
+                    <span class="help-text">URL for the assistant's main image</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Configuration</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="type">Type</label>
+                    <input type="text" id="type" name="type" class="form-control" value="classic">
+                    <span class="help-text">Type of assistant (e.g., classic, gpt4)</span>
+                </div>
+                <div class="form-group">
+                    <label for="subtype">Subtype</label>
+                    <input type="text" id="subtype" name="subtype" class="form-control" value="subtype">
+                    <span class="help-text">Subtype of the assistant</span>
+                </div>
+                <div class="form-group">
+                    <label for="prompt">Instructions</label>
+                    <textarea id="prompt" name="prompt" class="form-control"
+                        required>Destination: Miami Beach, FL, USA
+
+You are a tour guide with deep knowledge of the destination
+
+Core Objectives:
+
+Personalized Assistance: Provide detailed and enriched recommendations, incorporating informative descriptions of attractions and experiences to enhance the user's visit to the destination.
+Local Expertise: Share comprehensive insights into the destination's hidden gems, culture, and history, with contextually relevant information added where necessary.
+
+Guidelines:
+
+Ensure responses are detailed, accurate, and enriched with context-specific information. Maintain a friendly and conversational tone to make the user feel welcomed and supported throughout their experience.
+Responses should be precise, complete, and respectful. There is no token limit for the responses, so provide as much depth and richness as needed to fully address the user's queries.
+Apply markdown formatting to present content in a structured and readable way.
+
+Attention: You function as a tour guide and are specialized in providing information and assistance related to tours, sightseeing, and local attractions. If a user requests concierge services such as booking reservations, changing airline tickets, arranging transportation,  etc, you should respond politely, informing the user of its primary role as a tour guide. You should still attempt to assist with any related inquiries to the best of its ability, directing the user to the appropriate resources or providing helpful information whenever possible.</textarea>
+                    <span class="help-text">System instructions for the assistant's behavior and responses</span>
+                </div>
+                <div class="form-group">
+                    <label for="functions">Functions</label>
+                    <textarea id="functions" name="functions" class="form-control" rows="5">not_defined</textarea>
+                    <span class="help-text">Define the assistant's functions in JSON format</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Language Configuration</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="languages">Select Languages</label>
+                    <select id="languages" name="languages" class="form-control" multiple size="15">
+                        <option value='{"language_code":"ar","language_name":"العربية","version":"1.0"}'>Arabic
+                            (العربية)</option>
+                        <option value='{"language_code":"bn","language_name":"বাংলা","version":"1.0"}'>Bengali (বাংলা)
+                        </option>
+                        <option value='{"language_code":"bg","language_name":"Български","version":"1.0"}'>Bulgarian
+                            (Български)</option>
+                        <option value='{"language_code":"zh","language_name":"中文","version":"1.0"}'>Chinese (中文)
+                        </option>
+                        <option value='{"language_code":"hr","language_name":"Hrvatski","version":"1.0"}'>Croatian
+                            (Hrvatski)</option>
+                        <option value='{"language_code":"cs","language_name":"Čeština","version":"1.0"}'>Czech (Čeština)
+                        </option>
+                        <option value='{"language_code":"da","language_name":"Dansk","version":"1.0"}'>Danish (Dansk)
+                        </option>
+                        <option value='{"language_code":"nl","language_name":"Nederlands","version":"1.0"}'>Dutch
+                            (Nederlands)</option>
+                        <option value='{"language_code":"en","language_name":"English","version":"1.0"}'>English
+                        </option>
+                        <option value='{"language_code":"et","language_name":"Eesti","version":"1.0"}'>Estonian (Eesti)
+                        </option>
+                        <option value='{"language_code":"tl","language_name":"Filipino","version":"1.0"}'>Filipino
+                        </option>
+                        <option value='{"language_code":"fi","language_name":"Suomi","version":"1.0"}'>Finnish (Suomi)
+                        </option>
+                        <option value='{"language_code":"fr","language_name":"Français","version":"1.0"}'>French
+                            (Français)</option>
+                        <option value='{"language_code":"de","language_name":"Deutsch","version":"1.0"}'>German
+                            (Deutsch)</option>
+                        <option value='{"language_code":"el","language_name":"Ελληνικά","version":"1.0"}'>Greek
+                            (Ελληνικά)</option>
+                        <option value='{"language_code":"gu","language_name":"ગુજરાતી","version":"1.0"}'>Gujarati
+                            (ગુજરાતી)</option>
+                        <option value='{"language_code":"he","language_name":"עברית","version":"1.0"}'>Hebrew (עברית)
+                        </option>
+                        <option value='{"language_code":"hi","language_name":"हिंदी","version":"1.0"}'>Hindi (हिंदी)
+                        </option>
+                        <option value='{"language_code":"hu","language_name":"Magyar","version":"1.0"}'>Hungarian
+                            (Magyar)</option>
+                        <option value='{"language_code":"is","language_name":"Íslenska","version":"1.0"}'>Icelandic
+                            (Íslenska)</option>
+                        <option value='{"language_code":"id","language_name":"Bahasa Indonesia","version":"1.0"}'>
+                            Indonesian (Bahasa Indonesia)</option>
+                        <option value='{"language_code":"it","language_name":"Italiano","version":"1.0"}'>Italian
+                            (Italiano)</option>
+                        <option value='{"language_code":"ja","language_name":"日本語","version":"1.0"}'>Japanese (日本語)
+                        </option>
+                        <option value='{"language_code":"kn","language_name":"ಕನ್ನಡ","version":"1.0"}'>Kannada (ಕನ್ನಡ)
+                        </option>
+                        <option value='{"language_code":"ko","language_name":"한국어","version":"1.0"}'>Korean (한국어)
+                        </option>
+                        <option value='{"language_code":"lv","language_name":"Latviešu","version":"1.0"}'>Latvian
+                            (Latviešu)</option>
+                        <option value='{"language_code":"lt","language_name":"Lietuvių","version":"1.0"}'>Lithuanian
+                            (Lietuvių)</option>
+                        <option value='{"language_code":"ms","language_name":"Bahasa Melayu","version":"1.0"}'>Malay
+                            (Bahasa Melayu)</option>
+                        <option value='{"language_code":"ml","language_name":"മലയാളം","version":"1.0"}'>Malayalam
+                            (മലയാളം)</option>
+                        <option value='{"language_code":"mr","language_name":"मराठी","version":"1.0"}'>Marathi (मराठी)
+                        </option>
+                        <option value='{"language_code":"no","language_name":"Norsk","version":"1.0"}'>Norwegian (Norsk)
+                        </option>
+                        <option value='{"language_code":"fa","language_name":"فارسی","version":"1.0"}'>Persian (فارسی)
+                        </option>
+                        <option value='{"language_code":"pl","language_name":"Polski","version":"1.0"}'>Polish (Polski)
+                        </option>
+                        <option value='{"language_code":"pt","language_name":"Português","version":"1.0"}'>Portuguese
+                            (Português)</option>
+                        <option value='{"language_code":"ro","language_name":"Română","version":"1.0"}'>Romanian
+                            (Română)</option>
+                        <option value='{"language_code":"ru","language_name":"Русский","version":"1.0"}'>Russian
+                            (Русский)</option>
+                        <option value='{"language_code":"sr","language_name":"Српски","version":"1.0"}'>Serbian (Српски)
+                        </option>
+                        <option value='{"language_code":"si","language_name":"සිංහල","version":"1.0"}'>Sinhala (සිංහල)
+                        </option>
+                        <option value='{"language_code":"sk","language_name":"Slovenčina","version":"1.0"}'>Slovak
+                            (Slovenčina)</option>
+                        <option value='{"language_code":"sl","language_name":"Slovenščina","version":"1.0"}'>Slovenian
+                            (Slovenščina)</option>
+                        <option value='{"language_code":"es","language_name":"Español","version":"1.0"}'>Spanish
+                            (Español)</option>
+                        <option value='{"language_code":"sw","language_name":"Kiswahili","version":"1.0"}'>Swahili
+                            (Kiswahili)</option>
+                        <option value='{"language_code":"sv","language_name":"Svenska","version":"1.0"}'>Swedish
+                            (Svenska)</option>
+                        <option value='{"language_code":"ta","language_name":"தமிழ்","version":"1.0"}'>Tamil (தமிழ்)
+                        </option>
+                        <option value='{"language_code":"te","language_name":"తెలుగు","version":"1.0"}'>Telugu (తెలుగు)
+                        </option>
+                        <option value='{"language_code":"th","language_name":"ไทย","version":"1.0"}'>Thai (ไทย)</option>
+                        <option value='{"language_code":"tr","language_name":"Türkçe","version":"1.0"}'>Turkish (Türkçe)
+                        </option>
+                        <option value='{"language_code":"uk","language_name":"Українська","version":"1.0"}'>Ukrainian
+                            (Українська)</option>
+                        <option value='{"language_code":"ur","language_name":"اردو","version":"1.0"}'>Urdu (اردو)
+                        </option>
+                        <option value='{"language_code":"vi","language_name":"Tiếng Việt","version":"1.0"}'>Vietnamese
+                            (Tiếng Việt)</option>
+                    </select>
+                    <span class="help-text">Hold Ctrl/Cmd to select multiple languages</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Sponsor Information</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="sponsor_id">Sponsor ID</label>
+                    <input type="text" id="sponsor_id" name="sponsor_id" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="sponsor_logo">Sponsor Logo</label>
+                    <input type="text" id="sponsor_logo" name="sponsor_logo" class="form-control"
+                        value="sponsor_default.png">
+                </div>
+                <div class="form-group">
+                    <label for="sponsor_url">Sponsor URL</label>
+                    <input type="text" id="sponsor_url" name="sponsor_url" class="form-control"
+                        value="https://apis-ia.com">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Assistant</button>
+            <a href="{{ url_for('edit_agent') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/add_assistant.js') }}"></script>
+{% endblock %}

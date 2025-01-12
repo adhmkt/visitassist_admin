@@ -1,0 +1,1594 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container recommendation-container">
+    <h1 class="page-title">New Recommendation</h1>
+
+    <!-- Search Form -->
+    <div class="card search-card">
+        <form id="searchForm" class="search-form">
+            <div class="form-group">
+                <label for="searchQuery" class="form-label">Search for a place:</label>
+                <div class="search-input-group">
+                    <input type="text" class="form-control" id="searchQuery" name="query"
+                        placeholder="Enter place name or address" required>
+                    <button type="submit" class="action-button search-button">
+                        Search
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Search Results -->
+    <div id="searchResults" class="results-grid"></div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons-container">
+        <div class="button-group">
+            <button onclick="clearSelections()" class="action-button clear-button">
+                Clear
+            </button>
+            <button onclick="selectAll()" class="action-button select-all-button">
+                Select All
+            </button>
+            <button onclick="processSelections()" class="action-button process-button">
+                Add Selections
+            </button>
+        </div>
+    </div>
+
+    <!-- Selected Place -->
+    <div id="selectedPlace" class="card selected-place-card" style="display: none;"></div>
+
+    <!-- Recommendation Form -->
+    <div id="recommendationForm" class="card recommendation-form-card" style="display: none;">
+        <h2 class="card-title">Create Recommendation</h2>
+        <form class="recommendation-form">
+            <div class="form-group">
+                <label for="title" class="form-label">Title:</label>
+                <input type="text" class="form-control" id="title" name="title"
+                    placeholder="Enter a title for your recommendation" required>
+            </div>
+            <div class="form-group">
+                <label for="description" class="form-label">Description:</label>
+                <textarea class="form-control" id="description" name="description" rows="4"
+                    placeholder="Describe your recommendation" required></textarea>
+            </div>
+            <button type="submit" class="action-button submit-button">
+                Create Recommendation
+            </button>
+        </form>
+    </div>
+
+    <!-- Add Modal Structure -->
+    <div id="placeDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalPlaceName"></h2>
+                <div class="modal-actions">
+                    <button id="savePlaceButton" class="save-button">
+                        <span class="save-icon">💾</span>
+                        Save Place
+                    </button>
+                    <button class="close-modal">&times;</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div id="photoCarousel" class="carousel">
+                    <div class="carousel-indicators"></div>
+                    <div class="carousel-inner"></div>
+                </div>
+                <div id="placeDetailsContent" class="details-content"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedPlace = null;
+    let selectedPlaces = new Set();
+    let currentPlaceDetails = null;
+
+    document.getElementById('searchForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const query = document.getElementById('searchQuery').value;
+        if (!query) {
+            alert('Please enter a search term');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/recommendations/search', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query })
+            });
+
+            const data = await response.json();
+            console.log('Search results:', data);
+
+            if (data.success) {
+                displaySearchResults(data.results);
+            } else {
+                alert(data.message || 'Search failed');
+            }
+        } catch (error) {
+            console.error('Search error:', error);
+            alert('Error searching places');
+        }
+    });
+
+    function displaySearchResults(results) {
+        console.log('Search results with photos:', results);
+
+        const container = document.getElementById('searchResults');
+        container.innerHTML = '';
+
+        if (!results || results.length === 0) {
+            container.innerHTML = '<p class="no-results">No places found</p>';
+            return;
+        }
+
+        results.forEach((place, index) => {
+            console.log(`Place ${index} (${place.name}):`);
+            console.log('- photos:', place.photos);
+
+            const div = document.createElement('div');
+            div.className = 'place-result';
+
+            const priceLevel = place.price_level ? '💰'.repeat(place.price_level) : 'N/A';
+            const statusMap = {
+                'OPERATIONAL': '<span class="status-badge operational">Open</span>',
+                'CLOSED_TEMPORARILY': '<span class="status-badge temporary">Temporarily Closed</span>',
+                'CLOSED_PERMANENTLY': '<span class="status-badge closed">Permanently Closed</span>'
+            };
+            const businessStatus = statusMap[place.business_status] || '';
+            const formattedTypes = place.types
+                .map(type => type.replace(/_/g, ' '))
+                .slice(0, 3)
+                .map(type => `<span class="type-badge">${type}</span>`)
+                .join('');
+
+            div.innerHTML = `
+                <div class="place-photo-section">
+                    ${place.photos && place.photos.length > 0 ? `
+                        <div class="place-photo main-photo">
+                            <img src="/api/places/photo/${place.photos[0]}" 
+                                 alt="${place.name}" 
+                                 class="place-image" 
+                                 loading="lazy"
+                                 data-photo-ref="${place.photos[0]}"
+                                 onerror="this.parentElement.style.display='none'"/>
+                        </div>
+                        <button class="gallery-toggle" 
+                                data-index="${index}" 
+                                data-photos='${JSON.stringify(place.photos)}'
+                                onclick="handleGalleryToggle(this)">
+                            <span class="toggle-text">Show Photo (${place.photos.length} photo${place.photos.length > 1 ? 's' : ''})</span>
+                            <span class="toggle-icon">▼</span>
+                        </button>
+                        <div id="gallery-${index}" class="photo-gallery" style="display: none;"></div>
+                    ` : ''}
+                </div>
+                <div class="place-content">
+                    <div class="place-header">
+                        <img src="${place.icon}" alt="" class="place-icon" />
+                        <div class="place-title">
+                            <h3 class="place-name">${place.name}</h3>
+                            <p class="place-address">${place.address}</p>
+                        </div>
+                    </div>
+                    
+                    ${place.rating ? `
+                        <div class="rating-container">
+                            <div class="rating">
+                                <span class="rating-value">${place.rating}</span>
+                                <span class="rating-stars">⭐</span>
+                            </div>
+                            <span class="rating-count">${place.user_ratings_total} reviews</span>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="place-info">
+                        ${businessStatus}
+                        <div class="price-level">Price: ${priceLevel}</div>
+                        ${place.opening_hours !== undefined ?
+                    `<div class="status-badge ${place.opening_hours ? 'operational' : 'closed'}">
+                                ${place.opening_hours ? 'Open Now' : 'Closed'}
+                            </div>` : ''
+                }
+                    </div>
+                    
+                    <div class="place-types">
+                        ${formattedTypes}
+                    </div>
+                </div>
+                <div class="place-actions">
+                    <button onclick="showPlaceDetails('${place.place_id}')" class="details-button">
+                        View Details
+                    </button>
+                </div>
+                <div class="place-select">
+                    <input type="checkbox" 
+                           id="place-${index}" 
+                           class="place-checkbox" 
+                           data-place-id="${place.place_id}"
+                           ${selectedPlaces.has(place.place_id) ? 'checked' : ''}
+                           onchange="togglePlaceSelection('${place.place_id}', this.checked)" />
+                    <label for="place-${index}" class="place-checkbox-label"></label>
+                </div>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function handleGalleryToggle(button) {
+        const index = button.getAttribute('data-index');
+        const photos = JSON.parse(button.getAttribute('data-photos'));
+        toggleGallery(index, photos);
+    }
+
+    function toggleGallery(cardIndex, photoRefs) {
+        const galleryEl = document.getElementById(`gallery-${cardIndex}`);
+        const toggleBtn = galleryEl.previousElementSibling;
+        const toggleText = toggleBtn.querySelector('.toggle-text');
+        const toggleIcon = toggleBtn.querySelector('.toggle-icon');
+
+        if (galleryEl.style.display === 'none') {
+            if (!galleryEl.children.length) {
+                const photoGrid = photoRefs.map((photoRef, photoIndex) => `
+                    <div class="gallery-item ${photoIndex === 0 ? 'current-main' : ''}" 
+                         data-photo-ref="${photoRef}">
+                        <img src="/api/places/photo/${photoRef}" 
+                             alt="Photo ${photoIndex + 1}"
+                             loading="lazy"
+                             class="gallery-image" />
+                        <div class="gallery-item-overlay">
+                            ${photoIndex === 0 ?
+                        '<span class="main-indicator">Main Photo</span>' :
+                        `<button class="set-main-btn" onclick="setMainPhoto('${cardIndex}', '${photoRef}')">
+                                    Set as Main
+                                </button>`
+                    }
+                        </div>
+                    </div>
+                `).join('');
+
+                galleryEl.innerHTML = `<div class="gallery-grid">${photoGrid}</div>`;
+            }
+
+            galleryEl.style.display = 'block';
+            toggleText.textContent = `Hide Photo${photoRefs.length > 1 ? 's' : ''}`;
+            toggleIcon.textContent = '▲';
+        } else {
+            galleryEl.style.display = 'none';
+            toggleText.textContent = `Show Photo${photoRefs.length > 1 ? 's' : ''} (${photoRefs.length})`;
+            toggleIcon.textContent = '▼';
+        }
+    }
+
+    function setMainPhoto(cardIndex, photoRef) {
+        const card = document.getElementById(`gallery-${cardIndex}`).closest('.place-result');
+        const mainPhoto = card.querySelector('.main-photo img');
+        const oldPhotoRef = mainPhoto.getAttribute('data-photo-ref');
+
+        mainPhoto.src = `/api/places/photo/${photoRef}`;
+        mainPhoto.setAttribute('data-photo-ref', photoRef);
+
+        const gallery = card.querySelector('.gallery-grid');
+        const items = gallery.querySelectorAll('.gallery-item');
+
+        items.forEach(item => {
+            const itemPhotoRef = item.getAttribute('data-photo-ref');
+            const overlay = item.querySelector('.gallery-item-overlay');
+
+            if (itemPhotoRef === photoRef) {
+                item.classList.add('current-main');
+                overlay.innerHTML = '<span class="main-indicator">Main Photo</span>';
+            } else if (itemPhotoRef === oldPhotoRef) {
+                item.classList.remove('current-main');
+                overlay.innerHTML = `
+                    <button class="set-main-btn" onclick="setMainPhoto('${cardIndex}', '${itemPhotoRef}')">
+                        Set as Main
+                    </button>
+                `;
+            }
+        });
+    }
+
+    // Add JavaScript for Modal and Details Handling
+    async function showPlaceDetails(placeId) {
+        try {
+            const response = await fetch(`/api/places/details/${placeId}`);
+            const data = await response.json();
+
+            if (data.success) {
+                currentPlaceDetails = {
+                    ...data.place,
+                    geometry: {
+                        location: {
+                            lat: data.place.latitude,
+                            lng: data.place.longitude
+                        }
+                    }
+                };
+
+                console.log('Place details with geometry:', currentPlaceDetails);
+
+                // Update modal content
+                document.getElementById('modalPlaceName').textContent = data.place.name;
+
+                // Update carousel
+                const carouselInner = document.querySelector('#photoCarousel .carousel-inner');
+                const carouselIndicators = document.querySelector('#photoCarousel .carousel-indicators');
+                carouselInner.innerHTML = '';
+                carouselIndicators.innerHTML = '';
+
+                if (data.place.photos && data.place.photos.length > 0) {
+                    data.place.photos.forEach((photo, index) => {
+                        // Create indicator button
+                        const indicator = document.createElement('button');
+                        indicator.setAttribute('data-slide-to', index);
+                        if (index === 0) indicator.classList.add('active');
+                        indicator.addEventListener('click', () => showSlide(index));
+                        carouselIndicators.appendChild(indicator);
+
+                        // Create slide
+                        const slide = document.createElement('div');
+                        slide.className = `carousel-item${index === 0 ? ' active' : ''}`;
+
+                        const img = document.createElement('img');
+                        img.src = `/api/places/photo/${photo.photo_reference}`;
+                        img.alt = `Photo ${index + 1}`;
+                        img.onerror = () => {
+                            console.error(`Failed to load image ${index + 1}`);
+                            slide.style.display = 'none';
+                        };
+
+                        slide.appendChild(img);
+                        carouselInner.appendChild(slide);
+                    });
+
+                    // Show carousel only if there are valid photos
+                    const hasVisiblePhotos = carouselInner.querySelectorAll('.carousel-item:not([style*="display: none"])').length > 0;
+                    document.getElementById('photoCarousel').style.display = hasVisiblePhotos ? 'block' : 'none';
+                } else {
+                    document.getElementById('photoCarousel').style.display = 'none';
+                }
+
+                // Update place details
+                const detailsHtml = `
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <h5>Address</h5>
+                            <p>${data.place.formatted_address || 'Not available'}</p>
+                        </div>
+                        <div class="detail-item">
+                            <h5>Phone</h5>
+                            <p>${data.place.formatted_phone_number || 'Not available'}</p>
+                        </div>
+                        <div class="detail-item">
+                            <h5>Website</h5>
+                            <p>${data.place.website ? `<a href="${data.place.website}" target="_blank">${data.place.website}</a>` : 'Not available'}</p>
+                        </div>
+                        <div class="detail-item">
+                            <h5>Rating</h5>
+                            <p>${data.place.rating ? `${data.place.rating} ⭐ (${data.place.user_ratings_total} reviews)` : 'Not available'}</p>
+                        </div>
+                        <div class="detail-item">
+                            <h5>Price Level</h5>
+                            <p>${data.place.price_level ? '💰'.repeat(data.place.price_level) : 'Not available'}</p>
+                        </div>
+                        <div class="detail-item">
+                            <h5>Categories</h5>
+                            <p>${data.place.types ? data.place.types.join(', ') : 'Not available'}</p>
+                        </div>
+                    </div>
+                `;
+
+                document.getElementById('placeDetailsContent').innerHTML = detailsHtml;
+
+                // Show the modal
+                const modal = document.getElementById('placeDetailsModal');
+                modal.style.display = 'block';
+
+                // Initialize carousel functionality
+                initializeCarousel();
+            } else {
+                console.error('Failed to get place details:', data.message);
+                alert('Failed to load place details. Please try again.');
+            }
+        } catch (error) {
+            console.error('Error showing place details:', error);
+            alert('An error occurred while loading place details. Please try again.');
+        }
+    }
+
+    // Add carousel control functions
+    function showSlide(index) {
+        const items = document.querySelectorAll('.carousel-item');
+        const indicators = document.querySelectorAll('.carousel-indicators button');
+
+        items.forEach(item => item.classList.remove('active'));
+        indicators.forEach(indicator => indicator.classList.remove('active'));
+
+        items[index].classList.add('active');
+        indicators[index].classList.add('active');
+    }
+
+    function initializeCarousel() {
+        const items = document.querySelectorAll('.carousel-item');
+        if (items.length <= 1) return;
+
+        let currentIndex = 0;
+        const maxIndex = items.length - 1;
+
+        // Auto advance slides every 5 seconds
+        setInterval(() => {
+            currentIndex = currentIndex === maxIndex ? 0 : currentIndex + 1;
+            showSlide(currentIndex);
+        }, 5000);
+    }
+
+    // Modal close functionality
+    document.querySelector('.close-modal').addEventListener('click', () => {
+        document.getElementById('placeDetailsModal').style.display = 'none';
+    });
+
+    window.addEventListener('click', (event) => {
+        const modal = document.getElementById('placeDetailsModal');
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    // Add this after the showPlaceDetails function
+    async function savePlaceToDatabase() {
+        try {
+            console.log('Preparing to save place:', currentPlaceDetails);
+
+            // Prepare place data
+            const placeData = {
+                place_id: currentPlaceDetails.place_id,
+                name: currentPlaceDetails.name,
+                formatted_address: currentPlaceDetails.formatted_address,
+                formatted_phone_number: currentPlaceDetails.formatted_phone_number,
+                website: currentPlaceDetails.website,
+                rating: currentPlaceDetails.rating,
+                user_ratings_total: currentPlaceDetails.user_ratings_total,
+                price_level: currentPlaceDetails.price_level,
+                business_status: currentPlaceDetails.business_status,
+                types: currentPlaceDetails.types,
+                latitude: currentPlaceDetails.geometry.location.lat,
+                longitude: currentPlaceDetails.geometry.location.lng,
+                wheelchair_accessible: currentPlaceDetails.wheelchair_accessible
+            };
+
+            console.log('Place data prepared:', placeData);
+
+            // Prepare services data
+            const servicesData = {
+                place_id: currentPlaceDetails.place_id,
+                serves_vegetarian: currentPlaceDetails.serves_vegetarian || false
+            };
+
+            // Prepare opening hours data
+            const openingHoursData = currentPlaceDetails.opening_hours?.weekday_text?.map(text => ({
+                place_id: currentPlaceDetails.place_id,
+                weekday_text: text
+            })) || [];
+
+            // Prepare reviews data
+            const reviewsData = currentPlaceDetails.reviews?.map(review => ({
+                place_id: currentPlaceDetails.place_id,
+                author_name: review.author_name,
+                rating: review.rating,
+                text: review.text,
+                time: review.time,
+                relative_time_description: review.relative_time_description
+            })) || [];
+
+            // Prepare photos data
+            const photosData = currentPlaceDetails.photos?.map(photo => ({
+                place_id: currentPlaceDetails.place_id,
+                photo_reference: photo.photo_reference,
+                height: photo.height,
+                width: photo.width,
+                html_attributions: photo.html_attributions
+            })) || [];
+
+            // Send data to server
+            const response = await fetch('/api/places/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    place: placeData,
+                    services: servicesData,
+                    opening_hours: openingHoursData,
+                    reviews: reviewsData,
+                    photos: photosData
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                console.log('Place saved successfully');
+                const saveButton = document.getElementById('savePlaceButton');
+                saveButton.classList.add('saved');
+                saveButton.innerHTML = `
+                    <span class="save-icon">✓</span>
+                    Saved
+                `;
+            } else {
+                console.error('Failed to save place:', result.message);
+                alert('Failed to save place: ' + result.message);
+            }
+        } catch (error) {
+            console.error('Error saving place:', error);
+            alert('Error saving place: ' + error.message);
+        }
+    }
+
+    // Add click handler for save button
+    document.getElementById('savePlaceButton').addEventListener('click', async function () {
+        if (this.classList.contains('saved')) {
+            return;
+        }
+
+        const placeId = this.getAttribute('data-place-id');
+        if (!currentPlaceDetails) {
+            alert('No place details available to save');
+            return;
+        }
+
+        this.disabled = true;
+        this.innerHTML = `
+            <span class="save-icon">⏳</span>
+            Saving...
+        `;
+
+        const saved = await savePlaceToDatabase(currentPlaceDetails);
+
+        if (!saved) {
+            this.disabled = false;
+            this.innerHTML = `
+                <span class="save-icon">💾</span>
+                Save Place
+            `;
+        }
+    });
+
+    function clearSelections() {
+        selectedPlaces.clear();
+        const checkboxes = document.querySelectorAll('.place-checkbox');
+        checkboxes.forEach(checkbox => checkbox.checked = false);
+    }
+
+    function selectAll() {
+        const checkboxes = document.querySelectorAll('.place-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = true;
+            selectedPlaces.add(checkbox.getAttribute('data-place-id'));
+        });
+    }
+
+    function togglePlaceSelection(placeId, isChecked) {
+        if (isChecked) {
+            selectedPlaces.add(placeId);
+        } else {
+            selectedPlaces.delete(placeId);
+        }
+    }
+
+    function processSelections() {
+        if (selectedPlaces.size === 0) {
+            alert('Please select at least one place');
+            return;
+        }
+
+        // Show the recommendation form
+        document.getElementById('recommendationForm').style.display = 'block';
+
+        // Scroll to the form
+        document.getElementById('recommendationForm').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    }
+
+    // Add event listener for the recommendation form
+    document.querySelector('.recommendation-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const title = document.getElementById('title').value;
+        const description = document.getElementById('description').value;
+
+        if (!title || !description) {
+            alert('Please fill in all fields');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/recommendations/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    place_ids: Array.from(selectedPlaces)
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                alert('Recommendation created successfully!');
+                window.location.href = '/recommendations';
+            } else {
+                alert(result.message || 'Failed to create recommendation');
+            }
+        } catch (error) {
+            console.error('Error creating recommendation:', error);
+            alert('Error creating recommendation');
+        }
+    });
+</script>
+
+<style>
+    /* Container Styles */
+    .recommendation-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    /* Typography */
+    .page-title {
+        font-size: 2rem;
+        color: var(--primary-text);
+        margin-bottom: 2rem;
+    }
+
+    .card-title {
+        font-size: 1.5rem;
+        color: var(--primary-text);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Card Styles */
+    .card {
+        background-color: var(--card-background);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+    }
+
+    /* Form Styles */
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        color: var(--secondary-text);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    /* Search Input Group */
+    .search-input-group {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .search-input-group .form-control {
+        flex: 1;
+    }
+
+    /* Button Styles */
+    .action-button {
+        background-color: var(--primary-blue);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .action-button:hover {
+        background-color: var(--secondary-blue);
+    }
+
+    .submit-button {
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    /* Results Grid */
+    .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin: 1.5rem 0;
+    }
+
+    /* Modern Card Styles */
+    .place-result {
+        background-color: var(--card-background);
+        border-radius: 1rem;
+        overflow: hidden;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .place-result:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Photo Container */
+    .place-photo {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%;
+        background-color: #f1f5f9;
+        overflow: hidden;
+    }
+
+    .place-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .place-result:hover .place-image {
+        transform: scale(1.05);
+    }
+
+    /* Content Layout */
+    .place-content {
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        flex: 1;
+    }
+
+    .place-header {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .place-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 4px;
+        flex-shrink: 0;
+    }
+
+    .place-title {
+        flex: 1;
+    }
+
+    .place-name {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--primary-text);
+        margin: 0 0 0.5rem 0;
+        line-height: 1.2;
+    }
+
+    .place-address {
+        font-size: 0.875rem;
+        color: var(--secondary-text);
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    /* Rating Styles */
+    .rating-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .rating {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        background-color: #fef3c7;
+        padding: 0.25rem 0.5rem;
+        border-radius: 1rem;
+    }
+
+    .rating-value {
+        font-weight: 600;
+        color: #92400e;
+    }
+
+    .rating-stars {
+        color: #92400e;
+    }
+
+    .rating-count {
+        color: var(--secondary-text);
+        font-size: 0.875rem;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+
+    .status-badge.operational {
+        background-color: #dcfce7;
+        color: #166534;
+    }
+
+    .status-badge.temporary {
+        background-color: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-badge.closed {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+
+    /* Place Info */
+    .place-info {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .price-level {
+        background-color: #f1f5f9;
+        color: var(--secondary-text);
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+    }
+
+    /* Type Tags */
+    .place-types {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+
+    .type-badge {
+        background-color: #e2e8f0;
+        color: var(--secondary-text);
+        padding: 0.25rem 0.75rem;
+        border-radius: 1rem;
+        font-size: 0.75rem;
+        text-transform: capitalize;
+        letter-spacing: 0.025em;
+    }
+
+    /* Action Button */
+    .action-button {
+        width: 100%;
+        background-color: var(--primary-blue);
+        color: white;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 1rem;
+    }
+
+    .action-button:hover {
+        background-color: var(--secondary-blue);
+    }
+
+    /* Loading State */
+    .place-photo.loading {
+        background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+        background-size: 200% 100%;
+        animation: shimmer 1.5s linear infinite;
+    }
+
+    @keyframes shimmer {
+        to {
+            background-position-x: -200%;
+        }
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 640px) {
+        .results-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .place-content {
+            padding: 1rem;
+        }
+    }
+
+    /* Search Form Styles */
+    .search-card {
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .search-form {
+        width: 100%;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--primary-text);
+        margin-bottom: 0.5rem;
+    }
+
+    .search-input-group {
+        display: flex;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    .form-control {
+        flex: 1;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .search-button {
+        width: auto;
+        white-space: nowrap;
+        margin: 0;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+        .search-input-group {
+            flex-direction: column;
+        }
+
+        .search-button {
+            width: 100%;
+        }
+    }
+
+    /* Action Button Styles */
+    .card-actions {
+        padding: 1rem 1.5rem;
+        background-color: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        margin-top: auto;
+    }
+
+    .select-button {
+        width: 100%;
+        background-color: var(--primary-blue);
+        color: white;
+        border: none;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .select-button:hover {
+        background-color: var(--secondary-blue);
+        transform: translateY(-1px);
+    }
+
+    .select-button .icon {
+        font-size: 1.25rem;
+    }
+
+    /* Update place-result to ensure proper card layout */
+    .place-result {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .place-content {
+        flex: 1;
+        padding: 1.5rem;
+        padding-bottom: 1rem;
+    }
+
+    /* Update type tags to not interfere with button */
+    .place-types {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    /* Checkbox Styles */
+    .place-select {
+        padding: 1rem 1.5rem;
+        background-color: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .place-checkbox {
+        display: none;
+    }
+
+    .place-checkbox-label {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        cursor: pointer;
+        border: 2.5px solid #2563eb;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .place-checkbox:checked+.place-checkbox-label {
+        background-color: #2563eb;
+        border-color: #2563eb;
+    }
+
+    .place-checkbox:checked+.place-checkbox-label::after {
+        content: '✓';
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        line-height: 1;
+    }
+
+    .place-checkbox-label:hover {
+        border-color: #1d4ed8;
+        background-color: #f8fafc;
+    }
+
+    /* Update the bottom section styling */
+    .place-select {
+        padding: 1rem;
+        background-color: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 64px;
+    }
+
+    /* Action Buttons Container */
+    .action-buttons-container {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-end;
+    }
+
+    /* Button Styles */
+    .action-button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .clear-button {
+        background-color: #f1f5f9;
+        color: #64748b;
+        border: 1px solid #e2e8f0;
+    }
+
+    .clear-button:hover {
+        background-color: #e2e8f0;
+    }
+
+    .select-all-button {
+        background-color: #f1f5f9;
+        color: #2563eb;
+        border: 1px solid #2563eb;
+    }
+
+    .select-all-button:hover {
+        background-color: #eff6ff;
+    }
+
+    .process-button {
+        background-color: #2563eb;
+        color: white;
+        border: none;
+    }
+
+    .process-button:hover {
+        background-color: #1d4ed8;
+    }
+
+    @media (max-width: 640px) {
+        .button-group {
+            flex-direction: column;
+        }
+
+        .action-button {
+            width: 100%;
+        }
+    }
+
+    /* Photo Section Styles */
+    .place-photo-section {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+    }
+
+    .gallery-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: calc(100% - 2rem);
+        margin: 0.5rem 1rem;
+        padding: 0.75rem;
+        background-color: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        font-size: 0.875rem;
+        color: var(--primary-blue);
+        transition: all 0.2s ease;
+    }
+
+    .gallery-toggle:hover {
+        background-color: #eff6ff;
+        border-color: var(--primary-blue);
+    }
+
+    .toggle-text {
+        font-weight: 500;
+    }
+
+    .toggle-icon {
+        font-size: 0.75rem;
+    }
+
+    /* Update main photo container */
+    .main-photo {
+        position: relative;
+        width: 100%;
+        padding-top: 56.25%;
+        background-color: #f1f5f9;
+        overflow: hidden;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Photo Gallery Grid */
+    .photo-gallery {
+        padding: 0 1rem;
+    }
+
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.75rem;
+        padding: 1rem;
+        background-color: #f8fafc;
+        border-radius: 0.5rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .gallery-item {
+        position: relative;
+        padding-top: 75%;
+        background-color: #f1f5f9;
+        border-radius: 0.375rem;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .gallery-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.2s ease;
+    }
+
+    .gallery-item:hover .gallery-image {
+        transform: scale(1.05);
+    }
+
+    /* Overlay Styles */
+    .gallery-item-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.2s ease;
+    }
+
+    .gallery-item:hover .gallery-item-overlay {
+        opacity: 1;
+    }
+
+    .main-indicator {
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.25rem 0.75rem;
+        background-color: rgba(37, 99, 235, 0.9);
+        border-radius: 1rem;
+    }
+
+    .set-main-btn {
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 0.25rem 0.75rem;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 1px solid white;
+        border-radius: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .set-main-btn:hover {
+        background-color: rgba(37, 99, 235, 0.9);
+        border-color: transparent;
+    }
+
+    .current-main {
+        border: 2px solid var(--primary-blue);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 640px) {
+        .gallery-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 260px;
+        /* Account for sidebar width */
+        width: calc(100% - 260px);
+        /* Adjust width to account for sidebar */
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.75);
+        z-index: 1000;
+        overflow-y: auto;
+        padding: 2rem;
+        backdrop-filter: blur(4px);
+        box-sizing: border-box;
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: #fff;
+        margin: 2rem auto;
+        width: 90%;
+        max-width: 800px;
+        border-radius: 1rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+        animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-1rem);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-header {
+        padding: 1.5rem;
+        background-color: #fff;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #111827;
+        line-height: 1.2;
+    }
+
+    .close-modal {
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: transparent;
+        color: #6b7280;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 1.5rem;
+    }
+
+    .close-modal:hover {
+        background-color: #f3f4f6;
+        color: #111827;
+    }
+
+    .modal-body {
+        padding: 1.5rem;
+        max-height: calc(100vh - 12rem);
+        overflow-y: auto;
+    }
+
+    /* Carousel Styles */
+    .carousel {
+        position: relative;
+        background-color: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        margin-bottom: 2rem;
+    }
+
+    .carousel-inner {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+        border-radius: 0.5rem;
+    }
+
+    .carousel-item {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 0.6s ease-in-out;
+    }
+
+    .carousel-item.active {
+        opacity: 1;
+    }
+
+    .carousel-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .carousel-indicators {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 0.5rem;
+        z-index: 2;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .carousel-indicators button {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.5);
+        border: none;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .carousel-indicators button.active {
+        background-color: white;
+        transform: scale(1.2);
+    }
+
+    /* Details Content Styles */
+    .details-content {
+        padding: 1.5rem;
+    }
+
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .detail-item {
+        background-color: #f8fafc;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .detail-item h5 {
+        color: #64748b;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+    }
+
+    .detail-item p {
+        color: #0f172a;
+        font-size: 1rem;
+        margin: 0;
+    }
+
+    .detail-item a {
+        color: #2563eb;
+        text-decoration: none;
+    }
+
+    .detail-item a:hover {
+        text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+        .modal {
+            left: 0;
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .modal-content {
+            margin: 1rem auto;
+            width: 95%;
+        }
+
+        .carousel-inner {
+            height: 300px;
+        }
+
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Modal Header Actions */
+    .modal-actions {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .save-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .save-button:hover {
+        background-color: #1d4ed8;
+    }
+
+    .save-button:active {
+        transform: scale(0.98);
+    }
+
+    .save-button.saved {
+        background-color: #059669;
+    }
+
+    .save-button.saved:hover {
+        background-color: #047857;
+    }
+
+    .save-icon {
+        font-size: 1.25rem;
+    }
+</style>
+{% endblock %}

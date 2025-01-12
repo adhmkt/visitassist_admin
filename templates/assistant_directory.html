@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Assistant Directory{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/assistant_directory.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="content-wrapper">
+    <!-- Content Header -->
+    <div class="content-header">
+        <h1>Assistant Directory</h1>
+        <div class="header-actions">
+            <a href="{{ url_for('add_assistant') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                <span>New Assistant</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-body">
+        <!-- Search and Filter Section -->
+        <div class="search-section">
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="assistantSearch" placeholder="Search assistants..."
+                    aria-label="Search assistants">
+            </div>
+            <div class="filter-options">
+                <select id="typeFilter" class="form-control">
+                    <option value="">All Types</option>
+                    <option value="classic">Classic</option>
+                    <option value="custom">Custom</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Assistants Grid -->
+        <div class="assistants-grid">
+            {% for assistant in assistants %}
+            <div class="assistant-card" data-type="{{ assistant.assistant_type }}">
+                <div class="assistant-image">
+                    <img src="{{ assistant.assistant_img_url or url_for('static', filename='images/default-assistant.png') }}"
+                        alt="{{ assistant.assistant_name }}">
+                </div>
+                <div class="assistant-info">
+                    <h3>{{ assistant.assistant_name }}</h3>
+                    <p class="assistant-type">{{ assistant.assistant_type }}</p>
+                    <p class="assistant-desc">{{ assistant.assistant_desc }}</p>
+                </div>
+                <div class="assistant-actions">
+                    <a href="{{ url_for('edit_agent', id=assistant.assistant_id) }}" class="btn btn-secondary">
+                        <i class="fas fa-edit"></i>
+                        <span>Edit</span>
+                    </a>
+                    <button class="btn btn-icon" onclick="previewAssistant('{{ assistant.assistant_id }}')">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Empty State -->
+        {% if not assistants %}
+        <div class="empty-state">
+            <i class="fas fa-robot"></i>
+            <h2>No Assistants Found</h2>
+            <p>Start by creating your first assistant</p>
+            <a href="{{ url_for('add_assistant') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                <span>Create Assistant</span>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div id="previewModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Assistant Preview</h2>
+            <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div id="previewContent"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/assistant_directory.js') }}"></script>
+{% endblock %}

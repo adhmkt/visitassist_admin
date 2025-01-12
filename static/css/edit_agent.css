@@ -3,7 +3,7 @@
 /* Content Layout */
 .content-wrapper {
     flex: 1;
-    margin-left: 130px;
+    margin-left: 260px;
     /* Match sidebar width */
     min-height: 100vh;
     background-color: var(--background-color);
@@ -40,12 +40,31 @@
     background-color: var(--card-color);
     padding: 1.5rem;
     border-radius: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .search-section .search-bar {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
     margin-bottom: 1rem;
+}
+
+.search-section .search-bar i {
+    color: #64748b;
+    margin-right: 0.5rem;
+}
+
+.search-section .search-bar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 1rem;
+    color: #1e293b;
 }
 
 /* Form Content */
@@ -87,7 +106,7 @@
 
 /* Form Groups */
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .form-group:last-child {
@@ -97,14 +116,14 @@
 .form-group label {
     display: block;
     margin-bottom: 0.5rem;
-    color: var(--text-primary);
+    color: #1e293b;
     font-weight: 500;
 }
 
 .form-group .help-text {
     display: block;
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: #64748b;
     margin-top: 0.25rem;
 }
 
@@ -112,10 +131,11 @@
 .form-control {
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.25rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    color: #1e293b;
     background-color: white;
-    color: var(--text-primary);
 }
 
 .form-control:focus {
@@ -127,6 +147,19 @@
 textarea.form-control {
     resize: vertical;
     min-height: 100px;
+}
+
+select.form-control {
+    height: auto;
+    padding: 0.5rem;
+    appearance: auto;
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+}
+
+select.form-control option {
+    padding: 0.5rem;
+    color: #1e293b;
 }
 
 /* Language Selector */
@@ -262,4 +295,56 @@ textarea.form-control {
     .header-actions button {
         flex: 1;
     }
+}
+
+.form-group select.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    color: #1e293b;
+    background-color: white;
+    appearance: menulist;
+    -webkit-appearance: menulist;
+    -moz-appearance: menulist;
+    height: auto;
+    max-height: 300px;
+}
+
+.form-group select.form-control option {
+    padding: 0.75rem;
+    font-size: 1rem;
+    color: #1e293b;
+    background-color: white;
+}
+
+.form-group select.form-control:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+}
+
+/* Search bar specific styles */
+.search-bar {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    font-size: 1rem;
+    color: #1e293b;
+    background-color: white;
+}
+
+.search-bar i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
 }

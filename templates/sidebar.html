@@ -12,6 +12,12 @@
                 <span>Dashboard</span>
             </a>
         </li>
+        <li class="{{ 'active' if request.endpoint == 'recommendations' }}">
+            <a href="{{ url_for('recommendations') }}">
+                <i class="fas fa-lightbulb"></i>
+                <span>Recommendations</span>
+            </a>
+        </li>
         <li class="{{ 'active' if request.endpoint == 'edit_agent' }}">
             <a href="{{ url_for('edit_agent') }}">
                 <i class="fas fa-robot"></i>

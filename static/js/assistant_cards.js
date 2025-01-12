@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let allAssistants = [];
     let currentPage = 1;
-    const itemsPerPage = 20;
+    const itemsPerPage = 8;
     let filteredAssistants = [];
 
     // Fetch assistants from the server
@@ -17,13 +17,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await fetch('/agents');
             const data = await response.json();
             if (data.success) {
+                console.log('Fetched assistants:', data.agents);
                 // Filter assistants by subtype and sort alphabetically by name
                 allAssistants = data.agents
                     .filter(assistant =>
                         assistant.subtype === 'VisitAssist' ||
                         assistant.subtype === 'GuestAssist'
                     )
-                    .sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+                    .sort((a, b) => (a.assistant_name || '').localeCompare(b.assistant_name || ''));
 
                 filteredAssistants = [...allAssistants];
                 updateDisplay();
@@ -40,16 +41,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // Create assistant card HTML
     function createAssistantCard(assistant) {
         const baseUrl = 'https://apis-ia-app-28obw.ondigitalocean.app';
-        const cdnBaseUrl = 'https://apis-ia.nyc3.cdn.digitaloceanspaces.com/static/images/assistant_imgs';
-        const encodedName = encodeURIComponent(assistant.name || '');
-        const encodedType = encodeURIComponent(assistant.type || 'classic');
-        const url = `${baseUrl}/${assistant.id}?assistant_name=${encodedName}&type=${encodedType}&default_language=en`;
+        const cdnBaseUrl = 'https://apis-ia.nyc3.digitaloceanspaces.com/static/images/assistant_imgs';
+        const encodedName = encodeURIComponent(assistant.assistant_name || '');
+        const encodedType = encodeURIComponent(assistant.assistant_type || 'classic');
+        const url = `${baseUrl}/${assistant.assistant_id}?assistant_name=${encodedName}&type=${encodedType}&default_language=en`;
 
         // Construct full image URL using CDN
-        const imageUrl = assistant.image ? `${cdnBaseUrl}/${assistant.image}` : '';
+        const imageUrl = assistant.assistant_img ? `${cdnBaseUrl}/${assistant.assistant_img}` : '';
 
         const imageHtml = imageUrl ?
-            `<img src="${imageUrl}" alt="${assistant.name || 'Assistant'}" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'><i class=\'fas fa-robot\'></i></div>'">` :
+            `<img src="${imageUrl}" alt="${assistant.assistant_name || 'Assistant'}" onerror="this.parentElement.innerHTML='<div class=\'image-placeholder\'><i class=\'fas fa-robot\'></i></div>'">` :
             `<div class="image-placeholder"><i class="fas fa-robot"></i></div>`;
 
         return `
@@ -58,8 +59,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     ${imageHtml}
                 </div>
                 <div class="assistant-content">
-                    <h3>${assistant.name || 'Unnamed Assistant'}</h3>
-                    <p>${assistant.description || 'No description available'}</p>
+                    <h3>${assistant.assistant_name || 'Unnamed Assistant'}</h3>
+                    <p>${assistant.assistant_desc || 'No description available'}</p>
                     <a href="${url}" target="_blank" class="assistant-link">
                         Open Assistant <i class="fas fa-external-link-alt"></i>
                     </a>
@@ -76,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Remove loading message if it exists
         if (loadingMessage) {
-            loadingMessage.remove();
+            loadingMessage.style.display = 'none';
         }
 
         if (pageAssistants.length === 0) {
@@ -99,8 +100,8 @@ document.addEventListener('DOMContentLoaded', function () {
     searchInput.addEventListener('input', function (e) {
         const searchTerm = e.target.value.toLowerCase();
         filteredAssistants = allAssistants.filter(assistant =>
-            (assistant.name || '').toLowerCase().includes(searchTerm) ||
-            (assistant.description || '').toLowerCase().includes(searchTerm)
+            (assistant.assistant_name || '').toLowerCase().includes(searchTerm) ||
+            (assistant.assistant_desc || '').toLowerCase().includes(searchTerm)
         );
         currentPage = 1;
         updateDisplay();

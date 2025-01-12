@@ -1,0 +1,1024 @@
+{
+    "languages": {
+        "de": {
+            "sponsor_logo": "sponsor_default.png",
+            "assistant_desc": "<p>Beginne dein Gespräch mit dem Assistenten</p>",
+            "assistant_name": "Mount Kilimanjaro, Tansania",
+            "design_features": {
+                "bg_image": "kilimanjaro_background.jpg",
+                "bubble_bg_color": "#ffffff",
+                "assistant_img_url": "splash_bot_avatar.png",
+                "bubble_font_color": "#000000",
+                "assistant_splash_img": "back01_kilimanjaro.png",
+                "assistant_sidebar_img": "kilimanjaro.webp"
+            },
+            "functionalities": [
+                {
+                    "functionality_id": 1,
+                    "functionality_text": "Gipfel des Mount Kilimanjaro",
+                    "functionality_value": "Erzählen Sie mir mehr über das Klettern auf den Mount Kilimanjaro."
+                },
+                {
+                    "functionality_id": 2,
+                    "functionality_text": "Nationalpark Kilimanjaro",
+                    "functionality_value": "Was kann ich im Nationalpark Kilimanjaro sehen?"
+                },
+                {
+                    "functionality_id": 3,
+                    "functionality_text": "Stadtführung Moshi",
+                    "functionality_value": "Was kann ich in der Stadt Moshi erkunden?"
+                },
+                {
+                    "functionality_id": 4,
+                    "functionality_text": "Kaffeeverkostungstouren",
+                    "functionality_value": "Erzählen Sie mir von den Kaffeeverkostungstouren rund um Kilimanjaro."
+                },
+                {
+                    "functionality_id": 5,
+                    "functionality_text": "Chagga-Kulturelle Erfahrung",
+                    "functionality_value": "Was ist in der Chagga-Kulturellen Erfahrung enthalten?"
+                },
+                {
+                    "functionality_id": 6,
+                    "functionality_text": "Materuni Wasserfälle",
+                    "functionality_value": "Wie kann ich die Materuni Wasserfälle besuchen?"
+                },
+                {
+                    "functionality_id": 7,
+                    "functionality_text": "Heißquellen Tour",
+                    "functionality_value": "Erzählen Sie mir mehr über die heißen Quellen in der Nähe von Moshi."
+                },
+                {
+                    "functionality_id": 8,
+                    "functionality_text": "Shira-Plateau",
+                    "functionality_value": "Was kann ich auf dem Shira-Plateau sehen?"
+                },
+                {
+                    "functionality_id": 9,
+                    "functionality_text": "Chala See",
+                    "functionality_value": "Welche Aktivitäten kann ich am Chala See unternehmen?"
+                },
+                {
+                    "functionality_id": 10,
+                    "functionality_text": "Besuch des Marangu-Dorfes",
+                    "functionality_value": "Was sollte ich im Marangu-Dorf sehen?"
+                },
+                {
+                    "functionality_id": 11,
+                    "functionality_text": "Wasserfall-Abseilen",
+                    "functionality_value": "Wo kann ich Wasserfall-Abseilen ausprobieren?"
+                },
+                {
+                    "functionality_id": 12,
+                    "functionality_text": "Kikuletwa heiße Quellen",
+                    "functionality_value": "Was ist besonders an den Kikuletwa heißen Quellen?"
+                },
+                {
+                    "functionality_id": 13,
+                    "functionality_text": "Mountainbiking Touren",
+                    "functionality_value": "Wo kann ich rund um den Kilimanjaro Mountainbiking machen?"
+                },
+                {
+                    "functionality_id": 14,
+                    "functionality_text": "Besuch des Mkomazi-Nationalparks",
+                    "functionality_value": "Welche Wildtiere kann ich im Mkomazi-Nationalpark sehen?"
+                },
+                {
+                    "functionality_id": 15,
+                    "functionality_text": "Sundowner-Safari-Erfahrung",
+                    "functionality_value": "Können Sie die Sundowner-Safari-Erfahrung beschreiben?"
+                },
+                {
+                    "functionality_id": 16,
+                    "functionality_text": "Vogelbeobachtungstouren",
+                    "functionality_value": "Wo ist der beste Ort zur Vogelbeobachtung rund um den Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 17,
+                    "functionality_text": "Besuch der Osiligilai Maasai Lodge",
+                    "functionality_value": "Erzählen Sie mir von einem Besuch der Osiligilai Maasai Lodge."
+                },
+                {
+                    "functionality_id": 18,
+                    "functionality_text": "Kilimanjaro Marathon",
+                    "functionality_value": "Was sollte ich über den Kilimanjaro Marathon wissen?"
+                },
+                {
+                    "functionality_id": 19,
+                    "functionality_text": "Kilimanjaro Nachtwanderung",
+                    "functionality_value": "Was ist die Kilimanjaro Nachtwanderung Erfahrung?"
+                },
+                {
+                    "functionality_id": 20,
+                    "functionality_text": "Freiwillige Touren in Moshi",
+                    "functionality_value": "Wie kann ich an freiwilligen Touren in Moshi teilnehmen?"
+                },
+                {
+                    "functionality_id": 21,
+                    "functionality_text": "Kilimanjaro Tiererfahrung",
+                    "functionality_value": "Welche Wildtiere kann ich rund um den Kilimanjaro antreffen?"
+                },
+                {
+                    "functionality_id": 22,
+                    "functionality_text": "Wandern auf der Umbwe-Route",
+                    "functionality_value": "Was ist besonders an der Umbwe-Route auf dem Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 23,
+                    "functionality_text": "Höhlen- und Klippenerkundung",
+                    "functionality_value": "Wo kann ich Höhlen und Klippen in der Nähe des Kilimanjaro erkunden?"
+                },
+                {
+                    "functionality_id": 24,
+                    "functionality_text": "Besuchen des Arusha-Nationalparks",
+                    "functionality_value": "Was kann ich im Arusha-Nationalpark sehen?"
+                },
+                {
+                    "functionality_id": 25,
+                    "functionality_text": "Alte Moshi-Eisenbahn erkunden",
+                    "functionality_value": "Was ist interessant an der alten Moshi-Eisenbahn?"
+                },
+                {
+                    "functionality_id": 26,
+                    "functionality_text": "Fischer-Dörfer Kilimanjaro",
+                    "functionality_value": "Erzählen Sie mir von den Fischer-Dörfern rund um den Kilimanjaro."
+                },
+                {
+                    "functionality_id": 27,
+                    "functionality_text": "Kilimanjaro Landschaftsflüge",
+                    "functionality_value": "Wie sind die Landschaftsflüge über Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 28,
+                    "functionality_text": "Rongai-Routen-Erkundung",
+                    "functionality_value": "Können Sie mir mehr über die Rongai-Route auf dem Kilimanjaro erzählen?"
+                },
+                {
+                    "functionality_id": 29,
+                    "functionality_text": "Markt für lokale Handwerker und Kunsthandwerk",
+                    "functionality_value": "Wo kann ich lokale Handwerker und Kunsthandwerk in Moshi finden?"
+                },
+                {
+                    "functionality_id": 30,
+                    "functionality_text": "Notrufnummern",
+                    "functionality_value": "Was sind die Notrufnummern, die ich beim Besuch des Kilimanjaro kennen sollte?"
+                }
+            ],
+            "assistant_img_url": "splash_bot_avatar.png",
+            "assistant_splash_img": "splash_bot_avatar.png",
+            "assistant_splash_txt": "<p>Willkommen zu deinem Abenteuer!</p>\n<p>Dein Guide für den Mount Kilimanjaro und die umliegenden Wunder von Moshi.</p>\n<p><i class='fas fa-arrow-left'></i> Wähle einen Gesprächsanreger</p>\n<p>oder tippe in das Feld unten, um mir mitzuteilen, wie ich helfen kann <i class='fas fa-arrow-down'></i></p>",
+            "assistant_sidebar_img": "kilimanjaro.webp",
+            "assistant_splash_mobile_txt": "<p style='text-align: center;'>Willkommen zu deinem Abenteuer!</p>\n<p>Dein Guide für den Mount Kilimanjaro und die Wunder von Moshi ist hier.</p>\n<p>Klicke auf das Menü (<i class='fas fa-bars' onclick='closeInfoPanel()'></i>), um ein Gespräch zu beginnen.</p>\n<p>Oder lass mich deine Bedürfnisse wissen, indem du unten tippst <i class='fas fa-arrow-down'></i></p>"
+        },
+        "en": {
+            "sponsor_logo": "sponsor_default.png",
+            "assistant_desc": "<p>Start your conversation with the Assistant</p>",
+            "assistant_name": "Mount Kilimanjaro, Tanzania",
+            "design_features": {
+                "bg_image": "kilimanjaro_background.jpg",
+                "bubble_bg_color": "#ffffff",
+                "assistant_img_url": "splash_bot_avatar.png",
+                "bubble_font_color": "#000000",
+                "assistant_splash_img": "back01_kilimanjaro.png",
+                "assistant_sidebar_img": "kilimanjaro.webp"
+            },
+            "functionalities": [
+                {
+                    "functionality_id": 1,
+                    "functionality_text": "Summit Mount Kilimanjaro",
+                    "functionality_value": "Tell me more about climbing Mount Kilimanjaro."
+                },
+                {
+                    "functionality_id": 2,
+                    "functionality_text": "Kilimanjaro National Park",
+                    "functionality_value": "What can I see at Kilimanjaro National Park?"
+                },
+                {
+                    "functionality_id": 3,
+                    "functionality_text": "Moshi Town Walking Tour",
+                    "functionality_value": "What can I explore in Moshi town?"
+                },
+                {
+                    "functionality_id": 4,
+                    "functionality_text": "Coffee Plantation Tours",
+                    "functionality_value": "Tell me about coffee plantation tours around Kilimanjaro."
+                },
+                {
+                    "functionality_id": 5,
+                    "functionality_text": "Chagga Cultural Experience",
+                    "functionality_value": "What is included in the Chagga cultural experience?"
+                },
+                {
+                    "functionality_id": 6,
+                    "functionality_text": "Materuni Waterfalls",
+                    "functionality_value": "How can I visit Materuni Waterfalls?"
+                },
+                {
+                    "functionality_id": 7,
+                    "functionality_text": "Hot Springs Tour",
+                    "functionality_value": "Tell me more about the hot springs near Moshi."
+                },
+                {
+                    "functionality_id": 8,
+                    "functionality_text": "Shira Plateau",
+                    "functionality_value": "What can I see on the Shira Plateau?"
+                },
+                {
+                    "functionality_id": 9,
+                    "functionality_text": "Lake Chala",
+                    "functionality_value": "What activities can I do at Lake Chala?"
+                },
+                {
+                    "functionality_id": 10,
+                    "functionality_text": "Visit Marangu Village",
+                    "functionality_value": "What should I see in Marangu Village?"
+                },
+                {
+                    "functionality_id": 11,
+                    "functionality_text": "Waterfall Abseiling",
+                    "functionality_value": "Where can I try waterfall abseiling?"
+                },
+                {
+                    "functionality_id": 12,
+                    "functionality_text": "Kikuletwa Hot Springs",
+                    "functionality_value": "What's special about Kikuletwa Hot Springs?"
+                },
+                {
+                    "functionality_id": 13,
+                    "functionality_text": "Mountain Biking Tours",
+                    "functionality_value": "Where can I go for mountain biking around Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 14,
+                    "functionality_text": "Visit to Mkomazi National Park",
+                    "functionality_value": "What wildlife can I see at Mkomazi National Park?"
+                },
+                {
+                    "functionality_id": 15,
+                    "functionality_text": "Sundowner Safari Experience",
+                    "functionality_value": "Can you describe the sundowner safari experience?"
+                },
+                {
+                    "functionality_id": 16,
+                    "functionality_text": "Bird Watching Tours",
+                    "functionality_value": "Where is the best spot for bird watching around Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 17,
+                    "functionality_text": "Visit Osiligilai Maasai Lodge",
+                    "functionality_value": "Tell me about visiting the Osiligilai Maasai Lodge."
+                },
+                {
+                    "functionality_id": 18,
+                    "functionality_text": "Kilimanjaro Marathon",
+                    "functionality_value": "What should I know about the Kilimanjaro Marathon?"
+                },
+                {
+                    "functionality_id": 19,
+                    "functionality_text": "Kilimanjaro Night Hike",
+                    "functionality_value": "What is the Kilimanjaro Night Hike experience?"
+                },
+                {
+                    "functionality_id": 20,
+                    "functionality_text": "Voluntary Tours in Moshi",
+                    "functionality_value": "How can I participate in voluntary tours in Moshi?"
+                },
+                {
+                    "functionality_id": 21,
+                    "functionality_text": "Kilimanjaro Wildlife Experience",
+                    "functionality_value": "What wildlife can I encounter around Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 22,
+                    "functionality_text": "Hiking the Umbwe Route",
+                    "functionality_value": "What is special about the Umbwe Route on Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 23,
+                    "functionality_text": "Cave & Cliff Exploration",
+                    "functionality_value": "Where can I explore caves and cliffs near Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 24,
+                    "functionality_text": "Visit Arusha National Park",
+                    "functionality_value": "What can I see at Arusha National Park?"
+                },
+                {
+                    "functionality_id": 25,
+                    "functionality_text": "Explore Old Moshi Railway",
+                    "functionality_value": "What is interesting about the old Moshi railway?"
+                },
+                {
+                    "functionality_id": 26,
+                    "functionality_text": "Kilimanjaro Fishing Villages",
+                    "functionality_value": "Tell me about the fishing villages around Kilimanjaro."
+                },
+                {
+                    "functionality_id": 27,
+                    "functionality_text": "Kilimanjaro Scenic Flights",
+                    "functionality_value": "What are Kilimanjaro scenic flights like?"
+                },
+                {
+                    "functionality_id": 28,
+                    "functionality_text": "Rongai Route Exploration",
+                    "functionality_value": "Can you tell me more about the Rongai Route on Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 29,
+                    "functionality_text": "Local Artisans and Crafts Market",
+                    "functionality_value": "Where can I find local artisans and crafts in Moshi?"
+                },
+                {
+                    "functionality_id": 30,
+                    "functionality_text": "Emergency Numbers",
+                    "functionality_value": "What are the emergency numbers I should know when visiting Kilimanjaro?"
+                }
+            ],
+            "assistant_img_url": "splash_bot_avatar.png",
+            "assistant_splash_img": "splash_bot_avatar.png",
+            "assistant_splash_txt": "<p>Welcome to your adventure!</p>\n<p>Your guide to Mount Kilimanjaro and the surrounding wonders of Moshi.</p>\n<p><i class='fas fa-arrow-left'></i> Choose a conversation starter</p>\n<p>or type in the box below to let me know how I can help <i class='fas fa-arrow-down'></i></p>",
+            "assistant_sidebar_img": "kilimanjaro.webp",
+            "assistant_splash_mobile_txt": "<p style='text-align: center;'>Welcome to your adventure!</p>\n<p>Your guide to Mount Kilimanjaro and Moshi's wonders is here.</p>\n<p>Click the menu (<i class='fas fa-bars' onclick='closeInfoPanel()'></i>) to start a conversation.</p>\n<p>Or let me know your needs by typing below <i class='fas fa-arrow-down'></i></p>"
+        },
+        "es": {
+            "sponsor_logo": "sponsor_default.png",
+            "assistant_desc": "<p>Comienza tu conversación con el asistente</p>",
+            "assistant_name": "Monte Kilimanjaro, Tanzania",
+            "design_features": {
+                "bg_image": "kilimanjaro_background.jpg",
+                "bubble_bg_color": "#ffffff",
+                "assistant_img_url": "splash_bot_avatar.png",
+                "bubble_font_color": "#000000",
+                "assistant_splash_img": "back01_kilimanjaro.png",
+                "assistant_sidebar_img": "kilimanjaro.webp"
+            },
+            "functionalities": [
+                {
+                    "functionality_id": 1,
+                    "functionality_text": "Cima del Monte Kilimanjaro",
+                    "functionality_value": "Cuéntame más sobre escalar el Monte Kilimanjaro."
+                },
+                {
+                    "functionality_id": 2,
+                    "functionality_text": "Parque Nacional Kilimanjaro",
+                    "functionality_value": "¿Qué puedo ver en el Parque Nacional Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 3,
+                    "functionality_text": "Tour de Caminata por la Ciudad de Moshi",
+                    "functionality_value": "¿Qué puedo explorar en la ciudad de Moshi?"
+                },
+                {
+                    "functionality_id": 4,
+                    "functionality_text": "Tours de Plantaciones de Café",
+                    "functionality_value": "Cuéntame sobre los tours de plantaciones de café alrededor del Kilimanjaro."
+                },
+                {
+                    "functionality_id": 5,
+                    "functionality_text": "Experiencia Cultural Chagga",
+                    "functionality_value": "¿Qué incluye la experiencia cultural Chagga?"
+                },
+                {
+                    "functionality_id": 6,
+                    "functionality_text": "Cascadas de Materuni",
+                    "functionality_value": "¿Cómo puedo visitar las Cascadas de Materuni?"
+                },
+                {
+                    "functionality_id": 7,
+                    "functionality_text": "Tour a las Aguas Termales",
+                    "functionality_value": "Cuéntame más sobre las aguas termales cerca de Moshi."
+                },
+                {
+                    "functionality_id": 8,
+                    "functionality_text": "Meseta Shira",
+                    "functionality_value": "¿Qué puedo ver en la Meseta Shira?"
+                },
+                {
+                    "functionality_id": 9,
+                    "functionality_text": "Lago Chala",
+                    "functionality_value": "¿Qué actividades puedo hacer en el Lago Chala?"
+                },
+                {
+                    "functionality_id": 10,
+                    "functionality_text": "Visitar la Aldea de Marangu",
+                    "functionality_value": "¿Qué debo ver en la Aldea de Marangu?"
+                },
+                {
+                    "functionality_id": 11,
+                    "functionality_text": "Rapel en Cascadas",
+                    "functionality_value": "¿Dónde puedo intentar rapel en cascadas?"
+                },
+                {
+                    "functionality_id": 12,
+                    "functionality_text": "Aguas Termales de Kikuletwa",
+                    "functionality_value": "¿Qué es lo especial de las Aguas Termales de Kikuletwa?"
+                },
+                {
+                    "functionality_id": 13,
+                    "functionality_text": "Tours de Ciclismo de Montaña",
+                    "functionality_value": "¿Dónde puedo ir a hacer ciclismo de montaña alrededor del Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 14,
+                    "functionality_text": "Visita al Parque Nacional Mkomazi",
+                    "functionality_value": "¿Qué fauna silvestre puedo ver en el Parque Nacional Mkomazi?"
+                },
+                {
+                    "functionality_id": 15,
+                    "functionality_text": "Experiencia de Safari al Atardecer",
+                    "functionality_value": "¿Puedes describir la experiencia de safari al atardecer?"
+                },
+                {
+                    "functionality_id": 16,
+                    "functionality_text": "Tours de Observación de Aves",
+                    "functionality_value": "¿Dónde está el mejor lugar para observar aves alrededor del Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 17,
+                    "functionality_text": "Visitar la Casa Maasai Osiligilai",
+                    "functionality_value": "Cuéntame sobre visitar la Casa Maasai Osiligilai."
+                },
+                {
+                    "functionality_id": 18,
+                    "functionality_text": "Maratón Kilimanjaro",
+                    "functionality_value": "¿Qué debo saber sobre el Maratón Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 19,
+                    "functionality_text": "Caminata Nocturna Kilimanjaro",
+                    "functionality_value": "¿Qué es la experiencia de la Caminata Nocturna Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 20,
+                    "functionality_text": "Tours Voluntarios en Moshi",
+                    "functionality_value": "¿Cómo puedo participar en tours voluntarios en Moshi?"
+                },
+                {
+                    "functionality_id": 21,
+                    "functionality_text": "Experiencia de Vida Silvestre Kilimanjaro",
+                    "functionality_value": "¿Qué fauna silvestre puedo encontrar alrededor del Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 22,
+                    "functionality_text": "Caminata por la Ruta Umbwe",
+                    "functionality_value": "¿Qué es lo especial de la Ruta Umbwe en Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 23,
+                    "functionality_text": "Exploración de Cuevas y Acantilados",
+                    "functionality_value": "¿Dónde puedo explorar cuevas y acantilados cerca del Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 24,
+                    "functionality_text": "Visitar el Parque Nacional Arusha",
+                    "functionality_value": "¿Qué puedo ver en el Parque Nacional Arusha?"
+                },
+                {
+                    "functionality_id": 25,
+                    "functionality_text": "Explorar el Antiguo Ferrocarril de Moshi",
+                    "functionality_value": "¿Qué es interesante sobre el antiguo ferrocarril de Moshi?"
+                },
+                {
+                    "functionality_id": 26,
+                    "functionality_text": "Pueblos de Pescadores Kilimanjaro",
+                    "functionality_value": "Cuéntame sobre los pueblos de pescadores alrededor del Kilimanjaro."
+                },
+                {
+                    "functionality_id": 27,
+                    "functionality_text": "Vuelos Escénicos Kilimanjaro",
+                    "functionality_value": "¿Cómo son los vuelos escénicos sobre Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 28,
+                    "functionality_text": "Exploración de la Ruta Rongai",
+                    "functionality_value": "¿Puedes contarme más sobre la Ruta Rongai en Kilimanjaro?"
+                },
+                {
+                    "functionality_id": 29,
+                    "functionality_text": "Mercado de Artesanos y Artesanías Locales",
+                    "functionality_value": "¿Dónde puedo encontrar artesanos y artesanías locales en Moshi?"
+                },
+                {
+                    "functionality_id": 30,
+                    "functionality_text": "Números de Emergencia",
+                    "functionality_value": "¿Cuáles son los números de emergencia que debo conocer al visitar Kilimanjaro?"
+                }
+            ],
+            "assistant_img_url": "splash_bot_avatar.png",
+            "assistant_splash_img": "splash_bot_avatar.png",
+            "assistant_splash_txt": "<p>¡Bienvenido a tu aventura!</p>\n<p>Tu guía para el Monte Kilimanjaro y las maravillas que lo rodean en Moshi.</p>\n<p><i class='fas fa-arrow-left'></i> Elige un iniciador de conversación</p>\n<p>o escribe en el cuadro a continuación para hacerme saber cómo puedo ayudar <i class='fas fa-arrow-down'></i></p>",
+            "assistant_sidebar_img": "kilimanjaro.webp",
+            "assistant_splash_mobile_txt": "<p style='text-align: center;'>¡Bienvenido a tu aventura!</p>\n<p>Tu guía para el Monte Kilimanjaro y las maravillas de Moshi está aquí.</p>\n<p>Haz clic en el menú (<i class='fas fa-bars' onclick='closeInfoPanel()'></i>) para iniciar una conversación.</p>\n<p>O házmelo saber escribiendo abajo <i class='fas fa-arrow-down'></i></p>"
+        },
+        "fr": {
+            "sponsor_logo": "sponsor_default.png",
+            "assistant_desc": "<p>Commencez votre conversation avec l'Assistant</p>",
+            "assistant_name": "Mont Kilimandjaro, Tanzanie",
+            "design_features": {
+                "bg_image": "kilimanjaro_background.jpg",
+                "bubble_bg_color": "#ffffff",
+                "assistant_img_url": "splash_bot_avatar.png",
+                "bubble_font_color": "#000000",
+                "assistant_splash_img": "back01_kilimanjaro.png",
+                "assistant_sidebar_img": "kilimanjaro.webp"
+            },
+            "functionalities": [
+                {
+                    "functionality_id": 1,
+                    "functionality_text": "Sommet du Mont Kilimandjaro",
+                    "functionality_value": "Dites-moi en plus sur l'escalade du Mont Kilimandjaro."
+                },
+                {
+                    "functionality_id": 2,
+                    "functionality_text": "Parc National du Kilimandjaro",
+                    "functionality_value": "Que puis-je voir au Parc National du Kilimandjaro ?"
+                },
+                {
+                    "functionality_id": 3,
+                    "functionality_text": "Visite à pied de la ville de Moshi",
+                    "functionality_value": "Que puis-je explorer dans la ville de Moshi ?"
+                },
+                {
+                    "functionality_id": 4,
+                    "functionality_text": "Visites de plantations de café",
+                    "functionality_value": "Parlez-moi des visites de plantations de café autour de Kilimandjaro."
+                },
+                {
+                    "functionality_id": 5,
+                    "functionality_text": "Expérience culturelle Chagga",
+                    "functionality_value": "Que comprend l'expérience culturelle Chagga ?"
+                },
+                {
+                    "functionality_id": 6,
+                    "functionality_text": "Chutes d'eau de Materuni",
+                    "functionality_value": "Comment puis-je visiter les chutes d'eau de Materuni ?"
+                },
+                {
+                    "functionality_id": 7,
+                    "functionality_text": "Visite des sources chaudes",
+                    "functionality_value": "Dites-moi en plus sur les sources chaudes près de Moshi."
+                },
+                {
+                    "functionality_id": 8,
+                    "functionality_text": "Plateau Shira",
+                    "functionality_value": "Que puis-je voir sur le plateau Shira ?"
+                },
+                {
+                    "functionality_id": 9,
+                    "functionality_text": "Lac Chala",
+                    "functionality_value": "Quelles activités puis-je faire au Lac Chala ?"
+                },
+                {
+                    "functionality_id": 10,
+                    "functionality_text": "Visite du village de Marangu",
+                    "functionality_value": "Que devrais-je voir dans le village de Marangu ?"
+                },
+                {
+                    "functionality_id": 11,
+                    "functionality_text": "Descente en rappel de cascade",
+                    "functionality_value": "Où puis-je essayer la descente en rappel de cascade ?"
+                },
+                {
+                    "functionality_id": 12,
+                    "functionality_text": "Sources chaudes de Kikuletwa",
+                    "functionality_value": "Qu'est-ce qui est spécial dans les sources chaudes de Kikuletwa ?"
+                },
+                {
+                    "functionality_id": 13,
+                    "functionality_text": "Tours de VTT",
+                    "functionality_value": "Où puis-je faire du VTT autour du Kilimandjaro ?"
+                },
+                {
+                    "functionality_id": 14,
+                    "functionality_text": "Visite du parc national de Mkomazi",
+                    "functionality_value": "Quelle faune puis-je voir au parc national de Mkomazi ?"
+                },
+                {
+                    "functionality_id": 15,
+                    "functionality_text": "Expérience de safari au coucher de soleil",
+                    "functionality_value": "Peux-tu décrire l'expérience de safari au coucher de soleil ?"
+                },
+                {
+                    "functionality_id": 16,
+                    "functionality_text": "Visites d'observation des oiseaux",
+                    "functionality_value": "Quel est le meilleur endroit pour observer les oiseaux autour du Kilimandjaro ?"
+                },
+                {
+                    "functionality_id": 17,
+                    "functionality_text": "Visite de l'auberge Maasai Osiligilai",
+                    "functionality_value": "Parlez-moi de la visite de l'auberge Maasai Osiligilai."
+                },
+                {
+                    "functionality_id": 18,
+                    "functionality_text": "Marathon du Kilimandjaro",
+                    "functionality_value": "Que devrais-je savoir sur le marathon du Kilimandjaro ?"
+                },
+                {
+                    "functionality_id": 19,
+                    "functionality_text": "Randonnée nocturne du Kilimandjaro",
+                    "functionality_value": "Quelle est l'expérience de la randonnée nocturne du Kilimandjaro ?"
+                },
+                {
+                    "functionality_id": 20,
+                    "functionality_text": "Visites bénévoles à Moshi",
+                    "functionality_value": "Comment puis-je participer aux visites bénévoles à Moshi ?"
+                },
+                {
+                    "functionality_id": 21,
+                    "functionality_text": "Expérience animalière du Kilimandjaro",
+                    "functionality_value": "Quelle faune puis-je rencontrer autour du Kilimandjaro ?"
+                },
+                {
+                    "functionality_id": 22,
+                    "functionality_text": "Randonnée par la route Umbwe",
+                    "functionality_value": "Qu'est-ce qui est spécial à propos de la route Umbwe sur le Kilimandjaro ?"
+                },
+                {
+                    "functionality_id": 23,
+                    "functionality_text": "Exploration de grottes et falaises",
+                    "functionality_value": "Où puis-je explorer des grottes et des falaises près du Kilimandjaro ?"
+                },
+                {
+                    "functionality_id": 24,
+                    "functionality_text": "Visiter le Parc National d'Arusha",
+                    "functionality_value": "Que puis-je voir au Parc National d'Arusha ?"
+                },
+                {
+                    "functionality_id": 25,
+                    "functionality_text": "Explorer l'ancienne gare de Moshi",
+                    "functionality_value": "Qu'est-ce qui est intéressant à propos de l'ancienne gare de Moshi ?"
+                },
+                {
+                    "functionality_id": 26,
+                    "functionality_text": "Villages de pêcheurs du Kilimandjaro",
+                    "functionality_value": "Parlez-moi des villages de pêcheurs autour du Kilimandjaro."
+                },
+                {
+                    "functionality_id": 27,
+                    "functionality_text": "Vols panoramiques Kilimandjaro",
+                    "functionality_value": "À quoi ressemblent les vols panoramiques du Kilimandjaro ?"
+                },
+                {
+                    "functionality_id": 28,
+                    "functionality_text": "Exploration de la route Rongai",
+                    "functionality_value": "Pouvez-vous m'en dire plus sur la route Rongai sur le Kilimandjaro ?"
+                },
+                {
+                    "functionality_id": 29,
+                    "functionality_text": "Marché des artisans locaux",
+                    "functionality_value": "Où puis-je trouver des artisans et des métiers locaux à Moshi ?"
+                },
+                {
+                    "functionality_id": 30,
+                    "functionality_text": "Numéros d'urgence",
+                    "functionality_value": "Quels sont les numéros d'urgence que je devrais connaître en visitant le Kilimandjaro ?"
+                }
+            ],
+            "assistant_img_url": "splash_bot_avatar.png",
+            "assistant_splash_img": "splash_bot_avatar.png",
+            "assistant_splash_txt": "<p>Bienvenue dans votre aventure !</p>\n<p>Votre guide pour le Mont Kilimandjaro et les merveilles environnantes de Moshi.</p>\n<p><i class='fas fa-arrow-left'></i> Choisissez un déclencheur de conversation</p>\n<p>ou tapez dans la boîte ci-dessous pour me faire savoir comment je peux aider <i class='fas fa-arrow-down'></i></p>",
+            "assistant_sidebar_img": "kilimanjaro.webp",
+            "assistant_splash_mobile_txt": "<p style='text-align: center;'>Bienvenue dans votre aventure !</p>\n<p>Votre guide pour le Mont Kilimandjaro et les merveilles de Moshi est ici.</p>\n<p>Cliquez sur le menu (<i class='fas fa-bars' onclick='closeInfoPanel()'></i>) pour démarrer une conversation.</p>\n<p>Ou faites-moi savoir vos besoins en tapant ci-dessous <i class='fas fa-arrow-down'></i></p>"
+        },
+        "hi": {
+            "sponsor_logo": "sponsor_default.png",
+            "assistant_desc": "<p>सहायता से बात चीत शुरू करें</p>",
+            "assistant_name": "माउंट किलिमंजारो, तंजानिया",
+            "design_features": {
+                "bg_image": "kilimanjaro_background.jpg",
+                "bubble_bg_color": "#ffffff",
+                "assistant_img_url": "splash_bot_avatar.png",
+                "bubble_font_color": "#000000",
+                "assistant_splash_img": "back01_kilimanjaro.png",
+                "assistant_sidebar_img": "kilimanjaro.webp"
+            },
+            "functionalities": [
+                {
+                    "functionality_id": 1,
+                    "functionality_text": "माउंट किलिमंजारो की चोटी",
+                    "functionality_value": "मुझे किलिमंजारो चढ़ाई के बारे में और बताओ।"
+                },
+                {
+                    "functionality_id": 2,
+                    "functionality_text": "किलिमंजारो राष्ट्रीय पार्क",
+                    "functionality_value": "किलिमंजारो राष्ट्रीय पार्क में मैं क्या देख सकता हूं?"
+                },
+                {
+                    "functionality_id": 3,
+                    "functionality_text": "मोशी शहर की पैदल यात्रा",
+                    "functionality_value": "मोशी शहर में मैं क्या खोज सकता हूं?"
+                },
+                {
+                    "functionality_id": 4,
+                    "functionality_text": "कॉफी प्लांटेशन टूर",
+                    "functionality_value": "किलिमंज़ारो के चारों ओर कॉफी प्लांटेशन टूर के बारे में बताओ।"
+                },
+                {
+                    "functionality_id": 5,
+                    "functionality_text": "चाग्गा सांस्कृतिक अनुभव",
+                    "functionality_value": "चाग्गा सांस्कृतिक अनुभव में क्या शामिल है?"
+                },
+                {
+                    "functionality_id": 6,
+                    "functionality_text": "मैटरुनी जलप्रपात",
+                    "functionality_value": "मैं मैटरुनी जलप्रपात कैसे जा सकता हूं?"
+                },
+                {
+                    "functionality_id": 7,
+                    "functionality_text": "गर्म झरने का दौरा",
+                    "functionality_value": "मोशी के करीब गर्म झरनों के बारे में और बताओ।"
+                },
+                {
+                    "functionality_id": 8,
+                    "functionality_text": "शिरा पठार",
+                    "functionality_value": "मैं शिरा पठार पर क्या देख सकता हूं?"
+                },
+                {
+                    "functionality_id": 9,
+                    "functionality_text": "चाला झील",
+                    "functionality_value": "चाला झील पर मैं क्या गतिविधियाँ कर सकता हूँ?"
+                },
+                {
+                    "functionality_id": 10,
+                    "functionality_text": "मरांगु गांव का दौरा",
+                    "functionality_value": "मरांगु गांव में मुझे क्या देखना चाहिए?"
+                },
+                {
+                    "functionality_id": 11,
+                    "functionality_text": "जलप्रपात की रस्सी",
+                    "functionality_value": "मैं जलप्रपात की रस्सी कहाँ आज़मा सकता हूँ?"
+                },
+                {
+                    "functionality_id": 12,
+                    "functionality_text": "किकुलेटवा गर्म झरने",
+                    "functionality_value": "किकुलेटवा गर्म झरनों के बारे में क्या खास है?"
+                },
+                {
+                    "functionality_id": 13,
+                    "functionality_text": "माउंटेन बाइकिंग टूर",
+                    "functionality_value": "मैं किलिमंजारो के चारों ओर माउंटेन बाइकिंग के लिए कहाँ जा सकता हूँ?"
+                },
+                {
+                    "functionality_id": 14,
+                    "functionality_text": "एमकोमाज़ी राष्ट्रीय पार्क की यात्रा",
+                    "functionality_value": "एमकोमाज़ी राष्ट्रीय पार्क में मैं कौन सी वन्यजीव देख सकता हूं?"
+                },
+                {
+                    "functionality_id": 15,
+                    "functionality_text": "संडाउनर सफारी का अनुभव",
+                    "functionality_value": "क्या आप संडाउनर सफारी के अनुभव का वर्णन कर सकते हैं?"
+                },
+                {
+                    "functionality_id": 16,
+                    "functionality_text": "पक्षी देखने का दौरा",
+                    "functionality_value": "किलिमंजारो के चारों ओर पक्षियों को देखने के लिए सबसे अच्छा स्थान कहाँ है?"
+                },
+                {
+                    "functionality_id": 17,
+                    "functionality_text": "ओसिलिगिलाई मासी लॉज का दौरा",
+                    "functionality_value": "ओसिलिगिलाई मासी लॉज की यात्रा के बारे में बताओ।"
+                },
+                {
+                    "functionality_id": 18,
+                    "functionality_text": "किलिमंजारो मैराथन",
+                    "functionality_value": "मुझे किलिमंजारो मैराथन के बारे में क्या जानना चाहिए?"
+                },
+                {
+                    "functionality_id": 19,
+                    "functionality_text": "किलिमंजारो रात की पैदल यात्रा",
+                    "functionality_value": "किलिमंजारो रात की पैदल यात्रा का अनुभव क्या है?"
+                },
+                {
+                    "functionality_id": 20,
+                    "functionality_text": "मोशी में स्वैच्छिक टूर",
+                    "functionality_value": "मैं मोशी में स्वैच्छिक टूर में कैसे भाग ले सकता हूं?"
+                },
+                {
+                    "functionality_id": 21,
+                    "functionality_text": "किलिमंजारो वन्यजीव अनुभव",
+                    "functionality_value": "मैं किलिमंजारो के चारों ओर कौन से वन्यजीवों से मिल सकता हूँ?"
+                },
+                {
+                    "functionality_id": 22,
+                    "functionality_text": "उम्बवे मार्ग पर चढ़ाई",
+                    "functionality_value": "किलिमंजारो पर उम्बवे मार्ग विशेष क्या है?"
+                },
+                {
+                    "functionality_id": 23,
+                    "functionality_text": "गुफाओं और चट्टानों की खोज",
+                    "functionality_value": "मैं किलिमंजारो के करीब गुफाओं और चट्टानों का अन्वेषण कहाँ कर सकता हूँ?"
+                },
+                {
+                    "functionality_id": 24,
+                    "functionality_text": "अरुशा राष्ट्रीय पार्क की यात्रा",
+                    "functionality_value": "मैं अरुशा राष्ट्रीय पार्क में क्या देख सकता हूँ?"
+                },
+                {
+                    "functionality_id": 25,
+                    "functionality_text": "पुरानी मोशी रेलवे की खोज",
+                    "functionality_value": "पुरानी मोशी रेलवे में क्या दिलचस्प है?"
+                },
+                {
+                    "functionality_id": 26,
+                    "functionality_text": "किलिमंजारो मछुआरे गांव",
+                    "functionality_value": "किलिमंजारो के चारों ओर मछुआरे गांवों के बारे में बताओ।"
+                },
+                {
+                    "functionality_id": 27,
+                    "functionality_text": "किलिमंजारो दृश्य उड़ानें",
+                    "functionality_value": "किलिमंजारो दृश्य उड़ानें कैसी होती हैं?"
+                },
+                {
+                    "functionality_id": 28,
+                    "functionality_text": "रॉन्गाई मार्ग की खोज",
+                    "functionality_value": "क्या आप मुझे किलिमंजारो पर रॉन्गाई मार्ग के बारे में और बता सकते हैं?"
+                },
+                {
+                    "functionality_id": 29,
+                    "functionality_text": "स्थानीय कारीगर और शिल्प बाजार",
+                    "functionality_value": "मैं मोशी में स्थानीय कारीगर और शिल्प कहाँ खोज सकता हूँ?"
+                },
+                {
+                    "functionality_id": 30,
+                    "functionality_text": "आपातकालीन नंबर",
+                    "functionality_value": "किलिमंजारो का दौरा करते समय मुझे कौन से आपातकालीन नंबर जानने चाहिए?"
+                }
+            ],
+            "assistant_img_url": "splash_bot_avatar.png",
+            "assistant_splash_img": "splash_bot_avatar.png",
+            "assistant_splash_txt": "<p>आपके साहसिक कार्य में स्वागत है!</p>\n<p>आपका मार्गदर्शक माउंट किलिमंजारो और मोशी के आस-पास के अचंभों के लिए।</p>\n<p><i class='fas fa-arrow-left'></i> बातचीत शुरू करने वाला चुनें</p>\n<p>या नीचे बॉक्स में टाइप करें ताकि मैं जान सकूं कि मैं कैसे मदद कर सकता हूँ <i class='fas fa-arrow-down'></i></p>",
+            "assistant_sidebar_img": "kilimanjaro.webp",
+            "assistant_splash_mobile_txt": "<p style='text-align: center;'>आपके साहसिक कार्य में स्वागत है!</p>\n<p>आपका मार्गदर्शक माउंट किलिमंजारो और मोशी के अद्भुत चीजों के लिए यहाँ है।</p>\n<p>बातचीत शुरू करने के लिए मेनू पर क्लिक करें (<i class='fas fa-bars' onclick='closeInfoPanel()'></i>).</p>\n<p>या नीचे टाइप करके मुझे अपनी जरूरत बताएं <i class='fas fa-arrow-down'></i></p>"
+        },
+        "zh": {
+            "sponsor_logo": "sponsor_default.png",
+            "assistant_desc": "<p>开始与你的助手对话</p>",
+            "assistant_name": "基利曼杰罗山，坦桑尼亚",
+            "design_features": {
+                "bg_image": "kilimanjaro_background.jpg",
+                "bubble_bg_color": "#ffffff",
+                "assistant_img_url": "splash_bot_avatar.png",
+                "bubble_font_color": "#000000",
+                "assistant_splash_img": "back01_kilimanjaro.png",
+                "assistant_sidebar_img": "kilimanjaro.webp"
+            },
+            "functionalities": [
+                {
+                    "functionality_id": 1,
+                    "functionality_text": "登顶基利曼杰罗山",
+                    "functionality_value": "告诉我更多关于攀登基利曼杰罗山的信息。"
+                },
+                {
+                    "functionality_id": 2,
+                    "functionality_text": "基利曼杰罗国家公园",
+                    "functionality_value": "我可以在基利曼杰罗国家公园看到什么？"
+                },
+                {
+                    "functionality_id": 3,
+                    "functionality_text": "摩希市步行游",
+                    "functionality_value": "我可以在摩希市探索什么？"
+                },
+                {
+                    "functionality_id": 4,
+                    "functionality_text": "咖啡种植园游",
+                    "functionality_value": "告诉我关于基利曼杰罗周围咖啡种植园游的信息。"
+                },
+                {
+                    "functionality_id": 5,
+                    "functionality_text": "查加文化体验",
+                    "functionality_value": "查加文化体验包含什么？"
+                },
+                {
+                    "functionality_id": 6,
+                    "functionality_text": "马特鲁尼瀑布",
+                    "functionality_value": "我如何去马特鲁尼瀑布？"
+                },
+                {
+                    "functionality_id": 7,
+                    "functionality_text": "温泉旅行",
+                    "functionality_value": "告诉我关于摩希附近温泉的信息。"
+                },
+                {
+                    "functionality_id": 8,
+                    "functionality_text": "希拉高原",
+                    "functionality_value": "我可以在希拉高原看到什么？"
+                },
+                {
+                    "functionality_id": 9,
+                    "functionality_text": "查拉湖",
+                    "functionality_value": "我可以在查拉湖进行什么活动？"
+                },
+                {
+                    "functionality_id": 10,
+                    "functionality_text": "参观马兰古村",
+                    "functionality_value": "在马兰古村我应该看什么？"
+                },
+                {
+                    "functionality_id": 11,
+                    "functionality_text": "瀑布攀降",
+                    "functionality_value": "我可以在哪里尝试瀑布攀降？"
+                },
+                {
+                    "functionality_id": 12,
+                    "functionality_text": "基库列特温泉",
+                    "functionality_value": "基库列特温泉有什么特别之处？"
+                },
+                {
+                    "functionality_id": 13,
+                    "functionality_text": "山地自行车游",
+                    "functionality_value": "我可以在基利曼杰罗周边哪里骑山地自行车？"
+                },
+                {
+                    "functionality_id": 14,
+                    "functionality_text": "参观姆科马齐国家公园",
+                    "functionality_value": "我可以在姆科马齐国家公园看到什么野生动物？"
+                },
+                {
+                    "functionality_id": 15,
+                    "functionality_text": "傍晚野生动物园体验",
+                    "functionality_value": "你能描述一下傍晚野生动物园体验吗？"
+                },
+                {
+                    "functionality_id": 16,
+                    "functionality_text": "鸟类观察游",
+                    "functionality_value": "在基利曼杰罗周边，哪里是观鸟的最佳地点？"
+                },
+                {
+                    "functionality_id": 17,
+                    "functionality_text": "参观奥西利吉莱马赛小屋",
+                    "functionality_value": "告诉我关于参观奥西利吉莱马赛小屋的信息。"
+                },
+                {
+                    "functionality_id": 18,
+                    "functionality_text": "基利曼杰罗马拉松",
+                    "functionality_value": "关于基利曼杰罗马拉松，我应该知道些什么？"
+                },
+                {
+                    "functionality_id": 19,
+                    "functionality_text": "基利曼杰罗夜间远足",
+                    "functionality_value": "基利曼杰罗夜间远足的体验是什么？"
+                },
+                {
+                    "functionality_id": 20,
+                    "functionality_text": "摩希志愿者游",
+                    "functionality_value": "我如何参与摩希的志愿者游？"
+                },
+                {
+                    "functionality_id": 21,
+                    "functionality_text": "基利曼杰罗野生动物体验",
+                    "functionality_value": "我可以在基利曼杰罗周围遇到什么野生动物？"
+                },
+                {
+                    "functionality_id": 22,
+                    "functionality_text": "翁布威路线攀登",
+                    "functionality_value": "翁布威路线在基利曼杰罗上有什么特别之处？"
+                },
+                {
+                    "functionality_id": 23,
+                    "functionality_text": "洞穴与悬崖探索",
+                    "functionality_value": "我可以在哪儿探索基利曼杰罗附近的洞穴和悬崖？"
+                },
+                {
+                    "functionality_id": 24,
+                    "functionality_text": "参观阿鲁沙国家公园",
+                    "functionality_value": "我可以在阿鲁沙国家公园看到什么？"
+                },
+                {
+                    "functionality_id": 25,
+                    "functionality_text": "探索旧摩希铁路",
+                    "functionality_value": "旧摩希铁路有什么有趣之处？"
+                },
+                {
+                    "functionality_id": 26,
+                    "functionality_text": "基利曼杰罗渔村",
+                    "functionality_value": "告诉我关于基利曼杰罗周围渔村的信息。"
+                },
+                {
+                    "functionality_id": 27,
+                    "functionality_text": "基利曼杰罗风景飞行",
+                    "functionality_value": "基利曼杰罗的风景飞行是什么样的？"
+                },
+                {
+                    "functionality_id": 28,
+                    "functionality_text": "隆盖路线探索",
+                    "functionality_value": "你能告诉我更多关于基利曼杰罗的隆盖路线吗？"
+                },
+                {
+                    "functionality_id": 29,
+                    "functionality_text": "当地工匠和工艺品市场",
+                    "functionality_value": "我可以在摩希找到当地工匠和工艺品吗？"
+                },
+                {
+                    "functionality_id": 30,
+                    "functionality_text": "紧急号码",
+                    "functionality_value": "我应该知道的基利曼杰罗旅行时的紧急号码是什么？"
+                }
+            ],
+            "assistant_img_url": "splash_bot_avatar.png",
+            "assistant_splash_img": "splash_bot_avatar.png",
+            "assistant_splash_txt": "<p>欢迎来到你的冒险之旅！</p>\n<p>你前往基利曼杰罗山和摩希周边奇观的向导。</p>\n<p><i class='fas fa-arrow-left'></i> 选择一个对话启动器</p>\n<p>或在下面的框中输入以让我知道我可以如何帮助 <i class='fas fa-arrow-down'></i></p>",
+            "assistant_sidebar_img": "kilimanjaro.webp",
+            "assistant_splash_mobile_txt": "<p style='text-align: center;'>欢迎来到你的冒险之旅！</p>\n<p>你前往基利曼杰罗山和摩希奇观的向导在此。</p>\n<p>点击菜单 (<i class='fas fa-bars' onclick='closeInfoPanel()'></i>) 开始对话。</p>\n<p>或者通过下面输入告诉我你的需求 <i class='fas fa-arrow-down'></i></p>"
+        }
+    }
+}

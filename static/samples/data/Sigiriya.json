@@ -1,0 +1,1061 @@
+{
+  "local_results": [
+    {
+      "address": "Av. Monteiro Tourinho, 55 - Tingui, Curitiba - PR, 82600-000, Brazil",
+      "data_cid": "16997135527663286150",
+      "data_id": "0x94dce7a2299df0b7:0xebe1f4b52d8ab786",
+      "gps_coordinates": {
+        "latitude": -25.3903385,
+        "longitude": -49.22341
+      },
+      "hours": "Open ⋅ Closes 11 PM",
+      "open_state": "Open ⋅ Closes 11 PM",
+      "operating_hours": {
+        "friday": "12–11:30 PM",
+        "monday": "12–11 PM",
+        "saturday": "12–11:30 PM",
+        "sunday": "12–11 PM",
+        "thursday": "12–11 PM",
+        "tuesday": "12–11 PM",
+        "wednesday": "12–11 PM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11s8yv8lm4&g2lbs=AOHF13niJCkETEMPdLhtoozr5jzFNprOjs8TmxeuddTKWp8RLZBWP16df7_Z4_QeS6jYJTbYSdWXiAu_yibB8nJfQKCJ2-U0uQ%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3044-0202",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce7a2299df0b7%3A0xebe1f4b52d8ab786&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJt_CdKaLn3JQRhreKLbX04es",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJt_CdKaLn3JQRhreKLbX04es",
+      "position": 1,
+      "price": "R$20–40",
+      "provider_id": "/g/11s8yv8lm4",
+      "rating": 4.3,
+      "reviews": 261,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce7a2299df0b7%3A0xebe1f4b52d8ab786&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "dine_in": true,
+        "no_contact_delivery": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipNpWtKjhvTwbaux9ogZfX7E0nvkISc7sG629nYl=w92-h92-k-no",
+      "title": "Pizzaria Bella Fiore Tingui",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant",
+        "pizza_delivery_service",
+        "pizzatakeaway"
+      ],
+      "types": [
+        "Pizza restaurant",
+        "Pizza delivery",
+        "Pizza Takeout"
+      ]
+    },
+    {
+      "address": "Rua Alvaro Botelho, 125 - Bacacheri, Curitiba - PR, 82515-290, Brazil",
+      "data_cid": "12563024047414323843",
+      "data_id": "0x94dce678f9b03f27:0xae58d3cf32d22a83",
+      "gps_coordinates": {
+        "latitude": -25.3974203,
+        "longitude": -49.2362009
+      },
+      "hours": "Open ⋅ Closes 10:30 PM",
+      "open_state": "Open ⋅ Closes 10:30 PM",
+      "operating_hours": {
+        "friday": "5:30–11 PM",
+        "monday": "5:30–10:30 PM",
+        "saturday": "5:30–11 PM",
+        "sunday": "5:30–10:30 PM",
+        "thursday": "5:30–10:30 PM",
+        "tuesday": "5:30–10:30 PM",
+        "wednesday": "5:30–10:30 PM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11f03l4wkz&g2lbs=AOHF13nkBg4EV9-9yFcst-liAD-_Rk59hJvmVxAgKlS3Pb9dFCJw569x0ok4eaD3KDVWkMmBJY0WLY0Va71fGCG3foxK2JzYEA%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3077-4848",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce678f9b03f27%3A0xae58d3cf32d22a83&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJJz-w-Xjm3JQRgyrSMs_TWK4",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJJz-w-Xjm3JQRgyrSMs_TWK4",
+      "position": 2,
+      "price": "$$",
+      "provider_id": "/g/11f03l4wkz",
+      "rating": 4.6,
+      "reviews": 1072,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce678f9b03f27%3A0xae58d3cf32d22a83&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "curbside_pickup": true,
+        "dine_in": true,
+        "no_contact_delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipP_KcGbxTD5D-gStlGAicpkepKCkdsP5X6F-b7r=w80-h119-k-no",
+      "title": "Pizzaria Baggio",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant",
+        "family_restaurant",
+        "italian_restaurant",
+        "meal_delivery",
+        "pizza_delivery_service",
+        "pizzatakeaway",
+        "restaurant",
+        "vegetarian_restaurant"
+      ],
+      "types": [
+        "Pizza restaurant",
+        "Family restaurant",
+        "Italian restaurant",
+        "Delivery Restaurant",
+        "Pizza delivery",
+        "Pizza Takeout",
+        "Restaurant",
+        "Vegetarian restaurant"
+      ],
+      "website": "http://www.pizzariabaggio.com.br/"
+    },
+    {
+      "address": "Av. Pref. Erasto Gaertner, 2377 - Bacacheri, Curitiba - PR, 82515-000, Brazil",
+      "data_cid": "14762474253649457998",
+      "data_id": "0x94dce6744034d82d:0xccded81e66a0334e",
+      "gps_coordinates": {
+        "latitude": -25.392630099999998,
+        "longitude": -49.227038199999996
+      },
+      "hours": "Opens soon ⋅ 6 PM",
+      "open_state": "Opens soon ⋅ 6 PM",
+      "operating_hours": {
+        "friday": "11:30 AM–2 PM, 6–11 PM",
+        "monday": "11:30 AM–2 PM, 6–11 PM",
+        "saturday": "11:30 AM–2 PM, 6–11 PM",
+        "sunday": "6–11 PM",
+        "thursday": "11:30 AM–2 PM, 6–11 PM",
+        "tuesday": "11:30 AM–2 PM, 6–11 PM",
+        "wednesday": "11:30 AM–2 PM, 6–11 PM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11fyzdc_s0&g2lbs=AOHF13mCYLdzSW9pEVwRUnZi65ZUwx-pt5zCZobfAjF78_oiGGhFp0_21AF5sDZ8wZwGu3hGbKrkW9_Q787zDFMOAHDJH9f_Eg%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3356-1626",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce6744034d82d%3A0xccded81e66a0334e&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJLdg0QHTm3JQRTjOgZh7Y3sw",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJLdg0QHTm3JQRTjOgZh7Y3sw",
+      "position": 3,
+      "price": "R$20–40",
+      "provider_id": "/g/11fyzdc_s0",
+      "rating": 4.6,
+      "reviews": 1514,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce6744034d82d%3A0xccded81e66a0334e&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "dine_in": true,
+        "no_contact_delivery": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipPVGGMgN91yD-hCxvCMAx8_NCNfhxCCroIcmPAI=w122-h92-k-no",
+      "title": "Dom da Pizza Bacacheri",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant",
+        "restaurant"
+      ],
+      "types": [
+        "Pizza restaurant",
+        "Restaurant"
+      ],
+      "website": "http://www.domdapizza.com.br/"
+    },
+    {
+      "address": "R. Fagundes Varela, 1384 - Bacacheri, Curitiba - PR, 82520-040, Brazil",
+      "data_cid": "12709810494749896730",
+      "data_id": "0x94dce5c1346cd935:0xb062514e3619701a",
+      "description": "A modest, inventive pizzeria . A modest, traditional pizza parlor with a varied menu, specialty creations & gourmet ingredients.",
+      "gps_coordinates": {
+        "latitude": -25.4128275,
+        "longitude": -49.2279974
+      },
+      "hours": "Opens soon ⋅ 6 PM",
+      "open_state": "Opens soon ⋅ 6 PM",
+      "operating_hours": {
+        "friday": "6–11:30 PM",
+        "monday": "6–11 PM",
+        "saturday": "6–11:30 PM",
+        "sunday": "6–11 PM",
+        "thursday": "6–11 PM",
+        "tuesday": "6–11 PM",
+        "wednesday": "6–11 PM"
+      },
+      "phone": "+55 41 3264-2267",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce5c1346cd935%3A0xb062514e3619701a&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJNdlsNMHl3JQRGnAZNk5RYrA",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJNdlsNMHl3JQRGnAZNk5RYrA",
+      "position": 4,
+      "price": "$$",
+      "provider_id": "/g/1tcyb0zd",
+      "rating": 4.6,
+      "reviews": 543,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce5c1346cd935%3A0xb062514e3619701a&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "dine_in": true,
+        "no_contact_delivery": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipN7e06hgGgipK-UR4J6IAHlMFiEHkksL_-KhnU-=w163-h92-k-no",
+      "title": "Pizzaria Unipizza",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant"
+      ],
+      "types": [
+        "Pizza restaurant"
+      ],
+      "website": "https://pedir.delivery/pizzariaunipizza"
+    },
+    {
+      "address": "R. Estados Unidos, 321 - Bacacheri, Curitiba - PR, 82510-050, Brazil",
+      "data_cid": "17326820561100399792",
+      "data_id": "0x94dce548d8a2cedf:0xf0753b7fb752e4b0",
+      "gps_coordinates": {
+        "latitude": -25.408864599999998,
+        "longitude": -49.239543399999995
+      },
+      "hours": "Opens soon ⋅ 6 PM",
+      "open_state": "Opens soon ⋅ 6 PM",
+      "operating_hours": {
+        "friday": "6–11:30 PM",
+        "monday": "Closed",
+        "saturday": "6–11:30 PM",
+        "sunday": "6–11 PM",
+        "thursday": "6–11 PM",
+        "tuesday": "6–11 PM",
+        "wednesday": "6–11 PM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11stbh6cql&g2lbs=AOHF13kBNyOzQoUDRWc3FtHc8LQpjAvEp5ei_5gIKn-U9AD_rnkYBDdW9TGoMYv74rNcy_jgA4WwzhNIvF5isVa7nCUyPc-XpQ%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 99833-5070",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce548d8a2cedf%3A0xf0753b7fb752e4b0&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJ386i2Ejl3JQRsORSt387dfA",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ386i2Ejl3JQRsORSt387dfA",
+      "position": 5,
+      "provider_id": "/g/11stbh6cql",
+      "rating": 5,
+      "reviews": 81,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce548d8a2cedf%3A0xf0753b7fb752e4b0&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "delivery": true,
+        "dine_in": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipN1An7v-gIWAGtmEGrdmBWd0WE2OIb5yEX_2P_Z=w122-h92-k-no",
+      "title": "Pizzaria Noguchi",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant"
+      ],
+      "types": [
+        "Pizza restaurant"
+      ],
+      "user_review": "\"Delicious best pizza ever\"",
+      "website": "https://instagram.com/pizzarianoguchi?igshid=ZDdkNTZiNTM="
+    },
+    {
+      "address": "R. Fagundes Varela, 1177 - Bacacheri, Curitiba - PR, 82520-040, Brazil",
+      "data_cid": "6279050082243626425",
+      "data_id": "0x94dce5c6eea1d4bd:0x5723aac82f04c5b9",
+      "gps_coordinates": {
+        "latitude": -25.4134359,
+        "longitude": -49.2302323
+      },
+      "hours": "Open ⋅ Closes 7 PM",
+      "open_state": "Open ⋅ Closes 7 PM",
+      "operating_hours": {
+        "friday": "8 AM–7 PM",
+        "monday": "8 AM–7 PM",
+        "saturday": "8 AM–7 PM",
+        "sunday": "8 AM–2:30 PM",
+        "thursday": "8 AM–7 PM",
+        "tuesday": "8 AM–7 PM",
+        "wednesday": "8 AM–7 PM"
+      },
+      "phone": "+55 41 3263-1197",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce5c6eea1d4bd%3A0x5723aac82f04c5b9&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJvdSh7sbl3JQRucUEL8iqI1c",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJvdSh7sbl3JQRucUEL8iqI1c",
+      "position": 6,
+      "price": "R$20–40",
+      "provider_id": "/g/1vknqjy0",
+      "rating": 4.4,
+      "reviews": 670,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce5c6eea1d4bd%3A0x5723aac82f04c5b9&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "dine_in": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipPZznG___BYxmFkvxZgwpxTuLwzdkfuL4-TpUVR=w163-h92-k-no",
+      "title": "Companhia da Lasanha",
+      "type": "Italian restaurant",
+      "type_id": "italian_restaurant",
+      "type_ids": [
+        "italian_restaurant"
+      ],
+      "types": [
+        "Italian restaurant"
+      ],
+      "website": "https://ciadalasanha.com.br/"
+    },
+    {
+      "address": "R. Sete de Abril, 835 - 6 - Alto da XV, Curitiba - PR, 80045-165, Brazil",
+      "data_cid": "12303350075083551202",
+      "data_id": "0x94dce5b864347725:0xaabe47b514a171e2",
+      "gps_coordinates": {
+        "latitude": -25.4242119,
+        "longitude": -49.2559693
+      },
+      "hours": "Closed",
+      "open_state": "Closed",
+      "operating_hours": {
+        "friday": "Closed",
+        "monday": "Closed",
+        "saturday": "Closed",
+        "sunday": "Closed",
+        "thursday": "Closed",
+        "tuesday": "Closed",
+        "wednesday": "Closed"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11mts7dx8k&g2lbs=AOHF13lPZMuDnb_KFEi0qKhT2sACkpS37xwBR-Er4fa9AeiTCuVhRZ_FybgYRSKbUkosk6Jkl3hBgUHQg4IkcyVyn-NSSts5eA%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 99265-1398",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce5b864347725%3A0xaabe47b514a171e2&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJJXc0ZLjl3JQR4nGhFLVHvqo",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJJXc0ZLjl3JQR4nGhFLVHvqo",
+      "position": 7,
+      "price": "R$40–60",
+      "provider_id": "/g/11mts7dx8k",
+      "rating": 4.8,
+      "reviews": 272,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce5b864347725%3A0xaabe47b514a171e2&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "curbside_pickup": true,
+        "dine_in": true,
+        "no_contact_delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipPABLO2ZaCzt-yP6ULnIaGbB0vWgBDP04FQ_XBq=w92-h92-k-no",
+      "title": "Miraflores Pizza Bar",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant",
+        "cocktail_bar",
+        "gastropub",
+        "vegan_restaurant"
+      ],
+      "types": [
+        "Pizza restaurant",
+        "Cocktail bar",
+        "Gastropub",
+        "Vegan restaurant"
+      ],
+      "website": "https://www.instagram.com/miraflores.pizzabar/"
+    },
+    {
+      "address": "R. México, 600 - Bacacheri, Curitiba - PR, 82510-060, Brazil",
+      "data_cid": "8976415436187424145",
+      "data_id": "0x94dce5e4da00e2a1:0x7c92a247b648d591",
+      "gps_coordinates": {
+        "latitude": -25.4072571,
+        "longitude": -49.2388452
+      },
+      "hours": "Open ⋅ Closes 11 PM",
+      "open_state": "Open ⋅ Closes 11 PM",
+      "operating_hours": {
+        "friday": "5:30–11:30 PM",
+        "monday": "5:30–11 PM",
+        "saturday": "5:30–11:30 PM",
+        "sunday": "5:30–11 PM",
+        "thursday": "5:30–11 PM",
+        "tuesday": "5:30–11 PM",
+        "wednesday": "5:30–11 PM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11ghfhlgpw&g2lbs=AOHF13nXecmR4DAqTzE-qDHk4WiIZiOHTS8vKL53MFnSqB9PDpCqeGUH1s04qkQy33vF1893047ysroskKXIKDazS-jhMqZ-kw%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3252-2772",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce5e4da00e2a1%3A0x7c92a247b648d591&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJoeIA2uTl3JQRkdVItkeiknw",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJoeIA2uTl3JQRkdVItkeiknw",
+      "position": 8,
+      "price": "R$20–40",
+      "provider_id": "/g/11ghfhlgpw",
+      "rating": 4.5,
+      "reviews": 969,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce5e4da00e2a1%3A0x7c92a247b648d591&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "delivery": true,
+        "dine_in": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipNHr57E_A8q8mQxsS17ChdZn6rqqnXWpbsCaRLU=w80-h152-k-no",
+      "title": "Abaré Pizzarias - Express Bacacheri",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant",
+        "pizza_delivery_service",
+        "pizzatakeaway"
+      ],
+      "types": [
+        "Pizza restaurant",
+        "Pizza delivery",
+        "Pizza Takeout"
+      ],
+      "website": "https://abarepizzarias.com.br/"
+    },
+    {
+      "address": "Av. Munhoz da Rocha, 665 - Juvevê, Curitiba - PR, 80035-000, Brazil",
+      "data_cid": "4399474059234911945",
+      "data_id": "0x94dce42f4d55e07b:0x3d0e1258f33e26c9",
+      "description": "An Italian cantina with a modern flair. A cozy cantina known for its pizza, also offering pasta dishes, steak, chicken, fish & salad.",
+      "gps_coordinates": {
+        "latitude": -25.4094706,
+        "longitude": -49.2527383
+      },
+      "hours": "Open ⋅ Closes 11:30 PM",
+      "open_state": "Open ⋅ Closes 11:30 PM",
+      "operating_hours": {
+        "friday": "5 PM–12 AM",
+        "monday": "5–11:30 PM",
+        "saturday": "11:30 AM–3 PM, 5–11:30 PM",
+        "sunday": "11:30 AM–3 PM, 5–11:30 PM",
+        "thursday": "5–11:30 PM",
+        "tuesday": "5–11:30 PM",
+        "wednesday": "5–11:30 PM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11h0cq5_p&g2lbs=AOHF13nTctuod0EFb6JwVEoVri6msd9A34ohCKfP3CCkHOgOVRbuJ0qdvHdpVT62GRRKs1iF_rZk3J4miwzJMqfQzM-ea7OR3g%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3019-0909",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce42f4d55e07b%3A0x3d0e1258f33e26c9&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJe-BVTS_k3JQRySY-81gSDj0",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJe-BVTS_k3JQRySY-81gSDj0",
+      "position": 9,
+      "price": "$$",
+      "provider_id": "/g/11h0cq5_p",
+      "rating": 4.6,
+      "reviews": 1066,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce42f4d55e07b%3A0x3d0e1258f33e26c9&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "curbside_pickup": true,
+        "dine_in": true,
+        "no_contact_delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipPiQ36g3YmotViSWoB2Z51ncpUqbMXnYf36_tuz=w137-h92-k-no",
+      "title": "Originale Cucina e Pizzeria",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant",
+        "pizza_delivery_service",
+        "italian_restaurant",
+        "pizzatakeaway",
+        "vegan_restaurant"
+      ],
+      "types": [
+        "Pizza restaurant",
+        "Pizza delivery",
+        "Italian restaurant",
+        "Pizza Takeout",
+        "Vegan restaurant"
+      ],
+      "website": "http://originale.com.br/"
+    },
+    {
+      "address": "Av. José Gulin, 105 - Bacacheri, Curitiba - PR, 82600-360, Brazil",
+      "data_cid": "8323249807069613819",
+      "data_id": "0x94dce6750167564d:0x73821f99df390efb",
+      "description": "Fast food kiosks with outdoor seating. Burgers, meat kebabs, nachos & ice cream from a collection of fast food kiosks with shaded seating.",
+      "gps_coordinates": {
+        "latitude": -25.3935957,
+        "longitude": -49.225535699999995
+      },
+      "hours": "Opens soon ⋅ 6 PM",
+      "open_state": "Opens soon ⋅ 6 PM",
+      "operating_hours": {
+        "friday": "6–11 PM",
+        "monday": "Closed",
+        "saturday": "12:30–11 PM",
+        "sunday": "12:30–10 PM",
+        "thursday": "6–11 PM",
+        "tuesday": "6–11 PM",
+        "wednesday": "6–11 PM"
+      },
+      "phone": "+55 41 3356-3027",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce6750167564d%3A0x73821f99df390efb&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJTVZnAXXm3JQR-w4535kfgnM",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJTVZnAXXm3JQR-w4535kfgnM",
+      "position": 10,
+      "price": "R$40–60",
+      "provider_id": "/g/11c2q0n24_",
+      "rating": 4.6,
+      "reviews": 16269,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce6750167564d%3A0x73821f99df390efb&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "dine_in": true,
+        "no_contact_delivery": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipMKQQalPRBVQje7EN6vd3Z_t6EfZFpfynF2hFOX=w122-h92-k-no",
+      "title": "Ca'dore - Uncomplicated Food",
+      "type": "Fast food restaurant",
+      "type_id": "fast_food_restaurant",
+      "type_ids": [
+        "fast_food_restaurant",
+        "food_court"
+      ],
+      "types": [
+        "Fast food restaurant",
+        "Food court"
+      ],
+      "website": "https://instagram.com/cadorecuritiba"
+    },
+    {
+      "address": "R. México, 915 - Bacacheri, Curitiba - PR, 82510-060, Brazil",
+      "data_cid": "8965722703511717284",
+      "data_id": "0x94dce5ce27b2a7f1:0x7c6ca54be17885a4",
+      "gps_coordinates": {
+        "latitude": -25.409463,
+        "longitude": -49.2367342
+      },
+      "hours": "Opens soon ⋅ 6 PM",
+      "open_state": "Opens soon ⋅ 6 PM",
+      "operating_hours": {
+        "friday": "6 PM–12 AM",
+        "monday": "6 PM–12 AM",
+        "saturday": "6 PM–12 AM",
+        "sunday": "6 PM–12 AM",
+        "thursday": "6 PM–12 AM",
+        "tuesday": "6 PM–12 AM",
+        "wednesday": "6 PM–12 AM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/1ptxj6_zr&g2lbs=AOHF13mDWquwGElO02EITqU7e99aG0wl_A-ZhFke6QmCzOZn1qLfeRWemDg4rPAz5cbihEhhlest0XQbzc73QkjUY5g1JbrWaQ%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3257-1030",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce5ce27b2a7f1%3A0x7c6ca54be17885a4&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJ8aeyJ87l3JQRpIV44UulbHw",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ8aeyJ87l3JQRpIV44UulbHw",
+      "position": 11,
+      "price": "$",
+      "provider_id": "/g/1ptxj6_zr",
+      "rating": 4.4,
+      "reviews": 239,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce5ce27b2a7f1%3A0x7c6ca54be17885a4&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "curbside_pickup": true,
+        "dine_in": true,
+        "no_contact_delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipMYCyGIqVgvwOb1SqdBpvTtqwpF0qSjMR3v3Yc=w122-h92-k-no",
+      "title": "Trevizan Pizzas e Calzones",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant"
+      ],
+      "types": [
+        "Pizza restaurant"
+      ]
+    },
+    {
+      "address": "R. México, 342 - Bacacheri, Curitiba - PR, 82510-060, Brazil",
+      "data_cid": "11890483595789744187",
+      "data_id": "0x94dce5d4766c8c67:0xa5037bd4f6a8383b",
+      "gps_coordinates": {
+        "latitude": -25.4055647,
+        "longitude": -49.240209
+      },
+      "hours": "Closed ⋅ Opens 11 AM Wed",
+      "open_state": "Closed ⋅ Opens 11 AM Wed",
+      "operating_hours": {
+        "friday": "11 AM–2:30 PM",
+        "monday": "11 AM–2:30 PM",
+        "saturday": "11 AM–2:30 PM",
+        "sunday": "Closed",
+        "thursday": "11 AM–2:30 PM",
+        "tuesday": "11 AM–2:30 PM",
+        "wednesday": "11 AM–2:30 PM"
+      },
+      "phone": "+55 41 99711-9227",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce5d4766c8c67%3A0xa5037bd4f6a8383b&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJZ4xsdtTl3JQROzio9tR7A6U",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJZ4xsdtTl3JQROzio9tR7A6U",
+      "position": 12,
+      "price": "R$20–40",
+      "provider_id": "/g/1ptvqnby7",
+      "rating": 4.2,
+      "reviews": 295,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce5d4766c8c67%3A0xa5037bd4f6a8383b&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "curbside_pickup": true,
+        "dine_in": true,
+        "no_contact_delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipPXPtAr0pQMQ2IRGI_yo6848R_mN1dMTw69YiYa=w138-h92-k-no",
+      "title": "Restaurante e marmitaria Sabor na Grelha",
+      "type": "Buffet restaurant",
+      "type_id": "buffet_restaurant",
+      "type_ids": [
+        "buffet_restaurant",
+        "meal_delivery",
+        "restaurant"
+      ],
+      "types": [
+        "Buffet restaurant",
+        "Delivery Restaurant",
+        "Restaurant"
+      ],
+      "website": "http://www.instagram.com/casacarius"
+    },
+    {
+      "address": "Rua Emiliano Perneta, 680 - Centro, Curitiba - PR, 80420-080, Brazil",
+      "data_cid": "4406241380368974450",
+      "data_id": "0x94dce473e74bf2e7:0x3d261d30af850272",
+      "description": "A rustic-chic spot for Italian cuisine. An upscale eatery with rustic-chic décor, serving pizza, meats, homemade pasta & imported wines.",
+      "gps_coordinates": {
+        "latitude": -25.437155699999998,
+        "longitude": -49.277763799999995
+      },
+      "hours": "Opens soon ⋅ 6 PM",
+      "open_state": "Opens soon ⋅ 6 PM",
+      "operating_hours": {
+        "friday": "11:45 AM–2:30 PM, 6 PM–12:30 AM",
+        "monday": "11:45 AM–2:30 PM, 6 PM–12 AM",
+        "saturday": "11:45 AM–3 PM, 6 PM–12:30 AM",
+        "sunday": "11:45 AM–3 PM, 6 PM–12 AM",
+        "thursday": "11:45 AM–2:30 PM, 6 PM–12 AM",
+        "tuesday": "11:45 AM–2:30 PM, 6 PM–12 AM",
+        "wednesday": "11:45 AM–2:30 PM, 6 PM–12 AM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/1ts3mbvp&g2lbs=AOHF13nMF1rf0nVKHnIAu2Yw7DZ4Y8tK8G9bl0Uv5YUI_3OvAa3MS9Be0oOTJyxnGyOtvhh5EDEFPWhplGUK-YCRVoTSfh1TLQ%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3322-1441",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce473e74bf2e7%3A0x3d261d30af850272&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJ5_JL53Pk3JQRcgKFrzAdJj0",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ5_JL53Pk3JQRcgKFrzAdJj0",
+      "position": 13,
+      "price": "$$$",
+      "provider_id": "/g/1ts3mbvp",
+      "rating": 4.7,
+      "reserve_a_table": "https://www.google.com/maps/reserve/v/dine/c/VDuYfLCF_FE?source=pa&opi=79508299&hl=en-US&gei=n5R9Z-z2J-PE4-EPi732gQU&sourceurl=http://www.google.com/service/MapsSearchService/Search?hl%3Den%26authuser%3D0%26gl%3Dus%26q%3Dtop%2Brated%2Bpizzarias%2Bin%2BBacacheri,%2BCuritiba,%2BPR%2BBrazil%2B%26tbm%3Dmap",
+      "reviews": 5396,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce473e74bf2e7%3A0x3d261d30af850272&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "curbside_pickup": true,
+        "dine_in": true,
+        "no_contact_delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipP6OXa9UXOYHdpx8-GxRYCk_cSVW9F_RXL735HI=w138-h92-k-no",
+      "title": "Avenida Paulista - Pizza, Pasta e Vino",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant",
+        "italian_restaurant",
+        "piano_bar",
+        "pizza_delivery_service",
+        "restaurant"
+      ],
+      "types": [
+        "Pizza restaurant",
+        "Italian restaurant",
+        "Piano bar",
+        "Pizza delivery",
+        "Restaurant"
+      ],
+      "user_review": "\"Great pizza toppings and one of the best pizza doughs I've ever had.\""
+    },
+    {
+      "address": "Av. Paraná, 1845 - Boa Vista, Curitiba - PR, 82510-000, Brazil",
+      "data_cid": "15041529615597749764",
+      "data_id": "0x94dce56c37edd59b:0xd0be3f7df038c604",
+      "gps_coordinates": {
+        "latitude": -25.397634999999998,
+        "longitude": -49.244645
+      },
+      "hours": "Closed ⋅ Opens 6:30 PM",
+      "open_state": "Closed ⋅ Opens 6:30 PM",
+      "operating_hours": {
+        "friday": "6:30–11:30 PM",
+        "monday": "Closed",
+        "saturday": "6:30–11:30 PM",
+        "sunday": "6:30–11 PM",
+        "thursday": "6:30–11 PM",
+        "tuesday": "6:30–11 PM",
+        "wednesday": "6:30–11 PM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11fzf5cbrs&g2lbs=AOHF13kEogCiRozpxSKBF948d8yvIJPGBXwzgpDvIJB0Od_1PrYPgJ1NPJzJFPJEJIS00hfepoYOZwG0bBkUVD2D-PXfan8EQg%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 99115-1456",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce56c37edd59b%3A0xd0be3f7df038c604&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJm9XtN2zl3JQRBMY48H0_vtA",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJm9XtN2zl3JQRBMY48H0_vtA",
+      "position": 14,
+      "price": "R$20–40",
+      "provider_id": "/g/11fzf5cbrs",
+      "rating": 4.8,
+      "reviews": 965,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce56c37edd59b%3A0xd0be3f7df038c604&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "curbside_pickup": true,
+        "dine_in": true,
+        "no_contact_delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipNL0BguE4NiabU16pwu438jwY_xlGNGdg4MSe6g=w163-h92-k-no",
+      "title": "Palladino Pizzaria Boa Vista",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant"
+      ],
+      "types": [
+        "Pizza restaurant"
+      ]
+    },
+    {
+      "address": "Av. Pref. Erasto Gaertner, 363 - Bacacheri, Curitiba - PR, 82510-160, Brazil",
+      "data_cid": "18384114788558172515",
+      "data_id": "0x94dce5d539f769bd:0xff217eff3a03f163",
+      "description": "A traditional bakery & cafe. Family-friendly bakery established in 1969, with coffee, a lunch buffet, ice cream & more.",
+      "gps_coordinates": {
+        "latitude": -25.403064399999998,
+        "longitude": -49.243006099999995
+      },
+      "hours": "Open 24 hours",
+      "open_state": "Open 24 hours",
+      "operating_hours": {
+        "friday": "Open 24 hours",
+        "monday": "Open 24 hours",
+        "saturday": "Open 24 hours",
+        "sunday": "Open 24 hours",
+        "thursday": "Open 24 hours",
+        "tuesday": "Open 24 hours",
+        "wednesday": "Open 24 hours"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/1tfmdcy0&g2lbs=AOHF13maKvttULI5PVrRG9jaz0JC5S6UqopmtXG9ZlTs_pUtP6rWSbA8usBLAIr4Uyh76WzzlxvhTr1LATQwWxIlyT-4ISnSBw%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3018-6880",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce5d539f769bd%3A0xff217eff3a03f163&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJvWn3OdXl3JQRY_EDOv9-If8",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJvWn3OdXl3JQRY_EDOv9-If8",
+      "position": 15,
+      "price": "R$20–40",
+      "provider_id": "/g/1tfmdcy0",
+      "rating": 4.3,
+      "reviews": 5987,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce5d539f769bd%3A0xff217eff3a03f163&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "dine_in": true,
+        "no_contact_delivery": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipOW2hR7_JjYu8sx8jkdgu8jh_WQ5tKomaINA7YM=w138-h92-k-no",
+      "title": "Panificadora Aquarius Curitiba",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant",
+        "breakfast_restaurant",
+        "coffee_shop",
+        "confectionery",
+        "convenience_store",
+        "diner",
+        "hamburger_restaurant",
+        "ice_cream_shop",
+        "meal_delivery",
+        "bakery",
+        "restaurant"
+      ],
+      "types": [
+        "Pizza restaurant",
+        "Breakfast restaurant",
+        "Coffee shop",
+        "Confectionery store",
+        "Convenience store",
+        "Diner",
+        "Hamburger restaurant",
+        "Ice cream shop",
+        "Delivery Restaurant",
+        "Bakery",
+        "Restaurant"
+      ],
+      "website": "http://www.aquariuscuritiba.com.br/"
+    },
+    {
+      "address": "R. Maria de Lurdes dos Santos, 884 - Campo alto, Colombo - PR, 83408-315, Brazil",
+      "data_cid": "7174308384126359528",
+      "data_id": "0x94dce5e3a7827b17:0x63904376d8f557e8",
+      "gps_coordinates": {
+        "latitude": -25.3807773,
+        "longitude": -49.1920133
+      },
+      "hours": "Opens soon ⋅ 6 PM",
+      "open_state": "Opens soon ⋅ 6 PM",
+      "operating_hours": {
+        "friday": "6–11:30 PM",
+        "monday": "6–11:30 PM",
+        "saturday": "6–11:30 PM",
+        "sunday": "Closed",
+        "thursday": "6–11:30 PM",
+        "tuesday": "6–11 PM",
+        "wednesday": "6–11:30 PM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11b69jkrht&g2lbs=AOHF13mx1KYXIaqxL-NwyobB04keeUvo1AEZKBGQU8fTHwX0XiW4k3fDxY22uwW6atSaTFJnkxRI-pEju51USoTZsXd-nCUlKw%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3257-6862",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce5e3a7827b17%3A0x63904376d8f557e8&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJF3uCp-Pl3JQR6Ff12HZDkGM",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJF3uCp-Pl3JQR6Ff12HZDkGM",
+      "position": 16,
+      "provider_id": "/g/11b69jkrht",
+      "rating": 4.6,
+      "reviews": 159,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce5e3a7827b17%3A0x63904376d8f557e8&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "curbside_pickup": true,
+        "delivery": true,
+        "dine_in": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipM-oy0j2gjCGYn5kR7BGkGJAPgcW1zOua5rRivS=w122-h92-k-no",
+      "title": "Sollare Pizzaria",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant",
+        "pizza_delivery_service"
+      ],
+      "types": [
+        "Pizza restaurant",
+        "Pizza delivery"
+      ]
+    },
+    {
+      "address": "Rua José Merhy, 1605 - Boa Vista, Curitiba - PR, 82560-440, Brazil",
+      "data_cid": "2002664705495438149",
+      "data_id": "0x94dce700e06d2c33:0x1bcae4f067449345",
+      "gps_coordinates": {
+        "latitude": -25.3882791,
+        "longitude": -49.238737699999994
+      },
+      "hours": "Closed ⋅ Opens 6:30 PM",
+      "open_state": "Closed ⋅ Opens 6:30 PM",
+      "operating_hours": {
+        "friday": "6:30–10 PM",
+        "monday": "Closed",
+        "saturday": "6:30–10 PM",
+        "sunday": "6:30–10 PM",
+        "thursday": "6:30–10 PM",
+        "tuesday": "6:30–10 PM",
+        "wednesday": "6:30–10 PM"
+      },
+      "phone": "+55 41 99183-0985",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce700e06d2c33%3A0x1bcae4f067449345&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJMyxt4ADn3JQRRZNEZ_Dkyhs",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJMyxt4ADn3JQRRZNEZ_Dkyhs",
+      "position": 17,
+      "price": "R$40–60",
+      "provider_id": "/g/11n6_m72jd",
+      "rating": 4.8,
+      "reviews": 118,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce700e06d2c33%3A0x1bcae4f067449345&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "dine_in": true,
+        "no_contact_delivery": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipOcjUO0jmaDdZaEhMB4FT2z9cEIczwK2-nPfkE2=w163-h92-k-no",
+      "title": "Linho Forneria Artesanal",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant"
+      ],
+      "types": [
+        "Pizza restaurant"
+      ],
+      "website": "https://app.cardapioweb.com/linho_forneria_artesanal"
+    },
+    {
+      "address": "Av. Monteiro Tourinho, 985 - Bacacheri, Curitiba - PR, 82600-000, Brazil",
+      "data_cid": "9999144682641034608",
+      "data_id": "0x94dce78d87252f61:0x8ac4191c728e0d70",
+      "gps_coordinates": {
+        "latitude": -25.386897599999998,
+        "longitude": -49.2166351
+      },
+      "hours": "Opens soon ⋅ 6 PM",
+      "open_state": "Opens soon ⋅ 6 PM",
+      "operating_hours": {
+        "friday": "6–11:30 PM",
+        "monday": "6–11:30 PM",
+        "saturday": "6–11:30 PM",
+        "sunday": "6–11:30 PM",
+        "thursday": "6–11:30 PM",
+        "tuesday": "6–11:30 PM",
+        "wednesday": "6–11:30 PM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11qvd2y10q&g2lbs=AOHF13k0KWaqUpd54NSJLH-yvvrab1Zlxy3PD-_0J6ED4UU6XLi5MqlFDVqSBJSd21YJAjRHd0BwQHBniai6gj2Wrn38ahdBeA%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3021-2930",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce78d87252f61%3A0x8ac4191c728e0d70&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJYS8lh43n3JQRcA2OchwZxIo",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJYS8lh43n3JQRcA2OchwZxIo",
+      "position": 18,
+      "price": "R$20–40",
+      "provider_id": "/g/11qvd2y10q",
+      "rating": 4.1,
+      "reviews": 416,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce78d87252f61%3A0x8ac4191c728e0d70&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "dine_in": true,
+        "no_contact_delivery": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipNqFuN2HHs5wiV2nalYnwehwkKY69te_q5ePKx4=w80-h106-k-no",
+      "title": "DNA da Pizza Bacacheri",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant"
+      ],
+      "types": [
+        "Pizza restaurant"
+      ],
+      "user_review": "\"Pizza top top\"",
+      "website": "https://www.dnadapizzabacacheri.com.br/"
+    },
+    {
+      "address": "R. Rocha Pombo, 380 - Juvevê, Curitiba - PR, 80030-390, Brazil",
+      "data_cid": "18160857416802978332",
+      "data_id": "0x94dce424915fde9d:0xfc085399a90f4a1c",
+      "gps_coordinates": {
+        "latitude": -25.414717,
+        "longitude": -49.2578428
+      },
+      "hours": "Opens soon ⋅ 6 PM",
+      "open_state": "Opens soon ⋅ 6 PM",
+      "operating_hours": {
+        "friday": "6–11:30 PM",
+        "monday": "6–11 PM",
+        "saturday": "6–11:30 PM",
+        "sunday": "6–11 PM",
+        "thursday": "6–11 PM",
+        "tuesday": "6–11 PM",
+        "wednesday": "6–11 PM"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/1tf7ywg1&g2lbs=AOHF13myBiVTvxIwBZMaHQSGMXa5P8vGH_U1jWBBA1u8xsDg2TViMRONMxdZrUOsmcsNAscyUrPsaNxVu8ofu0IX9Z1u3ERogg%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 3353-7171",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce424915fde9d%3A0xfc085399a90f4a1c&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJnd5fkSTk3JQRHEoPqZlTCPw",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJnd5fkSTk3JQRHEoPqZlTCPw",
+      "position": 19,
+      "price": "$$",
+      "provider_id": "/g/1tf7ywg1",
+      "rating": 4.6,
+      "reviews": 2823,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce424915fde9d%3A0xfc085399a90f4a1c&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "curbside_pickup": true,
+        "dine_in": true,
+        "no_contact_delivery": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipPbB9hFZ34kroBpjHv1fK0uM1S_ABEz-voung3i=w122-h92-k-no",
+      "title": "Pizzaria Baggio",
+      "type": "Pizza restaurant",
+      "type_id": "pizza_restaurant",
+      "type_ids": [
+        "pizza_restaurant",
+        "family_restaurant",
+        "italian_restaurant",
+        "meal_delivery",
+        "pizza_delivery_service",
+        "pizzatakeaway",
+        "restaurant",
+        "vegetarian_restaurant"
+      ],
+      "types": [
+        "Pizza restaurant",
+        "Family restaurant",
+        "Italian restaurant",
+        "Delivery Restaurant",
+        "Pizza delivery",
+        "Pizza Takeout",
+        "Restaurant",
+        "Vegetarian restaurant"
+      ],
+      "user_review": "\"One of the best pizzas I've ever had.\"",
+      "website": "http://www.pizzariabaggio.com.br/"
+    },
+    {
+      "address": "R. Nicarágua, 1277 - Bacacheri, Curitiba - PR, 82515-260, Brazil",
+      "data_cid": "9386700303990727444",
+      "data_id": "0x94dce678ef9d8afd:0x82444231906b2314",
+      "gps_coordinates": {
+        "latitude": -25.3977367,
+        "longitude": -49.236797599999996
+      },
+      "hours": "Closed ⋅ Opens 9 AM Thu",
+      "open_state": "Closed ⋅ Opens 9 AM Thu",
+      "operating_hours": {
+        "friday": "9 AM–10 PM",
+        "monday": "9 AM–10 PM",
+        "saturday": "9 AM–10 PM",
+        "sunday": "9 AM–10 PM",
+        "thursday": "9 AM–10 PM",
+        "tuesday": "Closed",
+        "wednesday": "Closed"
+      },
+      "order_online": "https://www.google.com/viewer/chooseprovider?mid=/g/11csc7y5y3&g2lbs=AOHF13mg-YkanbDncClz9mot-R-jeVRpc-HuLmWbQz7H8f3m5aqYsEUj6aSaZGQnequ7JH3hTRVHqNyPGz1WASldeWmj0SDnMA%3D%3D&hl=en-US&gl=us&fo_m=MfohQo559jFvMUOzJVpjPL1YMfZ3bInYwBDuMfaXTPp5KXh-&utm_source=tactile&gei=n5R9Z-z2J-PE4-EPi732gQU&ei=n5R9Z-z2J-PE4-EPi732gQU&fo_s=OA,SOE&opi=79508299&ebb=1&cs=0&foub=mcpp",
+      "phone": "+55 41 99987-6115",
+      "photos_link": "https://serpapi.com/search.json?data_id=0x94dce678ef9d8afd%3A0x82444231906b2314&engine=google_maps_photos&hl=en",
+      "place_id": "ChIJ_Yqd73jm3JQRFCNrkDFCRII",
+      "place_id_search": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&place_id=ChIJ_Yqd73jm3JQRFCNrkDFCRII",
+      "position": 20,
+      "price": "R$40–60",
+      "provider_id": "/g/11csc7y5y3",
+      "rating": 4.7,
+      "reviews": 1993,
+      "reviews_link": "https://serpapi.com/search.json?data_id=0x94dce678ef9d8afd%3A0x82444231906b2314&engine=google_maps_reviews&hl=en",
+      "service_options": {
+        "delivery": true,
+        "dine_in": true,
+        "takeout": true
+      },
+      "thumbnail": "https://lh5.googleusercontent.com/p/AF1QipP8qFm5iPAXt9hXs6BompEFGl34C4RVM4KDQ1vM=w138-h92-k-no",
+      "title": "Leônidas Bike Café",
+      "type": "Restaurant",
+      "type_id": "restaurant",
+      "type_ids": [
+        "restaurant",
+        "coffee_shop",
+        "espresso_bar",
+        "hamburger_restaurant",
+        "lunch_restaurant"
+      ],
+      "types": [
+        "Restaurant",
+        "Coffee shop",
+        "Espresso bar",
+        "Hamburger restaurant",
+        "Lunch restaurant"
+      ],
+      "website": "http://www.leonidasbikecafe.com.br/"
+    }
+  ],
+  "search_information": {
+    "local_results_state": "Some results for exact spelling but showing fixed spelling",
+    "query_displayed": "top rated "
+  },
+  "search_metadata": {
+    "created_at": "2025-01-07 20:54:54 UTC",
+    "google_maps_url": "https://www.google.com/maps/search/top+rated+pizzarias+in+Bacacheri%2C+Curitiba%2C+PR+Brazil+?hl=en",
+    "id": "677d949e56dc3d6096bf3ab0",
+    "json_endpoint": "https://serpapi.com/searches/37ccc98e68b20fc9/677d949e56dc3d6096bf3ab0.json",
+    "processed_at": "2025-01-07 20:54:54 UTC",
+    "raw_html_file": "https://serpapi.com/searches/37ccc98e68b20fc9/677d949e56dc3d6096bf3ab0.html",
+    "status": "Success",
+    "total_time_taken": 2.58
+  },
+  "search_parameters": {
+    "engine": "google_maps",
+    "google_domain": "google.com",
+    "hl": "en",
+    "q": "top rated pizzarias in Bacacheri, Curitiba, PR Brazil ",
+    "type": "search"
+  },
+  "serpapi_pagination": {
+    "next": "https://serpapi.com/search.json?engine=google_maps&google_domain=google.com&hl=en&q=top+rated+pizzarias+in+Bacacheri%2C+Curitiba%2C+PR+Brazil+&start=20&type=search"
+  }
+}
