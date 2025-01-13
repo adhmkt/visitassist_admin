@@ -317,10 +317,25 @@
                     }
                 };
 
-                console.log('Place details with geometry:', currentPlaceDetails);
-
                 // Update modal content
                 document.getElementById('modalPlaceName').textContent = data.place.name;
+
+                // Reset save button state
+                const saveButton = document.getElementById('savePlaceButton');
+                saveButton.disabled = false;
+                saveButton.classList.remove('saved');
+                saveButton.innerHTML = `
+                    <span class="save-icon">💾</span>
+                    Save Place
+                `;
+
+                // Remove old event listener and add new one
+                saveButton.replaceWith(saveButton.cloneNode(true));
+                document.getElementById('savePlaceButton').addEventListener('click', async function () {
+                    if (!this.disabled) {
+                        await savePlaceToDatabase();
+                    }
+                });
 
                 // Update carousel
                 const carouselInner = document.querySelector('#photoCarousel .carousel-inner');
@@ -435,14 +450,17 @@
     }
 
     // Modal close functionality
-    document.querySelector('.close-modal').addEventListener('click', () => {
-        document.getElementById('placeDetailsModal').style.display = 'none';
+    document.querySelector('.close-modal').addEventListener('click', function () {
+        const modal = document.getElementById('placeDetailsModal');
+        modal.style.display = 'none';
+        currentPlaceDetails = null; // Reset current place details
     });
 
-    window.addEventListener('click', (event) => {
+    window.addEventListener('click', function (event) {
         const modal = document.getElementById('placeDetailsModal');
         if (event.target === modal) {
             modal.style.display = 'none';
+            currentPlaceDetails = null; // Reset current place details
         }
     });
 
@@ -497,7 +515,16 @@
 
     // Update the savePlaceToDatabase function
     async function savePlaceToDatabase() {
+        const saveButton = document.getElementById('savePlaceButton');
+        if (saveButton.disabled) return; // Prevent multiple clicks
+
         try {
+            saveButton.disabled = true;
+            saveButton.innerHTML = `
+                <span class="save-icon">⏳</span>
+                Saving...
+            `;
+
             console.log('Preparing to save place:', currentPlaceDetails);
 
             // Prepare place data
@@ -581,20 +608,32 @@
             const result = await response.json();
 
             if (result.success) {
-                console.log('Place saved successfully');
-                const saveButton = document.getElementById('savePlaceButton');
-                saveButton.classList.add('saved');
                 saveButton.innerHTML = `
                     <span class="save-icon">✓</span>
                     Saved
                 `;
+
+                // Re-enable the button after a short delay
+                setTimeout(() => {
+                    saveButton.disabled = false;
+                    saveButton.innerHTML = `
+                        <span class="save-icon">💾</span>
+                        Save Place
+                    `;
+                }, 1500);
             } else {
-                console.error('Failed to save place:', result.message);
-                alert('Failed to save place: ' + result.message);
+                throw new Error(result.message || 'Failed to save place');
             }
         } catch (error) {
             console.error('Error saving place:', error);
             alert('Error saving place: ' + error.message);
+
+            // Reset button state
+            saveButton.disabled = false;
+            saveButton.innerHTML = `
+                <span class="save-icon">💾</span>
+                Save Place
+            `;
         }
     }
 
