@@ -29,6 +29,9 @@ Primary table storing core place information.
 | created_at | TIMESTAMP WITH TIME ZONE | Record creation time | Default: now() |
 | updated_at | TIMESTAMP WITH TIME ZONE | Last update time | Default: now() |
 | types | TEXT[] | Array of place types | |
+| assistant_id | TEXT | Assistant identifier | |
+| search_query | TEXT | Search query used | |
+| featured_position | INTEGER | Position in featured list | Default: 0 |
 
 ### 2. place_services
 Tracks available services for each place.

@@ -12,6 +12,8 @@
                 <div class="search-input-group">
                     <input type="text" class="form-control" id="searchQuery" name="query"
                         placeholder="Enter place name or address" required>
+                    <input type="text" class="form-control" id="assistantId" name="assistantId"
+                        placeholder="Enter Assistant ID (e.g., asst_hdyr745hnfm0hd)" required>
                     <button type="submit" class="action-button search-button">
                         Search
                     </button>
@@ -67,10 +69,16 @@
             <div class="modal-header">
                 <h2 id="modalPlaceName"></h2>
                 <div class="modal-actions">
-                    <button id="savePlaceButton" class="save-button">
-                        <span class="save-icon">💾</span>
-                        Save Place
-                    </button>
+                    <div class="action-group">
+                        <div class="featured-checkbox-wrapper">
+                            <input type="checkbox" id="featuredCheckbox" class="featured-checkbox">
+                            <label for="featuredCheckbox">Featured Place</label>
+                        </div>
+                        <button id="savePlaceButton" class="save-button">
+                            <span class="save-icon">💾</span>
+                            Save Place
+                        </button>
+                    </div>
                     <button class="close-modal">&times;</button>
                 </div>
             </div>
@@ -94,8 +102,15 @@
         e.preventDefault();
 
         const query = document.getElementById('searchQuery').value;
+        const assistantId = document.getElementById('assistantId').value;
+
         if (!query) {
             alert('Please enter a search term');
+            return;
+        }
+
+        if (!assistantId) {
+            alert('Please enter an Assistant ID');
             return;
         }
 
@@ -105,7 +120,10 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ query: query })
+                body: JSON.stringify({
+                    query: query,
+                    assistantId: assistantId
+                })
             });
 
             const data = await response.json();
@@ -320,14 +338,16 @@
                 // Update modal content
                 document.getElementById('modalPlaceName').textContent = data.place.name;
 
-                // Reset save button state
+                // Reset save button and checkbox state
                 const saveButton = document.getElementById('savePlaceButton');
+                const featuredCheckbox = document.getElementById('featuredCheckbox');
                 saveButton.disabled = false;
                 saveButton.classList.remove('saved');
                 saveButton.innerHTML = `
                     <span class="save-icon">💾</span>
                     Save Place
                 `;
+                featuredCheckbox.checked = false;
 
                 // Remove old event listener and add new one
                 saveButton.replaceWith(saveButton.cloneNode(true));
@@ -542,7 +562,10 @@
                 latitude: currentPlaceDetails.geometry.location.lat,
                 longitude: currentPlaceDetails.geometry.location.lng,
                 wheelchair_accessible: currentPlaceDetails.wheelchair_accessible,
-                url: currentPlaceDetails.url
+                url: currentPlaceDetails.url,
+                assistant_id: document.getElementById('assistantId').value,
+                search_query: document.getElementById('searchQuery').value,
+                featured_position: document.getElementById('featuredCheckbox').checked ? 1 : 0
             };
 
             console.log('Place data prepared:', placeData);
@@ -805,10 +828,18 @@
     .search-input-group {
         display: flex;
         gap: 1rem;
+        flex-wrap: wrap;
     }
 
     .search-input-group .form-control {
         flex: 1;
+        min-width: 200px;
+        /* Ensure inputs don't get too narrow */
+    }
+
+    .search-input-group .search-button {
+        flex-shrink: 0;
+        /* Prevent button from shrinking */
     }
 
     /* Button Styles */
@@ -1079,7 +1110,18 @@
     .search-input-group {
         display: flex;
         gap: 1rem;
-        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .search-input-group .form-control {
+        flex: 1;
+        min-width: 200px;
+        /* Ensure inputs don't get too narrow */
+    }
+
+    .search-input-group .search-button {
+        flex-shrink: 0;
+        /* Prevent button from shrinking */
     }
 
     .form-control {
@@ -1104,12 +1146,13 @@
     }
 
     /* Responsive adjustments */
-    @media (max-width: 640px) {
+    @media (max-width: 768px) {
         .search-input-group {
             flex-direction: column;
         }
 
-        .search-button {
+        .search-input-group .form-control,
+        .search-input-group .search-button {
             width: 100%;
         }
     }
@@ -1690,6 +1733,40 @@
 
     .save-icon {
         font-size: 1.25rem;
+    }
+
+    /* Add these styles to your existing CSS */
+    .action-group {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .featured-checkbox-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .featured-checkbox {
+        width: 1.2rem;
+        height: 1.2rem;
+        cursor: pointer;
+    }
+
+    .featured-checkbox-wrapper label {
+        color: #374151;
+        font-size: 0.9rem;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    /* Update modal-actions styles */
+    .modal-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
     }
 </style>
 {% endblock %}
