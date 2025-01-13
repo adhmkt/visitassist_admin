@@ -1101,23 +1101,41 @@ def upload_to_storage():
         bucket_name = 'place-photos'  # Your Supabase storage bucket name
         storage_client = supabase.storage.from_(bucket_name)
         
-        # Upload the file
-        result = storage_client.upload(
-            path=filename,
-            file=binary_data,
-            file_options={"content-type": content_type}
-        )
+        # Extract folder name (place_id) from filename
+        folder = filename.split('/')[0]
+        
+        try:
+            # Create folder if it doesn't exist
+            try:
+                storage_client.create_folder(folder)
+            except Exception as folder_error:
+                print(f"Folder creation error (might already exist): {str(folder_error)}")
 
-        # Get the public URL
-        public_url = storage_client.get_public_url(filename)
+            # Upload the file directly
+            result = storage_client.upload(
+                path=filename,
+                file=binary_data,
+                file_options={
+                    "content-type": content_type
+                }
+            )
 
-        return jsonify({
-            'success': True,
-            'url': public_url
-        })
+            # Get the public URL
+            public_url = storage_client.get_public_url(filename)
+
+            return jsonify({
+                'success': True,
+                'url': public_url
+            })
+
+        except Exception as storage_error:
+            print(f"Storage operation error: {str(storage_error)}")
+            raise storage_error
 
     except Exception as e:
         print('Error uploading to storage:', str(e))
+        import traceback
+        print('Traceback:', traceback.format_exc())
         return jsonify({
             'success': False,
             'message': str(e)

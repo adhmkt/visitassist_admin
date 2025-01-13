@@ -453,10 +453,12 @@
             const photoResponse = await fetch(`/api/places/photo/${photoReference}`);
             const photoBlob = await photoResponse.blob();
 
-            // Create a unique filename using timestamp and random string
+            // Create a folder structure using place_id
+            const placeId = currentPlaceDetails.place_id;
             const timestamp = new Date().getTime();
             const randomString = Math.random().toString(36).substring(7);
-            const filename = `place_photos/${timestamp}_${randomString}.jpg`;
+            // Create filename with place_id folder structure
+            const filename = `${placeId}/${timestamp}_${randomString}.jpg`;
 
             // Upload to Supabase storage
             const uploadResponse = await fetch('/api/storage/upload', {
