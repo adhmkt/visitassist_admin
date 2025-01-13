@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from supabase import create_client, Client
 from math import cos, pi, radians
 import base64
+import json
 
 # Load environment variables
 load_dotenv()
@@ -974,82 +975,64 @@ def save_place():
         if 'photos' in data and data['photos']:
             print("\n=== Photo Saving Debug ===")
             print(f"Number of photos to save: {len(data['photos'])}")
+            print("Full data structure received:", data)
+            print("\nPhotos array structure:", json.dumps(data['photos'], indent=2))
             
-            # First delete existing photos
-            delete_result = supabase.table('place_photos').delete().eq('place_id', place_id).execute()
-            print(f"Deleted existing photos: {delete_result.data}")
-            
-            # Download and store each photo
-            for index, photo in enumerate(data['photos']):
-                print(f"\nProcessing photo {index + 1}/{len(data['photos'])}")
-                print(f"Photo data: {photo}")
+            try:
+                # First delete existing photos
+                delete_result = supabase.table('place_photos').delete().eq('place_id', place_id).execute()
+                print(f"Deleted existing photos for place_id {place_id}. Result:", delete_result.data)
                 
-                photo['place_id'] = place_id
-                
-                # Fetch photo from Google
-                photo_url = "https://maps.googleapis.com/maps/api/place/photo"
-                params = {
-                    'maxwidth': '800',  # Get larger size for storage
-                    'photo_reference': photo['photo_reference'],
-                    'key': GOOGLE_MAPS_API_KEY
-                }
-                
-                print(f"Fetching photo from Google: {photo_url}")
-                response = requests.get(photo_url, params=params)
-                print(f"Google API Response Status: {response.status_code}")
-                
-                if response.status_code == 200:
-                    # Generate unique filename
-                    filename = f"{place_id}/{photo['photo_reference']}.jpg"
-                    print(f"Generated filename: {filename}")
-                    
+                # Save each photo record to the database
+                for index, photo in enumerate(data['photos']):
                     try:
-                        # Create folder if it doesn't exist
-                        folder = f"{place_id}"
-                        print(f"Creating folder in bucket: {folder}")
-                        try:
-                            folder_result = supabase.storage.from_('place-photos').create_folder(folder)
-                            print(f"Folder creation result: {folder_result}")
-                        except Exception as folder_error:
-                            print(f"Folder creation error (might already exist): {str(folder_error)}")
+                        print(f"\nProcessing photo {index + 1}/{len(data['photos'])}")
+                        print("Raw photo data structure:", json.dumps(photo, indent=2))
                         
-                        # Upload to Supabase Storage
-                        print("Uploading to Supabase Storage...")
-                        storage_response = supabase.storage.from_('place-photos').upload(
-                            filename,
-                            response.content,
-                            {'content-type': response.headers['Content-Type'], 'upsert': True}
-                        )
-                        print(f"Storage upload response: {storage_response}")
+                        # Verify all required fields are present
+                        required_fields = ['photo_reference', 'storage_url']
+                        missing_fields = [field for field in required_fields if field not in photo]
+                        if missing_fields:
+                            print(f"Warning: Missing required fields for photo: {missing_fields}")
+                            continue
                         
-                        # Get public URL
-                        public_url = supabase.storage.from_('place-photos').get_public_url(filename)
-                        print(f"Generated public URL: {public_url}")
-                        
-                        # Save photo data with storage URL and created_by
                         photo_data = {
                             'place_id': place_id,
                             'photo_reference': photo['photo_reference'],
                             'height': photo.get('height'),
                             'width': photo.get('width'),
                             'html_attributions': photo.get('html_attributions', []),
-                            'created_by': session['user']['id'],
-                            'storage_url': public_url
+                            'storage_url': photo['storage_url']
                         }
-                        print(f"Saving photo data to database: {photo_data}")
                         
+                        print("Prepared photo_data for insert:", json.dumps(photo_data, indent=2))
+                        
+                        # Insert the photo record
+                        print("Attempting to insert into place_photos table...")
                         insert_result = supabase.table('place_photos').insert(photo_data).execute()
-                        print(f"Database insert result: {insert_result.data}")
                         
-                    except Exception as storage_error:
-                        print(f"Error saving photo {filename}: {str(storage_error)}")
-                        print(f"Full error details: {storage_error.__class__.__name__}")
-                        import traceback
-                        print(f"Traceback: {traceback.format_exc()}")
+                        if insert_result.data:
+                            print(f"Successfully saved photo to database. Insert result:", json.dumps(insert_result.data, indent=2))
+                        else:
+                            print("Warning: Insert completed but no data returned from Supabase")
+                            print("Insert result object:", insert_result)
+                        
+                    except KeyError as ke:
+                        print(f"Missing key in photo data: {str(ke)}")
+                        print("Full photo object:", json.dumps(photo, indent=2))
                         continue
-                else:
-                    print(f"Failed to fetch photo from Google. Status code: {response.status_code}")
-                    print(f"Response content: {response.text[:200]}...")  # First 200 chars
+                    except Exception as photo_error:
+                        print(f"Error saving photo to database: {str(photo_error)}")
+                        print(f"Error type: {type(photo_error)}")
+                        import traceback
+                        print("Full traceback:", traceback.format_exc())
+                        continue
+                        
+            except Exception as photos_error:
+                print(f"Error in photos processing block: {str(photos_error)}")
+                print(f"Error type: {type(photos_error)}")
+                import traceback
+                print("Full traceback:", traceback.format_exc())
         
         return jsonify({
             'success': True,
