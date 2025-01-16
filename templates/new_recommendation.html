@@ -229,6 +229,7 @@
                     <button onclick="showPlaceDetails('${place.place_id}')" class="details-button">
                         View Details
                     </button>
+                    <span class="place-id">ID: ${place.place_id}</span>
                 </div>
                 <div class="place-select">
                     <input type="checkbox" 
@@ -1767,6 +1768,40 @@
         align-items: center;
         justify-content: space-between;
         gap: 1rem;
+    }
+
+    /* Action Button */
+    .place-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        background-color: #f8fafc;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .details-button {
+        background-color: #1e40af;
+        color: white;
+        border: none;
+        padding: 0.75rem 1rem;
+        border-radius: 0.5rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .details-button:hover {
+        background-color: #1e3a8a;
+    }
+
+    .place-id {
+        font-size: 0.875rem;
+        color: var(--secondary-text);
+        padding: 0.5rem;
+        background-color: #f1f5f9;
+        border-radius: 0.375rem;
+        border: 1px solid #e2e8f0;
     }
 </style>
 {% endblock %}
