@@ -1,0 +1,451 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container translations-container">
+    <h1 class="page-title">Content Translations</h1>
+
+    <!-- Translation Form -->
+    <div class="card translation-card">
+        <form id="translationForm" class="translation-form">
+            <div class="form-group">
+                <label for="assistantId" class="form-label">Assistant ID:</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="assistantId" name="assistantId"
+                        placeholder="Enter Assistant ID (e.g., asst_jdjdfhfgy567n)" required>
+                    <button type="button" id="getLanguagesBtn" class="action-button get-languages-btn">
+                        Get Languages
+                    </button>
+                </div>
+            </div>
+
+            <div id="languageSelectionSection" style="display: none;">
+                <div class="form-group">
+                    <label for="sourceLanguage" class="form-label">Translate from:</label>
+                    <select class="form-control" id="sourceLanguage" name="sourceLanguage" required>
+                        <option value="">Select source language</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Translate to:</label>
+                    <div class="language-checkboxes" id="targetLanguages">
+                        <!-- Checkboxes will be dynamically populated -->
+                    </div>
+                </div>
+
+                <button type="submit" class="action-button submit-button">
+                    Perform Translations
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Translation Progress Section -->
+    <div id="translationProgress" class="card translation-progress" style="display: none; margin-top: 20px;">
+        <div class="progress-header">
+            <h3>Translation Progress</h3>
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div class="progress-content">
+            <div id="currentOperation" class="current-operation">
+                Initializing translations...
+            </div>
+            <div id="progressDetails" class="progress-details">
+                <div class="progress-item">
+                    <span class="label">Source Language:</span>
+                    <span id="sourceLanguageDisplay">-</span>
+                </div>
+                <div class="progress-item">
+                    <span class="label">Target Languages:</span>
+                    <span id="targetLanguagesDisplay">-</span>
+                </div>
+                <div class="progress-item">
+                    <span class="label">Texts to Translate:</span>
+                    <span id="textsToTranslateDisplay">-</span>
+                </div>
+                <div class="progress-item">
+                    <span class="label">Translations Completed:</span>
+                    <span id="translationsCompletedDisplay">0</span>
+                </div>
+            </div>
+            <div id="errorDisplay" class="error-display" style="display: none;">
+                <!-- Errors will be displayed here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('translationForm');
+        const getLanguagesBtn = document.getElementById('getLanguagesBtn');
+        const languageSelectionSection = document.getElementById('languageSelectionSection');
+        const sourceLanguageSelect = document.getElementById('sourceLanguage');
+        const targetLanguagesDiv = document.getElementById('targetLanguages');
+        const translationProgress = document.getElementById('translationProgress');
+        const currentOperation = document.getElementById('currentOperation');
+        const sourceLanguageDisplay = document.getElementById('sourceLanguageDisplay');
+        const targetLanguagesDisplay = document.getElementById('targetLanguagesDisplay');
+        const textsToTranslateDisplay = document.getElementById('textsToTranslateDisplay');
+        const translationsCompletedDisplay = document.getElementById('translationsCompletedDisplay');
+        const errorDisplay = document.getElementById('errorDisplay');
+
+        // Function to update progress display
+        function updateProgress(status, details = {}) {
+            currentOperation.textContent = status;
+            if (details.sourceLanguage) sourceLanguageDisplay.textContent = details.sourceLanguage;
+            if (details.targetLanguages) targetLanguagesDisplay.textContent = details.targetLanguages.join(', ');
+            if (details.textsToTranslate) textsToTranslateDisplay.textContent = details.textsToTranslate;
+            if (details.translationsCompleted) translationsCompletedDisplay.textContent = details.translationsCompleted;
+        }
+
+        // Function to show errors
+        function showError(message) {
+            errorDisplay.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+            errorDisplay.style.display = 'block';
+        }
+
+        // Handle Get Languages button click
+        getLanguagesBtn.addEventListener('click', async function () {
+            const assistantId = document.getElementById('assistantId').value.trim();
+
+            if (!assistantId) {
+                alert('Please enter an Assistant ID');
+                return;
+            }
+
+            try {
+                console.log('Fetching languages for assistant:', assistantId);
+                const response = await fetch(`/api/assistants/${assistantId}/languages`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Response data:', data);
+
+                if (data.success) {
+                    // Clear existing options
+                    sourceLanguageSelect.innerHTML = '<option value="">Select source language</option>';
+                    targetLanguagesDiv.innerHTML = '';
+
+                    console.log('Languages received:', data.languages);
+
+                    if (!data.languages || data.languages.length === 0) {
+                        alert('No languages found for this assistant');
+                        return;
+                    }
+
+                    // Language name mapping
+                    const languageNames = {
+                        'en': 'English',
+                        'es': 'Spanish',
+                        'pt': 'Portuguese',
+                        'fr': 'French',
+                        'de': 'German',
+                        'it': 'Italian',
+                        'nl': 'Dutch',
+                        'pl': 'Polish',
+                        'ru': 'Russian',
+                        'ja': 'Japanese',
+                        'ko': 'Korean',
+                        'zh': 'Chinese'
+                    };
+
+                    // Populate source language dropdown and target language checkboxes
+                    data.languages.forEach(langCode => {
+                        const langName = languageNames[langCode] || langCode;
+
+                        // Add to source dropdown
+                        const option = document.createElement('option');
+                        option.value = langCode;
+                        option.textContent = `${langName} (${langCode})`;
+                        sourceLanguageSelect.appendChild(option);
+
+                        // Add to target checkboxes
+                        const checkboxDiv = document.createElement('div');
+                        checkboxDiv.className = 'checkbox-item';
+                        checkboxDiv.innerHTML = `
+                        <input type="checkbox" 
+                               id="lang_${langCode}" 
+                               name="targetLanguages" 
+                               value="${langCode}">
+                        <label for="lang_${langCode}">${langName} (${langCode})</label>
+                    `;
+                        targetLanguagesDiv.appendChild(checkboxDiv);
+                    });
+
+                    // Show the language selection section
+                    languageSelectionSection.style.display = 'block';
+                } else {
+                    console.error('Server error:', data.message);
+                    alert(data.message || 'Failed to fetch languages');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                console.error('Error details:', {
+                    name: error.name,
+                    message: error.message,
+                    stack: error.stack
+                });
+                alert(`Error fetching languages: ${error.message}`);
+            }
+        });
+
+        // Handle form submission
+        form.addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const assistantId = document.getElementById('assistantId').value;
+            const sourceLanguage = sourceLanguageSelect.value;
+            const targetLanguages = Array.from(document.querySelectorAll('input[name="targetLanguages"]:checked'))
+                .map(cb => cb.value);
+
+            if (!sourceLanguage) {
+                alert('Please select a source language');
+                return;
+            }
+
+            if (targetLanguages.length === 0) {
+                alert('Please select at least one target language');
+                return;
+            }
+
+            // Show progress section and reset displays
+            translationProgress.style.display = 'block';
+            errorDisplay.style.display = 'none';
+            updateProgress('Starting translation process...');
+
+            try {
+                // Step 1: Initial process
+                updateProgress('Preparing translations...', {
+                    sourceLanguage,
+                    targetLanguages,
+                    textsToTranslate: '...',
+                    translationsCompleted: 0
+                });
+
+                const processResponse = await fetch('/api/translations/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        assistantId,
+                        sourceLanguage,
+                        targetLanguages
+                    })
+                });
+
+                const processResult = await processResponse.json();
+
+                if (processResult.success) {
+                    // Update progress with initial details
+                    updateProgress('Starting background translation...', {
+                        sourceLanguage: processResult.details.source_language,
+                        targetLanguages: processResult.details.target_languages,
+                        textsToTranslate: processResult.details.texts_to_translate,
+                        translationsCompleted: 0
+                    });
+
+                    // Step 2: Trigger background translation with source texts
+                    const backgroundResponse = await fetch('/api/translations/process-background', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            assistantId,
+                            sourceLanguage,
+                            targetLanguages,
+                            sourceTexts: processResult.details.source_texts  // Pass source texts directly
+                        })
+                    });
+
+                    const backgroundResult = await backgroundResponse.json();
+
+                    if (backgroundResult.success) {
+                        // Update final progress
+                        updateProgress('Translation completed!', {
+                            translationsCompleted: backgroundResult.details.translations_processed
+                        });
+
+                        // Show any errors if they occurred
+                        if (backgroundResult.details.errors.length > 0) {
+                            showError('Some translations had errors:\n' + backgroundResult.details.errors.join('\n'));
+                        }
+
+                        // Hide spinner
+                        document.querySelector('.spinner-border').style.display = 'none';
+                    } else {
+                        showError('Error in background translation: ' + backgroundResult.message);
+                    }
+                } else {
+                    showError('Error initiating translation: ' + processResult.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Error processing translations: ' + error.message);
+            }
+        });
+    });
+</script>
+
+<style>
+    .translations-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    .page-title {
+        font-size: 2rem;
+        color: var(--primary-text);
+        margin-bottom: 2rem;
+    }
+
+    .translation-card {
+        background-color: var(--card-background);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .translation-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--secondary-text);
+        margin-bottom: 0.5rem;
+    }
+
+    .input-group {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .form-control {
+        flex: 1;
+        padding: 0.75rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .get-languages-btn {
+        padding: 0.75rem 1.5rem;
+        white-space: nowrap;
+    }
+
+    .language-checkboxes {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+        width: 1.2rem;
+        height: 1.2rem;
+        cursor: pointer;
+    }
+
+    .checkbox-item label {
+        color: var(--primary-text);
+        font-size: 0.875rem;
+        cursor: pointer;
+    }
+
+    .submit-button {
+        margin-top: 1rem;
+    }
+
+    /* Progress Section Styles */
+    .translation-progress {
+        padding: 1.5rem;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .progress-header h3 {
+        margin: 0;
+        color: var(--primary-text);
+    }
+
+    .current-operation {
+        font-size: 1.1rem;
+        color: var(--primary-color);
+        margin-bottom: 1rem;
+    }
+
+    .progress-details {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .progress-item {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .progress-item .label {
+        font-weight: bold;
+        min-width: 150px;
+    }
+
+    .error-display {
+        margin-top: 1rem;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        color: #721c24;
+    }
+</style>
+{% endblock %}

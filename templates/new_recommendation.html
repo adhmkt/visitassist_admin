@@ -322,6 +322,11 @@
     // Add JavaScript for Modal and Details Handling
     async function showPlaceDetails(placeId) {
         try {
+            // First, check if the place exists in our database
+            const checkResponse = await fetch(`/api/places/exists/${placeId}`);
+            const checkData = await checkResponse.json();
+            const placeExists = checkData.exists;
+
             const response = await fetch(`/api/places/details/${placeId}`);
             const data = await response.json();
 
@@ -344,10 +349,12 @@
                 const featuredCheckbox = document.getElementById('featuredCheckbox');
                 saveButton.disabled = false;
                 saveButton.classList.remove('saved');
-                saveButton.innerHTML = `
-                    <span class="save-icon">💾</span>
-                    Save Place
-                `;
+
+                // Update button text based on whether the place exists
+                saveButton.innerHTML = placeExists ?
+                    `<span class="save-icon">✏️</span>Edit Place` :
+                    `<span class="save-icon">💾</span>Save Place`;
+
                 featuredCheckbox.checked = false;
 
                 // Remove old event listener and add new one
@@ -424,9 +431,32 @@
                             <p>${data.place.types ? data.place.types.join(', ') : 'Not available'}</p>
                         </div>
                     </div>
+                    <div class="snippet-section">
+                        <h5>Simple Link Snippet</h5>
+                        <div class="snippet-container">
+                            <textarea id="snippetField" class="snippet-field" readonly>${generateSnippet(data.place)}</textarea>
+                            <button onclick="copySnippet('snippetField')" class="copy-button">
+                                <span class="copy-icon">📋</span>
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="snippet-section">
+                        <h5>Featured Listing Snippet</h5>
+                        <div class="snippet-container">
+                            <textarea id="featuredSnippetField" class="snippet-field" readonly>${generateFeaturedSnippet(data.place)}</textarea>
+                            <button onclick="copySnippet('featuredSnippetField')" class="copy-button">
+                                <span class="copy-icon">📋</span>
+                                Copy
+                            </button>
+                        </div>
+                    </div>
                 `;
 
                 document.getElementById('placeDetailsContent').innerHTML = detailsHtml;
+
+                // Initialize copy button functionality
+                initializeCopyButton();
 
                 // Show the modal
                 const modal = document.getElementById('placeDetailsModal');
@@ -766,6 +796,85 @@
             alert('Error creating recommendation');
         }
     });
+
+    function generateSnippet(place) {
+        const emoji = getPlaceTypeEmoji(place.types[0]);
+        return `<a href="#" class="view-details" data-place-id="${place.place_id}" data-business-id="1" data-popup-type="${place.types[0]}">ℹ️ Ver Detalhes</a>`;
+    }
+
+    function getPlaceTypeEmoji(type) {
+        const emojiMap = {
+            restaurant: '🍴',
+            cafe: '☕',
+            bar: '🍺',
+            lodging: '🏨',
+            museum: '🏛️',
+            park: '🌳',
+            shopping_mall: '🛍️',
+            tourist_attraction: '🎯',
+            amusement_park: '🎢',
+            art_gallery: '🎨',
+            bakery: '🥖',
+            beach: '🏖️',
+            casino: '🎰',
+            church: '⛪',
+            gym: '💪',
+            library: '📚',
+            movie_theater: '🎬',
+            night_club: '🎉',
+            spa: '💆',
+            zoo: '🦁'
+        };
+        return emojiMap[type] || '📍';
+    }
+
+    function copySnippet(fieldId) {
+        const snippetField = document.getElementById(fieldId);
+        snippetField.select();
+        document.execCommand('copy');
+
+        const copyButton = snippetField.nextElementSibling;
+        const originalText = copyButton.innerHTML;
+        copyButton.innerHTML = '<span class="copy-icon">✓</span> Copied!';
+
+        setTimeout(() => {
+            copyButton.innerHTML = originalText;
+        }, 2000);
+    }
+
+    function initializeCopyButton() {
+        const snippetFields = document.querySelectorAll('.snippet-field');
+        snippetFields.forEach(field => {
+            field.addEventListener('click', function () {
+                this.select();
+            });
+        });
+    }
+
+    function generateFeaturedSnippet(place) {
+        const emoji = getPlaceTypeEmoji(place.types[0]);
+        const photoUrl = place.photos && place.photos.length > 0 ?
+            `/api/places/photo/${place.photos[0].photo_reference}` :
+            '/static/images/placeholder.jpg';
+
+        return `<div class="featured-place-card">
+        <div class="featured-badge">Featured</div>
+        <div class="place-image">
+            <img src="${photoUrl}" alt="${place.name}">
+        </div>
+        <div class="place-content">
+            <h3 class="place-title">${emoji} ${place.name}</h3>
+            ${place.rating ?
+                `<div class="place-rating">⭐ ${place.rating} (${place.user_ratings_total} reviews)</div>` :
+                ''
+            }
+            <p class="place-address">${place.formatted_address || ''}</p>
+            <a href="#" class="view-details" data-place-id="${place.place_id}" data-business-id="1" data-popup-type="${place.types[0]}">
+                View Details
+            </a>
+        </div>
+    </div>`;
+    }
 </script>
 
 <style>
@@ -1802,6 +1911,79 @@
         background-color: #f1f5f9;
         border-radius: 0.375rem;
         border: 1px solid #e2e8f0;
+    }
+
+    /* Snippet Section Styles */
+    .snippet-section {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background-color: #f8fafc;
+        border-radius: 0.75rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    .snippet-section h5 {
+        color: #64748b;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+    }
+
+    .snippet-container {
+        position: relative;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .snippet-field {
+        flex: 1;
+        min-height: 60px;
+        padding: 0.75rem;
+        background-color: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: #334155;
+        resize: vertical;
+        white-space: pre-wrap;
+        word-break: break-all;
+    }
+
+    .snippet-field:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .copy-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: #ffffff;
+        color: #475569;
+        border: 1px solid #e2e8f0;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        height: fit-content;
+    }
+
+    .copy-button:hover {
+        background-color: #f1f5f9;
+        border-color: #cbd5e1;
+    }
+
+    .copy-button:active {
+        transform: scale(0.98);
+    }
+
+    .copy-icon {
+        font-size: 1rem;
     }
 </style>
 {% endblock %}

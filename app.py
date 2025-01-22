@@ -6,6 +6,7 @@ from supabase import create_client, Client
 from math import cos, pi, radians
 import base64
 import json
+from openai import OpenAI
 
 # Load environment variables
 load_dotenv()
@@ -32,6 +33,9 @@ SUPABASE_KEY = os.getenv('SUPABASE_KEY')
 
 # Initialize Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# Initialize OpenAI
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 # Database operations class
 class DatabaseOperations:
@@ -318,6 +322,12 @@ def events_page():
         return redirect(url_for('login'))
     return render_template('events.html', user=session['user'])
 
+@app.route('/translations')
+def translations_page():
+    if 'user' not in session:
+        return redirect(url_for('login'))
+    return render_template('translations.html', user=session['user'])
+
 @app.route('/logout')
 def logout():
     session.clear()
@@ -480,7 +490,8 @@ def search_recommendations():
         places_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         params = {
             'query': query,
-            'key': GOOGLE_MAPS_API_KEY
+            'key': GOOGLE_MAPS_API_KEY,
+            'language': 'pt-BR' 
         }
         
         print("\nMaking request to Google Places API:")
@@ -779,7 +790,8 @@ def search_places():
         base_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         params = {
             'query': query,
-            'key': GOOGLE_MAPS_API_KEY
+            'key': GOOGLE_MAPS_API_KEY,
+            'language': 'pt-BR' 
         }
         
         # Add location if provided
@@ -832,6 +844,7 @@ def get_place_details(place_id):
         params = {
             'place_id': place_id,
             'key': GOOGLE_MAPS_API_KEY,
+            'language': 'pt-BR',
             'fields': ','.join([
                 'place_id', 'name', 'formatted_address', 'formatted_phone_number',
                 'geometry', 'icon', 'photos', 'rating', 'reviews', 'types',
@@ -1047,18 +1060,19 @@ def save_place():
             'message': f'Error saving place: {str(e)}'
         }), 500
 
-@app.route('/api/places/<place_id>', methods=['GET'])
+@app.route('/api/places/exists/<place_id>', methods=['GET'])
 def check_place_exists(place_id):
     if 'user' not in session:
         return jsonify({'success': False, 'message': 'Not authenticated'}), 401
     
     try:
         result = supabase.table('places').select('place_id').eq('place_id', place_id).execute()
+        
         return jsonify({
             'success': True,
             'exists': len(result.data) > 0
         })
-        
+
     except Exception as e:
         print(f"Error checking place: {str(e)}")
         return jsonify({
@@ -1123,6 +1137,298 @@ def upload_to_storage():
             'success': False,
             'message': str(e)
         }), 500
+
+@app.route('/api/assistants/<assistant_id>/languages')
+def get_assistant_languages(assistant_id):
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
+    try:
+        print(f"\n=== Fetching Languages Debug ===")
+        print(f"Assistant ID: {assistant_id}")
+        
+        # Query the assistants table for the specified assistant
+        result = supabase.table('assistants')\
+            .select('assistant_languages')\
+            .eq('assistant_id', assistant_id)\
+            .execute()
+            
+        print(f"Query result: {result.data}")
+            
+        if not result.data:
+            print("No assistant found with ID:", assistant_id)
+            return jsonify({
+                'success': False,
+                'message': 'Assistant not found'
+            }), 404
+
+        # Extract languages from the result
+        assistant_languages = result.data[0].get('assistant_languages')
+        if not assistant_languages or 'languages' not in assistant_languages:
+            print("No languages data found in assistant record")
+            return jsonify({
+                'success': False,
+                'message': 'No languages data found for this assistant'
+            }), 404
+
+        languages_data = assistant_languages['languages']
+        if not languages_data:
+            print("Empty languages array")
+            return jsonify({
+                'success': False,
+                'message': 'No languages configured for this assistant'
+            }), 404
+
+        # Convert to simple array of language codes
+        languages = [lang['language_code'] for lang in languages_data]
+        print(f"Languages found: {languages}")
+        
+        return jsonify({
+            'success': True,
+            'languages': languages
+        })
+        
+    except KeyError as ke:
+        error_msg = f"Invalid data structure: {str(ke)}"
+        print(error_msg)
+        print("Data structure received:", result.data if 'result' in locals() else 'No data')
+        return jsonify({
+            'success': False,
+            'message': error_msg
+        }), 500
+    except Exception as e:
+        print(f"Error fetching assistant languages: {str(e)}")
+        print(f"Error type: {type(e)}")
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
+        return jsonify({
+            'success': False,
+            'message': f'Error fetching languages: {str(e)}'
+        }), 500
+
+@app.route('/api/translations/process', methods=['POST'])
+def process_translations():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
+    try:
+        print("\n=== Translation Process Debug ===")
+        data = request.get_json()
+        assistant_id = data.get('assistantId')
+        source_language = data.get('sourceLanguage')
+        target_languages = data.get('targetLanguages', [])
+        
+        print(f"Assistant ID: {assistant_id}")
+        print(f"Source Language: {source_language}")
+        print(f"Target Languages: {target_languages}")
+
+        # Validate required fields
+        if not all([assistant_id, source_language, target_languages]):
+            print("Missing required fields")
+            return jsonify({
+                'success': False,
+                'message': 'Missing required fields'
+            }), 400
+
+        # 1. Fetch source functionality texts
+        print("\nFetching source texts...")
+        source_texts = supabase.table('assistants_func_text')\
+            .select('*')\
+            .eq('assistant_id', assistant_id)\
+            .eq('language', source_language)\
+            .execute()
+
+        print(f"Found {len(source_texts.data) if source_texts.data else 0} source texts")
+        if source_texts.data:
+            print("Sample source text:")
+            print(f"ID: {source_texts.data[0].get('id')}")
+            print(f"Functionality ID: {source_texts.data[0].get('functionality_id')}")
+            print(f"Text: {source_texts.data[0].get('functionality_text')}")
+            print(f"Value: {source_texts.data[0].get('functionality_value')}")
+
+        if not source_texts.data:
+            print(f"No texts found for language: {source_language}")
+            return jsonify({
+                'success': False,
+                'message': f'No functionality texts found for language: {source_language}'
+            }), 404
+
+        # Return the source texts directly in the response
+        source_texts_by_func = {
+            str(text['functionality_id']): {
+                'functionality_text': text['functionality_text'],
+                'functionality_value': text['functionality_value'],
+                'functionality_blob': text.get('functionality_blob', '')
+            }
+            for text in source_texts.data
+        }
+
+        print("\nInitial translation process completed successfully")
+        return jsonify({
+            'success': True,
+            'message': 'Translation process initiated successfully',
+            'details': {
+                'source_language': source_language,
+                'target_languages': target_languages,
+                'texts_to_translate': len(source_texts.data),
+                'source_texts': source_texts_by_func  # Include source texts in response
+            }
+        })
+
+    except Exception as e:
+        print(f"\nError processing translations: {str(e)}")
+        print("Error type:", type(e))
+        import traceback
+        print("Traceback:", traceback.format_exc())
+        return jsonify({
+            'success': False,
+            'message': f'Error processing translations: {str(e)}'
+        }), 500
+
+@app.route('/api/translations/process-background', methods=['POST'])
+def process_background_translations():
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    
+    try:
+        print("\n=== Background Translation Process Debug ===")
+        data = request.get_json()
+        
+        # Get data directly from request
+        assistant_id = data.get('assistantId')
+        source_language = data.get('sourceLanguage')
+        target_languages = data.get('targetLanguages', [])
+        source_texts = data.get('sourceTexts', {})
+
+        print(f"Assistant ID: {assistant_id}")
+        print(f"Source Language: {source_language}")
+        print(f"Target Languages: {target_languages}")
+        print(f"Number of source texts: {len(source_texts)}")
+
+        translations_processed = 0
+        errors = []
+
+        # Process each functionality_id
+        for functionality_id, source_content in source_texts.items():
+            print(f"\nProcessing functionality_id: {functionality_id}")
+            
+            # Process each target language
+            for target_lang in target_languages:
+                if target_lang == source_language:
+                    print(f"Skipping {target_lang} as it's the source language")
+                    continue
+
+                try:
+                    print(f"\nTranslating to language: {target_lang}")
+                    
+                    # Translate all three fields
+                    translated_text = translate_text(source_content['functionality_text'], target_lang)
+                    translated_value = translate_text(source_content['functionality_value'], target_lang)
+                    translated_blob = translate_text(source_content['functionality_blob'], target_lang) if source_content.get('functionality_blob') else ''
+
+                    # Check if translation already exists
+                    existing = supabase.table('assistants_func_text')\
+                        .select('id')\
+                        .eq('assistant_id', assistant_id)\
+                        .eq('functionality_id', functionality_id)\
+                        .eq('language', target_lang)\
+                        .execute()
+
+                    if existing.data:
+                        # Update existing translation
+                        print(f"Updating existing translation for functionality_id {functionality_id}")
+                        update_result = supabase.table('assistants_func_text')\
+                            .update({
+                                'functionality_text': translated_text,
+                                'functionality_value': translated_value,
+                                'functionality_blob': translated_blob
+                            })\
+                            .eq('assistant_id', assistant_id)\
+                            .eq('functionality_id', functionality_id)\
+                            .eq('language', target_lang)\
+                            .execute()
+                        print(f"Update result: {update_result.data if hasattr(update_result, 'data') else 'No data'}")
+                    else:
+                        # Insert new translation
+                        print(f"Inserting new translation for functionality_id {functionality_id}")
+                        insert_result = supabase.table('assistants_func_text')\
+                            .insert({
+                                'assistant_id': assistant_id,
+                                'functionality_id': functionality_id,
+                                'functionality_text': translated_text,
+                                'functionality_value': translated_value,
+                                'functionality_blob': translated_blob,
+                                'language': target_lang
+                            })\
+                            .execute()
+                        print(f"Insert result: {insert_result.data if hasattr(insert_result, 'data') else 'No data'}")
+
+                    translations_processed += 1
+
+                except Exception as translation_error:
+                    error_msg = f"Error translating functionality_id {functionality_id} to {target_lang}: {str(translation_error)}"
+                    print(error_msg)
+                    errors.append(error_msg)
+                    continue
+
+        print(f"\nBackground translation completed. Processed: {translations_processed}, Errors: {len(errors)}")
+        return jsonify({
+            'success': True,
+            'message': 'Background translation process completed',
+            'details': {
+                'translations_processed': translations_processed,
+                'errors': errors
+            }
+        })
+
+    except Exception as e:
+        print(f"\nError in background translation process: {str(e)}")
+        print("Error type:", type(e))
+        import traceback
+        print("Traceback:", traceback.format_exc())
+        return jsonify({
+            'success': False,
+            'message': f'Error in background translation process: {str(e)}'
+        }), 500
+
+def translate_text(text, target_language):
+    """
+    Translate text using GPT-4 while preserving markup
+    """
+    print(f"\n=== Translating Text Debug ===")
+    print(f"Target Language: {target_language}")
+    print(f"Original Text: {text}")
+    
+    try:
+        prompt = f"""Translate the following text to {target_language}. 
+        IMPORTANT: Preserve all HTML tags, markdown formatting, and special characters exactly as they are.
+        Only translate the actual content/values, not any markup or formatting.
+        
+        Text to translate:
+        {text}
+        
+        Translation:"""
+
+        print("\nSending request to OpenAI...")
+        completion = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a professional translator. Preserve all HTML tags, markdown formatting, and special characters in your translations."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.3
+        )
+
+        translated_text = completion.choices[0].message.content.strip()
+        print(f"Translated Text: {translated_text}")
+        return translated_text
+
+    except Exception as e:
+        print(f"Translation error: {str(e)}")
+        print("Error type:", type(e))
+        import traceback
+        print("Traceback:", traceback.format_exc())
+        raise e
 
 if __name__ == '__main__':
     app.run(debug=True)
