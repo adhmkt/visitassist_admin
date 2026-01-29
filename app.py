@@ -24,6 +24,47 @@ app.secret_key = os.getenv('FLASK_SECRET_KEY', 'your-secret-key')
 
 # Make GOOGLE_MAPS_API_KEY available to templates
 @app.context_processor
+# ...existing code...
+
+# Place the route here, after app is defined
+@app.route('/api/assistants/<assistant_id>')
+def get_assistant_details(assistant_id):
+    if 'user' not in session:
+        return jsonify({'success': False, 'message': 'Not authenticated'}), 401
+    try:
+        assistant = db.get_agent(assistant_id)
+        if assistant:
+            return jsonify({'success': True, 'assistant': assistant})
+        else:
+            return jsonify({'success': False, 'message': 'Assistant not found'}), 404
+    except Exception as e:
+        return jsonify({'success': False, 'message': str(e)}), 500
+from flask import Flask, render_template, redirect, url_for, session, request, jsonify, Response
+import os
+import requests
+from dotenv import load_dotenv
+from supabase import create_client, Client
+from math import cos, pi, radians
+import base64
+import json
+from openai import OpenAI
+
+# Load environment variables
+load_dotenv()
+
+# Configuration - with debug logging and fallback values
+GOOGLE_MAPS_API_KEY = os.getenv('GOOGLE_MAPS_API_KEY')
+print("\n=== API Configuration Debug ===")
+print(f"GOOGLE_MAPS_API_KEY present: {'Yes' if GOOGLE_MAPS_API_KEY else 'No'}")
+if not GOOGLE_MAPS_API_KEY:
+    raise ValueError("GOOGLE_MAPS_API_KEY not found in environment variables")
+
+# Initialize Flask app
+app = Flask(__name__)
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'your-secret-key')
+
+# Make GOOGLE_MAPS_API_KEY available to templates
+@app.context_processor
 def inject_google_maps_key():
     return dict(GOOGLE_MAPS_API_KEY=GOOGLE_MAPS_API_KEY)
 
@@ -314,7 +355,12 @@ def add_assistant():
 def assistant_directory():
     if 'user' not in session:
         return redirect(url_for('login'))
-    return render_template('assistant_directory.html', user=session['user'])
+    try:
+        assistants = db.get_all_agents()
+        return render_template('assistant_directory.html', user=session['user'], assistants=assistants)
+    except Exception as e:
+        print(f"Error loading assistants for directory: {str(e)}")
+        return render_template('assistant_directory.html', user=session['user'], assistants=[], error="Error loading assistants")
 
 @app.route('/events')
 def events_page():

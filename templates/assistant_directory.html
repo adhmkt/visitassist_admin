@@ -4,6 +4,144 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/assistant_directory.css') }}">
+<style>
+    body {
+        background: #f6f8fb;
+    }
+    .content-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+    .assistants-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+    .assistant-card-link {
+        display: block;
+        height: 100%;
+        text-decoration: none;
+        color: inherit;
+    }
+    .assistant-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        transition: box-shadow 0.2s, border 0.2s;
+        border: 1px solid #e0e0e0;
+        min-height: 180px;
+        position: relative;
+    }
+    .assistant-card:hover {
+        box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+        border-color: #b3b3b3;
+    }
+    .assistant-card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    .assistant-image img {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #e0e0e0;
+        margin-right: 1rem;
+        background: #f6f8fb;
+    }
+    .assistant-info {
+        flex: 1;
+    }
+    .assistant-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin: 0;
+    }
+    .assistant-type {
+        font-size: 0.95rem;
+        color: #888;
+    }
+    .assistant-card-body {
+        flex: 1;
+        margin-bottom: 1rem;
+    }
+    .assistant-desc {
+        color: #444;
+        font-size: 1rem;
+        margin: 0;
+    }
+    .assistant-card-footer {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+        margin-top: 1rem;
+    }
+    .btn.btn-secondary {
+        background: #e3e7f7;
+        color: #2a3a5e;
+        border: none;
+        border-radius: 6px;
+        padding: 0.4rem 1rem;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .btn.btn-secondary:hover {
+        background: #c7d2ee;
+    }
+    .btn.btn-icon {
+        background: none;
+        border: none;
+        color: #2a3a5e;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0.4rem 0.6rem;
+        border-radius: 6px;
+        transition: background 0.2s;
+    }
+    .btn.btn-icon:hover {
+        background: #f0f2fa;
+    }
+    /* Modal styles */
+    #previewModal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: auto;
+        background: rgba(0,0,0,0.25);
+    }
+    #previewModal .modal-content {
+        background: #fff;
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: 12px;
+        width: 100%;
+        max-width: 420px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+        position: relative;
+    }
+    #previewModal .close-modal {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #888;
+        cursor: pointer;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -40,22 +178,24 @@
         <!-- Assistants Grid -->
         <div class="assistants-grid">
             {% for assistant in assistants %}
-            <div class="assistant-card" data-type="{{ assistant.assistant_type }}">
-                <div class="assistant-image">
-                    <img src="{{ assistant.assistant_img_url or url_for('static', filename='images/default-assistant.png') }}"
-                        alt="{{ assistant.assistant_name }}">
+            <div class="assistant-card" data-type="{{ assistant.assistant_type }}" onclick="window.open('http://localhost:3000/chat?assistant_id={{ assistant.assistant_id }}', '_blank')">
+                <div class="assistant-card-header">
+                    <div class="assistant-image">
+                        <img src="{{ assistant.assistant_img_url or url_for('static', filename='images/default-assistant.png') }}" alt="{{ assistant.assistant_name }}">
+                    </div>
+                    <div class="assistant-info">
+                        <h3 class="assistant-name">{{ assistant.assistant_name }}</h3>
+                        <span class="assistant-type">{{ assistant.assistant_type }}</span>
+                    </div>
                 </div>
-                <div class="assistant-info">
-                    <h3>{{ assistant.assistant_name }}</h3>
-                    <p class="assistant-type">{{ assistant.assistant_type }}</p>
+                <div class="assistant-card-body">
                     <p class="assistant-desc">{{ assistant.assistant_desc }}</p>
                 </div>
-                <div class="assistant-actions">
-                    <a href="{{ url_for('edit_agent', id=assistant.assistant_id) }}" class="btn btn-secondary">
-                        <i class="fas fa-edit"></i>
-                        <span>Edit</span>
+                <div class="assistant-card-footer">
+                    <a href="{{ url_for('edit_agent', id=assistant.assistant_id) }}" class="btn btn-secondary" onclick="event.stopPropagation();event.preventDefault();window.open(this.href,'_blank');return false;">
+                        <i class="fas fa-edit"></i> Edit
                     </a>
-                    <button class="btn btn-icon" onclick="previewAssistant('{{ assistant.assistant_id }}')">
+                    <button class="btn btn-icon" onclick="event.stopPropagation();previewAssistant('{{ assistant.assistant_id }}');return false;" title="Preview">
                         <i class="fas fa-eye"></i>
                     </button>
                 </div>
