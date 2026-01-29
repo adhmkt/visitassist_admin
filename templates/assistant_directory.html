@@ -178,7 +178,11 @@
         <!-- Assistants Grid -->
         <div class="assistants-grid">
             {% for assistant in assistants %}
+            {% if config['ENV'] == 'production' %}
+            <div class="assistant-card" data-type="{{ assistant.assistant_type }}" onclick="window.open('https://apis-ia.vercel.app/chat?assistant_id={{ assistant.assistant_id }}', '_blank')">
+            {% else %}
             <div class="assistant-card" data-type="{{ assistant.assistant_type }}" onclick="window.open('http://localhost:3000/chat?assistant_id={{ assistant.assistant_id }}', '_blank')">
+            {% endif %}
                 <div class="assistant-card-header">
                     <div class="assistant-image">
                         <img src="{{ assistant.assistant_img_url or url_for('static', filename='images/default-assistant.png') }}" alt="{{ assistant.assistant_name }}">
